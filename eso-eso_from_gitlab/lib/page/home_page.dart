@@ -2,6 +2,7 @@ import 'package:eso/api/api.dart';
 import 'package:eso/database/search_item.dart';
 import 'package:eso/database/search_item_manager.dart';
 import 'package:eso/page/history_page.dart';
+import 'package:eso/page/home/home_content_page.dart';
 import 'package:eso/page/search_page.dart';
 import 'package:eso/page/setting/about_page.dart';
 import 'package:eso/ui/ui_audio_view.dart';
@@ -80,7 +81,8 @@ class _HomePageState extends State<HomePage> {
             final _pageView = PageView(
               controller: pageSwitch.pageController,
               children: <Widget>[
-                FavoritePage(),
+                // FavoritePage(),
+                HomeContentPage(),
                 DiscoverPage(),
                 if (isLargeScreen || profile.bottomCount == 4) HistoryPage(),
                 if (isLargeScreen || profile.bottomCount == 4) AboutPage(),
