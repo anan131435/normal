@@ -5,6 +5,8 @@ class HomeViewModel extends ChangeNotifier {
     "推荐",
     "阅读",
     "音频",
-    "图片"
+    "图片",
+    "视频",
+    "短视频",
   ];
 }

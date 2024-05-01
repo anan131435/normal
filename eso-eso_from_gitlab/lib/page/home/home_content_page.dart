@@ -91,6 +91,7 @@ class _HomeContentPageState extends State<HomeContentPage>
             searchBar(),
             const SizedBox(height: 16,),
             TabBar(
+              indicator: const BoxDecoration(),
               padding: EdgeInsets.symmetric(horizontal: 10),
               controller: controller,
               unselectedLabelColor: ColorsUtil.contractColor("#A6A6A6"),
@@ -104,6 +105,8 @@ class _HomeContentPageState extends State<HomeContentPage>
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
+              labelPadding: EdgeInsets.symmetric(horizontal: 16.0),
+              isScrollable: true,
               tabs: viewModel.tabTitles
                   .map((e) => Tab(
                         text: e,
@@ -113,9 +116,11 @@ class _HomeContentPageState extends State<HomeContentPage>
             Expanded(
               child: TabBarView(controller: controller, children: [
                RecommendPage(),
-                Container(color: Colors.red,),
-                Container(color: Colors.red,),
-                Container(color: Colors.red,),
+                RecommendPage(),
+                RecommendPage(),
+                RecommendPage(),
+                RecommendPage(),
+                RecommendPage(),
               ]),
             )
           ],
