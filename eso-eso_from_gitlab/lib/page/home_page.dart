@@ -81,10 +81,11 @@ class _HomePageState extends State<HomePage> {
             final _pageView = PageView(
               controller: pageSwitch.pageController,
               children: <Widget>[
-                // FavoritePage(),
+
                 HomeContentPage(),
+                FavoritePage(),
                 DiscoverPage(),
-                if (isLargeScreen || profile.bottomCount == 4) HistoryPage(),
+                // if (isLargeScreen || profile.bottomCount == 4) HistoryPage(),
                 if (isLargeScreen || profile.bottomCount == 4) AboutPage(),
               ],
               onPageChanged: (index) => pageSwitch.changePage(index, false),
@@ -120,9 +121,9 @@ class _HomePageState extends State<HomePage> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Icon(FIcons.heart,
+                                      Icon(FIcons.home,
                                           color: getColor(pageSwitch, context, 0)),
-                                      Text("收藏",
+                                      Text("首页",
                                           style: TextStyle(
                                               color: getColor(pageSwitch, context, 0)))
                                     ],
@@ -135,15 +136,16 @@ class _HomePageState extends State<HomePage> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Icon(FIcons.compass,
+                                      Icon(FIcons.heart,
                                           color: getColor(pageSwitch, context, 1)),
-                                      Text("发现",
+                                      Text("收藏",
                                           style: TextStyle(
                                               color: getColor(pageSwitch, context, 1)))
                                     ],
                                   ),
                                 ),
                               ),
+
                             ],
                           ),
                         ),
@@ -162,9 +164,9 @@ class _HomePageState extends State<HomePage> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        Icon(Icons.history,
+                                        Icon(FIcons.compass,
                                             color: getColor(pageSwitch, context, 2)),
-                                        Text("历史",
+                                        Text("发现",
                                             style: TextStyle(
                                                 color: getColor(pageSwitch, context, 2)))
                                       ],
