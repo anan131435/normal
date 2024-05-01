@@ -84,37 +84,20 @@ class _RecommendPageState extends State<RecommendPage> {
             ),
           );
         } else {
-          return Container(
-            width: double.infinity,
-            margin: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white,
-            ),
-            child: Expanded(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 10.0),
-                    child: Text("热门推荐",style: TextStyle(fontSize: 16, color: Colors.black)),
-                  ),
-                  Expanded(
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1/2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10
-                      ), itemBuilder: (context, index) {
-                        return HotRecommendItem();
-                      },
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 30,
-                      )
-                  ),
-                ],
-              ),
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0,right: 16.0),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 157/230,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10
+              ), itemBuilder: (context, index) {
+              return HotRecommendItem();
+            },
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 30,
             ),
           );
         }
