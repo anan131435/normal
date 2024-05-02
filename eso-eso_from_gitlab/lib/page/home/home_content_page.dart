@@ -1,5 +1,6 @@
 import 'package:eso/page/home/view_model/home_view_model.dart';
 import 'package:eso/page/recommand/recommand_page.dart';
+import 'package:eso/page/short_video/short_video_page.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -120,7 +121,7 @@ class _HomeContentPageState extends State<HomeContentPage>
                 RecommendPage(),
                 RecommendPage(),
                 RecommendPage(),
-                RecommendPage(),
+                ShortVideoPage(),
               ]),
             )
           ],

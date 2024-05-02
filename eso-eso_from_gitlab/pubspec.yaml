@@ -59,16 +59,6 @@ dependencies:
     path: modules/text_composition
   url_launcher: ^6.0.3
   uuid: ^3.0.4
-  video_player: ^2.1.1
-  # video_player_macos:
-  #   git:
-  #     url: https://github.com/cbenhagen/plugins.git
-  #     path: packages/video_player/video_player_macos
-  #     ref: video_player_macos_new
-  # video_player_windows:
-  #   git:
-  #     url: https://github.com/anirudhb/flutter_packages.git
-  #     path: video_player_windows
   webdav:
     # git: https://github.com/timestee/dart-webdav
     path: modules/dart-webdav
@@ -95,9 +85,8 @@ dependencies:
   just_audio_mpv: ^0.1.7
   audio_service: ^0.18.12
   auto_orientation: ^2.3.1
-  # video_player_media_kit: ^0.0.5
-  # video_player_win: ^2.2.2
-  
+  video_player: ^2.4.1
+
 
 dev_dependencies:
   build_runner: ^1.11.5

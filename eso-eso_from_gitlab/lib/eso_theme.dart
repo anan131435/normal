@@ -56,7 +56,7 @@ const thDef = {
   showMangaStatusBox: false,
   showMangaInfoBox: true,
   searchPostionBox: ESOTheme.searchDocker,
-  bottomCountBox: 2,
+  bottomCountBox: 4,
   autoRefreshBox: false,
   primaryColorBox: 0xFF4BB0A0,
   mangaKeepOnBox: false,

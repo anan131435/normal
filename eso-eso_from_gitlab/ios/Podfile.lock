@@ -185,7 +185,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audio_service: f509d65da41b9521a61f1c404dd58651f265a567
-  audio_session: c6d2ee773340776a1af7a6220fba59eef35f99ef
+  audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
   auto_orientation: 102ed811a5938d52c86520ddd7ecd3a126b5d39d
   battery_plus: 7851ab482c336dd101ae735dc9363f01e1223c7c
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467

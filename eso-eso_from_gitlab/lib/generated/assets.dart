@@ -169,6 +169,7 @@ class Assets {
   static const String settingFontFamilyPage = 'lib/page/setting/font_family_page.dart';
   static const String settingThemePage = 'lib/page/setting/theme_page.dart';
   static const String settingUiSetting = 'lib/page/setting/ui_setting.dart';
+  static const String shortVideoShortVideoPage = 'lib/page/short_video/short_video_page.dart';
   static const String sourceDebugRulePage = 'lib/page/source/debug_rule_page.dart';
   static const String sourceEditRulePage = 'lib/page/source/edit_rule_page.dart';
   static const String sourceEditSourcePage = 'lib/page/source/edit_source_page.dart';
@@ -208,6 +209,7 @@ class Assets {
   static const String utilsTextInputFormatter = 'lib/utils/text_input_formatter.dart';
   static const String viewModelHomeViewModel = 'lib/page/home/view_model/home_view_model.dart';
   static const String widgetHotRecommendItem = 'lib/page/recommand/widget/hot_recommend_item.dart';
+  static const String widgetNetworkimage = 'lib/page/short_video/widget/networkimage.dart';
   static const String widgetProductItemWidget = 'lib/page/recommand/widget/product_item_widget.dart';
   static const String widgetsAnimationRotateView = 'lib/ui/widgets/animation_rotate_view.dart';
   static const String widgetsDraggableScrollbarSliver = 'lib/ui/widgets/draggable_scrollbar_sliver.dart';
