@@ -1,4 +1,5 @@
 import 'package:auto_orientation/auto_orientation.dart';
+import 'package:eso/page/short_video/model/physics.dart';
 import 'package:eso/page/short_video/widget/networkimage.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -55,10 +56,11 @@ class _ShortVideoPageState extends State<ShortVideoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.black,
+        color: Colors.blue,
         child: PageView.builder(
           controller: _pageController,
           scrollDirection: Axis.vertical,
+          physics: const QuickerScrollPhysics(),
           itemCount: list.length,
           onPageChanged: (value) {
             print("要跳转$value");
@@ -98,15 +100,13 @@ class _ShortVideoPageState extends State<ShortVideoPage> {
                                 height: double.infinity,
                                 width: double.infinity,
                                 alignment: Alignment.center,
-                                child: Container(
-                                  child: _controller.value.isInitialized
-                                      ? AspectRatio(
-                                          aspectRatio:
-                                              _controller.value.aspectRatio,
-                                          child: VideoPlayer(_controller),
-                                        )
-                                      : const CircularProgressIndicator(),
-                                ),
+                                child: _controller.value.isInitialized
+                                    ? AspectRatio(
+                                        aspectRatio:
+                                            _controller.value.aspectRatio,
+                                        child: VideoPlayer(_controller),
+                                      )
+                                    : const CircularProgressIndicator(),
                               ),
                               onTap: () => playOrPauseVideo(),
                             ),

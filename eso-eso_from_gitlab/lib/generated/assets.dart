@@ -126,6 +126,7 @@ class Assets {
   static const String modelMangaPageProvider = 'lib/model/manga_page_provider.dart';
   static const String modelNovelPageProvider = 'lib/model/novel_page_provider.dart';
   static const String modelPageSwitch = 'lib/model/page_switch.dart';
+  static const String modelPhysics = 'lib/page/short_video/model/physics.dart';
   static const String modelRssPageProvider = 'lib/model/rss_page_provider.dart';
   static const String modelSearchPageDelegate = 'lib/model/search_page_delegate.dart';
   static const String modelSystemInfoProvider = 'lib/model/system_info_provider.dart';
