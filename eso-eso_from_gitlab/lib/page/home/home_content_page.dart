@@ -3,7 +3,11 @@ import 'package:eso/page/recommand/recommand_page.dart';
 import 'package:eso/page/short_video/short_video_page.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:provider/provider.dart';
+import 'package:eso/page/home/model/hj_banner_listener.dart';
+
+import 'model/reward_listener.dart';
 
 class HomeContentPage extends StatefulWidget {
   HomeContentPage({Key key}) : super(key: key);
@@ -16,12 +20,28 @@ class _HomeContentPageState extends State<HomeContentPage>
     with SingleTickerProviderStateMixin {
   HomeViewModel viewModel = null;
   TabController controller = null;
+  HjBannerAd _bannerAd;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
+    // _adBanner();
+    // _rewardBanner();
+  }
+
+  void _rewardBanner() {
+    HjAdRequest request = HjAdRequest(placementId: "5847726571825805");
+    HjRewardAd ad = HjRewardAd(request: request,listener: EsoRewardListener());
+    ad.loadAdData();
+  }
+
+  void _adBanner() {
+    HjAdRequest request = HjAdRequest(placementId: "8533172371714945");
+    _bannerAd = HjBannerAd(request: request,width: 300,height: 100, listener: EsoHjBannerListener());
+    _bannerAd.loadAd();
+    print("_adBanner $_bannerAd");
   }
 
   Widget searchBar() {
@@ -40,15 +60,30 @@ class _HomeContentPageState extends State<HomeContentPage>
         Stack(
           alignment: Alignment.centerLeft,
           children: [
-            Container(
-              height: 32,
-              width: 300,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  )),
+            GestureDetector(
+              child: Container(
+                height: 32,
+                width: 300,
+
+                decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    )),
+              ),
+              onTap: () async {
+                bool isReady = await _bannerAd.isReady();
+                print("isReady $isReady");
+                if (isReady) {
+                  BannerAdWidget bannerAdWidget = BannerAdWidget(
+                    hjBannerAd: _bannerAd,
+                    height: 50,
+                    width: 320,
+                  );
+                }
+              },
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,

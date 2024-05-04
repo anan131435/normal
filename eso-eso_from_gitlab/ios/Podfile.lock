@@ -63,10 +63,27 @@ PODS:
   - FMDB (2.7.10):
     - FMDB/standard (= 2.7.10)
   - FMDB/standard (2.7.10)
+  - HjOctopusAdapter (1.0.0):
+    - OctopusSDK
+    - ToBid-iOS/ToBidSDK
+  - huijing_ads_plugin (2.0.1):
+    - Flutter
+    - HjOctopusAdapter
+    - ToBid-iOS (= 3.5.0)
+    - ToBid-iOS/AdScopeAdapter (= 3.5.0)
+    - ToBid-iOS/CSJMediationAdapter (= 3.5.0)
+    - ToBid-iOS/GDTAdapter (= 3.5.0)
+    - ToBid-iOS/KSAdapter (= 3.5.0)
+    - ToBid-iOS/MintegralAdapter (= 3.5.0)
+    - ToBid-iOS/MSAdAdapter (= 3.5.0)
+    - ToBid-iOS/TouTiaoAdapter (= 3.5.0)
   - image_gallery_saver (1.5.0):
     - Flutter
   - just_audio (0.0.1):
     - Flutter
+  - OctopusSDK (1.5.9.33):
+    - OctopusSDK/OctopusBaseSDK (= 1.5.9.33)
+  - OctopusSDK/OctopusBaseSDK (1.5.9.33)
   - OrderedSet (5.0.0)
   - package_info_plus (0.4.5):
     - Flutter
@@ -88,6 +105,23 @@ PODS:
     - Flutter
     - FMDB (>= 2.7.5)
   - SwiftyGif (5.4.5)
+  - ToBid-iOS (3.5.0):
+    - ToBid-iOS/ToBidSDK (= 3.5.0)
+  - ToBid-iOS/AdScopeAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/CSJMediationAdapter (3.5.0):
+    - ToBid-iOS/TouTiaoAdapter
+  - ToBid-iOS/GDTAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/KSAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/MintegralAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/MSAdAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/ToBidSDK (3.5.0)
+  - ToBid-iOS/TouTiaoAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
   - uni_links (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -110,6 +144,7 @@ DEPENDENCIES:
   - flutter_inappwebview (from `.symlinks/plugins/flutter_inappwebview/ios`)
   - flutter_qjs (from `.symlinks/plugins/flutter_qjs/ios`)
   - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
+  - huijing_ads_plugin (from `.symlinks/plugins/huijing_ads_plugin/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -128,10 +163,13 @@ SPEC REPOS:
     - DKImagePickerController
     - DKPhotoGallery
     - FMDB
+    - HjOctopusAdapter
+    - OctopusSDK
     - OrderedSet
     - Reachability
     - SDWebImage
     - SwiftyGif
+    - ToBid-iOS
 
 EXTERNAL SOURCES:
   audio_service:
@@ -158,6 +196,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_qjs/ios"
   flutter_tts:
     :path: ".symlinks/plugins/flutter_tts/ios"
+  huijing_ads_plugin:
+    :path: ".symlinks/plugins/huijing_ads_plugin/ios"
   image_gallery_saver:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
   just_audio:
@@ -199,8 +239,11 @@ SPEC CHECKSUMS:
   flutter_qjs: 00a5691bdef3079061466f6fd88cd7d6986fb8b6
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   FMDB: eae540775bf7d0c87a5af926ae37af69effe5a19
+  HjOctopusAdapter: b7126f5aa729e8fcb00a89f8be06454a7c17800b
+  huijing_ads_plugin: 5cebdbf7267844feebc4a8bc240a486b03cf55c7
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
+  OctopusSDK: c52b1ce69f7248c34632919428c4eaa9eb24fdf8
   OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
@@ -211,6 +254,7 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
+  ToBid-iOS: fc72d21254967542060fb3e48d3f019e65e4c2a7
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126

@@ -27,7 +27,8 @@ import 'package:flutter/gestures.dart';
 import 'ui/ui_add_rule_dialog.dart';
 import 'utils/auto_decode_cli.dart';
 import 'utils/rule_comparess.dart';
-
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
+ HjRewardAd hjRewardAd;//全局对象
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
   @override
@@ -109,10 +110,13 @@ void main() async {
       onLink(linkPath);
     }
     linkStream.listen(onLink);
+    // await HjAd.init("37686");
+    // await HjAd.init("37686",rewardId: "5847726571825805",interstitialId: "4132313425498304",fullScreenId: "6325145517824350");
   }
 
   await Hive.initFlutter("eso");
   await openThemeModeBox();
+
   runApp(const MyApp());
 
   // 必须加上这一行。
@@ -136,7 +140,8 @@ void main() async {
 class ErrorApp extends StatelessWidget {
   final error;
   final stackTrace;
-  const ErrorApp({Key key, this.error, this.stackTrace}) : super(key: key);
+  final MethodChannel channel;
+  const ErrorApp({Key key, this.error, this.stackTrace,this.channel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
