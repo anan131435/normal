@@ -291,7 +291,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   }
 
   Widget _buildPage() {
-    print("_buildPage");
+    print("_buildDisCoverPage");
     return ChangeNotifierProvider.value(
       value: EditSourceProvider(type: 2),
       builder: (BuildContext context, _) {
@@ -406,21 +406,24 @@ class _DiscoverPageState extends State<DiscoverPage> {
   }
 
   Widget _buildFilterView(BuildContext context, EditSourceProvider provider) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildFilterItemView(context, provider, -1),
-          SizedBox(width: 8),
-          _buildFilterItemView(context, provider, API.NOVEL),
-          SizedBox(width: 8),
-          _buildFilterItemView(context, provider, API.MANGA),
-          SizedBox(width: 8),
-          _buildFilterItemView(context, provider, API.AUDIO),
-          SizedBox(width: 8),
-          _buildFilterItemView(context, provider, API.VIDEO),
-        ],
+    return Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _buildFilterItemView(context, provider, -1),
+            SizedBox(width: 8),
+            _buildFilterItemView(context, provider, API.NOVEL),
+            SizedBox(width: 8),
+            _buildFilterItemView(context, provider, API.MANGA),
+            SizedBox(width: 8),
+            _buildFilterItemView(context, provider, API.AUDIO),
+            SizedBox(width: 8),
+            _buildFilterItemView(context, provider, API.VIDEO),
+          ],
+        ),
       ),
     );
   }

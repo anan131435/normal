@@ -92,6 +92,7 @@ class _DiscoverSearchPageState extends State<DiscoverSearchPage>
 
   @override
   Widget build(BuildContext context) {
+    print("discover_search_page build");
     if (_discover == null) {
       _discover = _buildDiscover();
     }

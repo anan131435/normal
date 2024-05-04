@@ -91,7 +91,7 @@ class _ChapterPageState extends State<ChapterPage> {
     final size = MediaQuery.of(context).size;
     final topHeight = kToolbarHeight + MediaQuery.of(context).padding.top;
     _controller = ScrollController();
-
+  print("CapturePage build");
     return ChangeNotifierProvider<ChapterPageProvider>(
       create: (context) => ChapterPageProvider(searchItem: searchItem, size: size),
       builder: (context, child) => Container(
@@ -141,7 +141,7 @@ class _ChapterPageState extends State<ChapterPage> {
 
   Widget buildPage(BuildContext context) {
     final page = Provider.of<ChapterPageProvider>(context, listen: true).page;
-    print(page);
+    print("ChapterPageProvider$page");
     if (page > 0)
       return Positioned(
         right: 20,
