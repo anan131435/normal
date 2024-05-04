@@ -21,6 +21,7 @@ class _HomeContentPageState extends State<HomeContentPage>
   HomeViewModel viewModel = null;
   TabController controller = null;
   HjBannerAd _bannerAd;
+  HjRewardAd _rewardAd;
   @override
   void initState() {
     // TODO: implement initState
@@ -28,13 +29,13 @@ class _HomeContentPageState extends State<HomeContentPage>
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
     // _adBanner();
-    // _rewardBanner();
+
   }
 
   void _rewardBanner() {
-    HjAdRequest request = HjAdRequest(placementId: "5847726571825805");
-    HjRewardAd ad = HjRewardAd(request: request,listener: EsoRewardListener());
-    ad.loadAdData();
+    HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
+    _rewardAd = HjRewardAd(request: request,listener: EsoRewardListener());
+    _rewardAd.loadAdData();
   }
 
   void _adBanner() {
@@ -74,6 +75,9 @@ class _HomeContentPageState extends State<HomeContentPage>
                     )),
               ),
               onTap: () async {
+                print("_rewardBanner");
+                _rewardBanner();
+                return;
                 bool isReady = await _bannerAd.isReady();
                 print("isReady $isReady");
                 if (isReady) {
@@ -127,6 +131,15 @@ class _HomeContentPageState extends State<HomeContentPage>
             searchBar(),
             const SizedBox(height: 16,),
             TabBar(
+              onTap: (value) async {
+                bool isReady = await _rewardAd.isReady();
+                print("_rewardAd isReady $isReady");
+                if (isReady) {
+                  _rewardAd.showAd();
+                } else {
+                  _rewardAd.loadAdData();
+                }
+              },
               indicator: const BoxDecoration(),
               padding: EdgeInsets.symmetric(horizontal: 10),
               controller: controller,

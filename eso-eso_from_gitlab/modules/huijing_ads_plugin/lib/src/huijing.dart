@@ -9,7 +9,7 @@ class HjAd {
 
   /// 初始化SDK
   static Future<void> init(String appId,
-  {String rewardId, String interstitialId, String fullScreenId}) {
+      {String rewardId, String interstitialId, String fullScreenId}) {
     return _channel.invokeMethod('init', {
       'appId': appId,
       'rewardId': rewardId,

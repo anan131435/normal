@@ -3,7 +3,7 @@ class HjAdRequest {
   String placementId;
   Map<String, String> options;
 
-  HjAdRequest({this.placementId, this.userId, this.options});
+  HjAdRequest({ this.placementId, this.userId, this.options});
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};

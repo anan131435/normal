@@ -71,6 +71,7 @@ PODS:
     - HjOctopusAdapter
     - ToBid-iOS (= 3.5.0)
     - ToBid-iOS/AdScopeAdapter (= 3.5.0)
+    - ToBid-iOS/BaiduAdapter (= 3.5.0)
     - ToBid-iOS/CSJMediationAdapter (= 3.5.0)
     - ToBid-iOS/GDTAdapter (= 3.5.0)
     - ToBid-iOS/KSAdapter (= 3.5.0)
@@ -108,6 +109,8 @@ PODS:
   - ToBid-iOS (3.5.0):
     - ToBid-iOS/ToBidSDK (= 3.5.0)
   - ToBid-iOS/AdScopeAdapter (3.5.0):
+    - ToBid-iOS/ToBidSDK
+  - ToBid-iOS/BaiduAdapter (3.5.0):
     - ToBid-iOS/ToBidSDK
   - ToBid-iOS/CSJMediationAdapter (3.5.0):
     - ToBid-iOS/TouTiaoAdapter
@@ -240,7 +243,7 @@ SPEC CHECKSUMS:
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   FMDB: eae540775bf7d0c87a5af926ae37af69effe5a19
   HjOctopusAdapter: b7126f5aa729e8fcb00a89f8be06454a7c17800b
-  huijing_ads_plugin: 5cebdbf7267844feebc4a8bc240a486b03cf55c7
+  huijing_ads_plugin: 734a5cc2d41964fa9094f734c299d03ca83c3080
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   OctopusSDK: c52b1ce69f7248c34632919428c4eaa9eb24fdf8

@@ -14,13 +14,13 @@ mixin HjAdEvent {
 }
 
 mixin HjAdEventHandler {
-  HjAdEvent delegate = null;
+   HjAdEvent delegate = null;
 
   Future<void> handleEvent(MethodCall call) async {
     try {
       if (delegate == null) return;
       Map<String, dynamic> arguments = {};
-      if (call.arguments != null) {
+      if (call.arguments == null) {
         arguments.addAll(Map<String, dynamic>.from(call.arguments));
       }
       HjError error;
@@ -49,7 +49,7 @@ mixin HjAdEventHandler {
           delegate.onVideoComplete();
           break;
         case 'onAdReward':
-          delegate.onAdReward(arguments);
+    delegate.onAdReward(arguments);
           break;
         case 'onAdAutoRefreshed':
           delegate.onAdAutoRefreshed(arguments);

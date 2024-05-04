@@ -13,7 +13,7 @@ class HjBannerAd with HjAdEventHandler {
    MethodChannel _adChannel;
   final double width; //广告宽度
   final double height;
-   HjBannerListener<HjBannerAd> _listener;
+  HjBannerListener<HjBannerAd> _listener;
   Size adSize;
   HjBannerAd({
     Key key,
@@ -65,7 +65,7 @@ class BannerAdWidget extends StatefulWidget {
   BannerAdWidgetState createState() => BannerAdWidgetState();
 
   final HjBannerAd hjBannerAd;
-   ValueNotifier<Size> sizeNotify;
+  ValueNotifier<Size> sizeNotify;
 
   BannerAdWidget({
     Key key,

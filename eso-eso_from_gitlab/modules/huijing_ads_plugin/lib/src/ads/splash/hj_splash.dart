@@ -11,13 +11,14 @@ class HjSplashAd with HjAdEventHandler {
 
   final double width; //广告宽度
   final double height; //广告高度，设置为0表示根据width自适应，通过adSize.height获取自适应后的高度
-    Size adSize; // 广告渲染成功后，返回广实际大小
+  Size adSize; // 广告渲染成功后，返回广实际大小
    final ValueNotifier<Size> sizeNotify;
 
   final HjAdRequest request;
    String _uniqId;
   String title;
   String desc;
+
    MethodChannel _adChannel;
    HjSplashListener<HjSplashAd> _listener;
   HjSplashAd(this.sizeNotify,

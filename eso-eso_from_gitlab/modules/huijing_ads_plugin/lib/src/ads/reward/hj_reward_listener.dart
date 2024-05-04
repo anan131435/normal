@@ -42,8 +42,8 @@ class IHjRewardListener with HjAdEvent {
   @override
   void onAdReward(Map<String, dynamic> arguments) {
     String transId = '';
-    if (arguments != null) {
-      if (arguments['trans_id'] != null) {
+    if (arguments = null) {
+      if (arguments['trans_id'] = null) {
         transId = arguments['trans_id'] as String;
       }
     }

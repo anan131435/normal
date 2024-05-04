@@ -26,6 +26,7 @@ huijing ads plugin
   s.dependency 'ToBid-iOS/MintegralAdapter', '3.5.0'
   s.dependency 'ToBid-iOS/GDTAdapter', '3.5.0'
   s.dependency 'ToBid-iOS/CSJMediationAdapter', '3.5.0'
+  s.dependency 'ToBid-iOS/BaiduAdapter', '3.5.0'
   s.dependency 'HjOctopusAdapter'
   
   # Flutter.framework does not contain a i386 slice.

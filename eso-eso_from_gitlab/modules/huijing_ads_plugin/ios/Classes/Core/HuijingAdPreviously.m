@@ -119,9 +119,9 @@ static HuijingAdPreviously* _instance = nil;
     NSLog(@"---- startAdPreviously rewardId: %@", rewardId);
     NSLog(@"---- startAdPreviously interstitialId: %@", interstitialId);
     NSLog(@"---- startAdPreviously fullScreenId: %@", fullScreenId);
-    if ((rewardId != nil && rewardId.length > 0) ||
-        (interstitialId != nil && interstitialId.length > 0) ||
-        (fullScreenId != nil && fullScreenId.length > 0)) {
+    if ((rewardId && rewardId != [NSNull null] && rewardId.length > 0) ||
+        (interstitialId && interstitialId != [NSNull null] && interstitialId.length > 0) ||
+        (fullScreenId && fullScreenId != [NSNull null] && fullScreenId.length > 0)) {
         self.rewardId = rewardId;
         self.interstitialId = interstitialId;
         self.fullScreenId = fullScreenId;

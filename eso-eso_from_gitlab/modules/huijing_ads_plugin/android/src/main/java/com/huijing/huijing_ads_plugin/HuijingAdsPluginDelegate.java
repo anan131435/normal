@@ -51,6 +51,7 @@ public class HuijingAdsPluginDelegate implements MethodChannel.MethodCallHandler
             HJLog.d("###############fullScreenId: " + fullScreenId);
             HuijingAdPreviously huijingAdPreviously = HuijingAdPreviously.instance();
             huijingAdPreviously.startAdPreviously(rewardId, interstitialId, fullScreenId, this.activity);
+			result.success(null);
         } else {
             result.notImplemented();
         }
