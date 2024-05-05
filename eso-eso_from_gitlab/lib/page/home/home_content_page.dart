@@ -28,8 +28,6 @@ class _HomeContentPageState extends State<HomeContentPage>
     super.initState();
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
-    // _adBanner();
-
   }
 
   void _rewardBanner() {
@@ -43,6 +41,16 @@ class _HomeContentPageState extends State<HomeContentPage>
     _bannerAd = HjBannerAd(request: request,width: 300,height: 100, listener: EsoHjBannerListener());
     _bannerAd.loadAd();
     print("_adBanner $_bannerAd");
+  }
+
+  void _showRewardAd() async {
+    bool isReady = await _rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      _rewardAd.showAd();
+    } else {
+      _rewardAd.loadAdData();
+    }
   }
 
   Widget searchBar() {
@@ -75,18 +83,7 @@ class _HomeContentPageState extends State<HomeContentPage>
                     )),
               ),
               onTap: () async {
-                print("_rewardBanner");
-                _rewardBanner();
-                return;
-                bool isReady = await _bannerAd.isReady();
-                print("isReady $isReady");
-                if (isReady) {
-                  BannerAdWidget bannerAdWidget = BannerAdWidget(
-                    hjBannerAd: _bannerAd,
-                    height: 50,
-                    width: 320,
-                  );
-                }
+
               },
             ),
             Row(
@@ -132,13 +129,7 @@ class _HomeContentPageState extends State<HomeContentPage>
             const SizedBox(height: 16,),
             TabBar(
               onTap: (value) async {
-                bool isReady = await _rewardAd.isReady();
-                print("_rewardAd isReady $isReady");
-                if (isReady) {
-                  _rewardAd.showAd();
-                } else {
-                  _rewardAd.loadAdData();
-                }
+
               },
               indicator: const BoxDecoration(),
               padding: EdgeInsets.symmetric(horizontal: 10),

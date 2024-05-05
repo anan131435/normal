@@ -295,7 +295,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
     return ChangeNotifierProvider.value(
       value: EditSourceProvider(type: 2),
       builder: (BuildContext context, _) {
-        final provider = Provider.of<EditSourceProvider>(context, listen: true);
+        EditSourceProvider provider = Provider.of<EditSourceProvider>(context, listen: true);
         return Container(
           decoration: globalDecoration,
           child: Scaffold(
@@ -319,7 +319,6 @@ class _DiscoverPageState extends State<DiscoverPage> {
                      // provider.refreshData();
                      return UIAddRuleDialog(refresh: () => refreshData(provider));
                     }
-
                   ),
                 ),
                 IconButton(
@@ -433,6 +432,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
     bool selected = provider.ruleContentType == contextType;
     return GestureDetector(
       onTap: () {
+        print("ruleContentType $contextType");
         provider.ruleContentType = contextType;
         _lastContextType = contextType;
         if (Utils.empty(_searchEdit?.text))
@@ -466,6 +466,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
   }
 
   Widget _buildItem(EditSourceProvider provider, int index) {
+    print("rulesindex$index");
     final rule = provider.rules[index];
     final _theme = Theme.of(context);
     final _leadColor = () {

@@ -75,7 +75,6 @@ class DiscoverPageController with ChangeNotifier {
     _title = origin;
     _showSearchResult = false;
     _showSearchField = false;
-    // _showFilter = false;
     _queryController = TextEditingController();
     _queryController.addListener(() => notifyListeners());
     APIFromRUle.clearNextUrl();
@@ -157,6 +156,7 @@ class DiscoverPageController with ChangeNotifier {
         newItems = await APIManager.search(originTag,
             'url@${searchOptions[_selectOption]}@url${_queryController.text}', item.page);
       } else {
+        //加载列表内容
         newItems = await APIManager.discover(
             originTag, {discoverMap.first.name: item.pair}, item.page);
       }
@@ -176,11 +176,6 @@ class DiscoverPageController with ChangeNotifier {
     item.more = newItems.length > 0;
     notifyListeners();
   }
-
-  // Future<void> refresh() async {
-  //   _page = 1;
-  //   return fetchData();
-  // }
 
   submitSearch() async {
     _showSearchResult = true;
