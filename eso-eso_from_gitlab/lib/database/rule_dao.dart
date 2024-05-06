@@ -31,6 +31,7 @@ abstract class RuleDao {
   /// 改邪归正
   static Future<void> gaixieguizheng() async {
     final rules = await Global.ruleDao.findAllRules();
+    print("gaixieguizheng${rules.length}");
     final xie = rules
         .where((rule) =>
             rule.discoverUrl == "''" ||

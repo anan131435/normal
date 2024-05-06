@@ -70,9 +70,11 @@ class EditSourceProvider with ChangeNotifier {
     switch (this.type) {
       case 1:
         _rules = await Global.ruleDao.findAllRules();
+        print("_rules is 2 length${_rules.length}");
         break;
       case 2:
         _rules = await Global.ruleDao.findAllDiscoverRules();
+        print("_rules is 2 length${_rules.length}");
         break;
     }
     _isLoading = false;

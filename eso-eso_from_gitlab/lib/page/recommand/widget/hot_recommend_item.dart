@@ -1,12 +1,17 @@
+import 'package:eso/database/rule.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HotRecommendItem extends StatelessWidget {
-  const HotRecommendItem({Key key}) : super(key: key);
+  final Rule rule;
+  const HotRecommendItem({Key key,this.rule}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final iconUrl = rule.icon != null && rule.icon.isNotEmpty
+        ? rule.icon
+        : Uri.tryParse(rule.host)?.resolve("/favicon.ico")?.toString();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -23,7 +28,7 @@ class HotRecommendItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              "https://img1.baidu.com/it/u=3593114214,976018682&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500",
+              iconUrl,
               fit: BoxFit.cover,
             ),
           ),
@@ -34,7 +39,7 @@ class HotRecommendItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "名称",
+                  rule.name,
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -45,12 +50,12 @@ class HotRecommendItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "分类",
+                      rule.group,
                       style: TextStyle(
                           fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
                     ),
                     Text(
-                      "作者",
+                      rule.author,
                       style: TextStyle(
                           fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
                     ),
