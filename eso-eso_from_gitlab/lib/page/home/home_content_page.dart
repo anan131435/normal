@@ -150,10 +150,10 @@ class _HomeContentPageState extends State<HomeContentPage>
             Expanded(
               child: TabBarView(controller: controller, children: [
                RecommendPage(contentType: HomeContentType.Novel,),
+                RecommendPage(contentType: HomeContentType.Novel,),
                 RecommendPage(contentType: HomeContentType.Picture,),
                 RecommendPage(contentType: HomeContentType.Audio,),
                 RecommendPage(contentType: HomeContentType.Video,),
-                RecommendPage(contentType: HomeContentType.Novel,),
                 ShortVideoPage(),
               ]),
             )

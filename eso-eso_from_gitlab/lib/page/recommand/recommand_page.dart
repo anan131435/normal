@@ -27,12 +27,12 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage> {
   List<ProductItem> itemList;
   EditSourceProvider _provider;
-  int contentTypeTag(HomeContentType type) {
+  int fetchRuletype(HomeContentType type) {
     switch (type) {
       case HomeContentType.Novel:
         return 1;
       case HomeContentType.Picture:
-        return 4;
+        return 0;
       case HomeContentType.Audio:
         return 3;
       case HomeContentType.Video:
@@ -48,7 +48,7 @@ class _RecommendPageState extends State<RecommendPage> {
 
   void createProvider() async {
     _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = 1;
+    _provider.ruleContentType = fetchRuletype(widget.contentType);
     await _provider.refreshData();
   }
 
@@ -181,7 +181,12 @@ class _RecommendPageState extends State<RecommendPage> {
         if (value.rules.isEmpty) {
           return Container();
         } else {
-          Rule rule = value.rules[5];
+          Rule rule;
+          if (widget.contentType == HomeContentType.Picture) {
+            rule = value.rules.last;
+          } else {
+            rule = value.rules[5];
+          }
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
