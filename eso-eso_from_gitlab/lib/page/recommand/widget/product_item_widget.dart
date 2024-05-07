@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 
 import '../entity/product_item.dart';
 class ProductItemWidget extends StatelessWidget {
-  Rule rule;
-  ProductItemWidget({Key key, this.rule}) : super(key: key);
+  SearchItem item;
+  ProductItemWidget({Key key, this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final iconUrl = rule.icon != null && rule.icon.isNotEmpty
-        ? rule.icon
-        : Uri.tryParse(rule.host)?.resolve("/favicon.ico")?.toString();
+
     return Container(
       color: Colors.white,
       // height: 73,
@@ -30,7 +28,7 @@ class ProductItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              iconUrl,
+              item.cover,
               fit: BoxFit.cover,
             ),
           ),
@@ -40,9 +38,9 @@ class ProductItemWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(rule.name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Colors.black,),maxLines: 2,),
+                  Text(item.name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Colors.black,),maxLines: 1,),
                   const SizedBox(height: 4,),
-                  Text(rule.author,style: TextStyle(fontSize: 14,color: ColorsUtil.contractColor("#A6A6A6")),maxLines: 1,),
+                  Text(item.author,style: TextStyle(fontSize: 14,color: ColorsUtil.contractColor("#A6A6A6")),maxLines: 1,),
                 ],
               ),
             ),

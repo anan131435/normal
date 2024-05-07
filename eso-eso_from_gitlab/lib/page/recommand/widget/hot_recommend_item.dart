@@ -1,17 +1,18 @@
 import 'package:eso/database/rule.dart';
+import 'package:eso/database/search_item.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HotRecommendItem extends StatelessWidget {
-  final Rule rule;
+  final SearchItem rule;
   const HotRecommendItem({Key key,this.rule}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final iconUrl = rule.icon != null && rule.icon.isNotEmpty
-        ? rule.icon
-        : Uri.tryParse(rule.host)?.resolve("/favicon.ico")?.toString();
+    // final iconUrl = rule.icon != null && rule.icon.isNotEmpty
+    //     ? rule.icon
+    //     : Uri.tryParse(rule.host)?.resolve("/favicon.ico")?.toString();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -28,7 +29,7 @@ class HotRecommendItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              iconUrl,
+              rule.cover,
               fit: BoxFit.cover,
             ),
           ),
@@ -44,15 +45,18 @@ class HotRecommendItem extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.black),
+                  maxLines: 1,
                 ),
                 const SizedBox(height: 3.0,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      rule.group,
+                      rule.origin,
                       style: TextStyle(
-                          fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
+                          fontSize: 12, color: ColorsUtil.contractColor("#86909C"),
+                      ),
+                      maxLines: 1,
                     ),
                     Text(
                       rule.author,

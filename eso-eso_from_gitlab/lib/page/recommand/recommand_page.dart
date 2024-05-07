@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eso/api/api.dart';
 import 'package:eso/api/api_from_rule.dart';
 import 'package:eso/database/rule.dart';
+import 'package:eso/database/search_item.dart';
 import 'package:eso/model/discover_page_controller.dart';
 import 'package:eso/model/edit_source_provider.dart';
 import 'package:eso/page/enum/content_type.dart';
@@ -12,6 +13,7 @@ import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../chapter_page.dart';
 import 'entity/product_item.dart';
 
 class RecommendPage extends StatefulWidget {
@@ -48,12 +50,120 @@ class _RecommendPageState extends State<RecommendPage> {
 
   void createProvider() async {
     _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = contentTypeTag(widget.contentType);
+    _provider.ruleContentType = 1;
     await _provider.refreshData();
   }
 
   void _findDataSource() async {
     _discoverMap = await APIFromRUle(_rule).discoverMap();
+  }
+
+  Widget findListView({BuildContext context}) {
+    final controller = Provider.of<DiscoverPageController>(context);
+    if (controller.items != null && controller.items.isNotEmpty) {
+      print("findListView has data ${controller.items.length}");
+      for (var item in controller.items) {
+        print("itemListCount ${item.items.length}");
+      }
+      ListDataItem item = controller.items[0];
+      DiscoverMap map = controller.discoverMap[0];
+      return ListView.builder(
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Container(
+              margin: const EdgeInsets.all(16),
+              height: 374,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, top: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "猜你喜欢",
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        Text(
+                          "换一换",
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: ColorsUtil.contractColor("#86909C")),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: GridView(
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 155 / 93,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 10,
+                      ),
+                      children: item.items.isEmpty
+                          ? [Container()]
+                          : item.items
+                              .sublist(0, 6)
+                              .map((e) => ProductItemWidget(
+                                item: e,
+                              ))
+                              .toList(),
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 157 / 230,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10),
+                itemBuilder: (context, index) {
+                  SearchItem searchItem = item.items[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => ChapterPage(searchItem: searchItem)),
+                      );
+                    },
+                    child: HotRecommendItem(
+                      rule: searchItem,
+                    ),
+                  );
+                },
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: item.items.length,
+              ),
+            );
+          }
+        },
+        itemCount: 2,
+      );
+    } else {
+      print("findListView no data");
+      return Center(
+        child: CircularProgressIndicator(
+          color: Colors.pink,
+        ),
+      );
+    }
   }
 
   @override
@@ -65,86 +175,41 @@ class _RecommendPageState extends State<RecommendPage> {
           create: (context) => _provider,
         ),
       ],
-      child: Consumer<EditSourceProvider>(
-        builder: (context, value, child) {
-          print("Consumer<EditSourceProvider>");
-          return  ListView.builder(
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Container(
-                  margin: const EdgeInsets.all(16),
-                  height: 374,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding:
-                        const EdgeInsets.only(left: 10, right: 10, top: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "猜你喜欢",
-                              style: TextStyle(fontSize: 16, color: Colors.black),
-                            ),
-                            Text(
-                              "换一换",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: ColorsUtil.contractColor("#86909C")),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: GridView(
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 155 / 93,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 10,
-                          ),
-                          children:  value.rules.isEmpty ? [Container()] : value.rules.sublist(0,6)
-                              .map((e) => ProductItemWidget(
-                            rule: e,
-                          )).toList(),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              } else {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 157 / 230,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10),
-                    itemBuilder: (context, index) {
-                      final rule = value.rules[index];
-                      return HotRecommendItem(rule: rule,);
-                    },
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: value.rules.length,
-                  ),
-                );
+      child: Consumer<EditSourceProvider>(builder: (context, value, child) {
+        print("Consumer<EditSourceProvider>");
+        if (value.rules.isEmpty) {
+          return Container();
+        } else {
+          Rule rule = value.rules[1];
+          return FutureBuilder<List<DiscoverMap>>(
+            initialData: null,
+            future: APIFromRUle(rule).discoverMap(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("error: ${snapshot.error}");
               }
+              if (!snapshot.hasData) {
+                return Text("loading");
+              }
+              return ChangeNotifierProvider<DiscoverPageController>(
+                  create: (context) {
+                return DiscoverPageController(
+                    originTag: rule.id,
+                    discoverMap: snapshot.data,
+                    origin: rule.name,
+                    searchUrl: rule.searchUrl);
+              }, child: LayoutBuilder(
+                builder: (context, p1) {
+                  return findListView(context: context);
+                },
+              ));
             },
-            itemCount: 2,
           );
-        },
-      ),
+        }
+      }),
     );
   }
 }
+/*
+*
+* */
