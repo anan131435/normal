@@ -243,6 +243,7 @@ class _MyAppState extends State<MyApp> {
                       darkTheme: getGlobalDarkThemeData(),
                       scrollBehavior: MyCustomScrollBehavior(),
                       title: Global.appName,
+                      debugShowCheckedModeBanner: false,
                       home: ValueListenableBuilder<Box<dynamic>>(
                           valueListenable: globalConfigBox.listenable(),
                           builder: (BuildContext context, Box<dynamic> _, Widget child) {

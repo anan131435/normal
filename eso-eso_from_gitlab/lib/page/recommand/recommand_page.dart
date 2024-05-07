@@ -4,6 +4,7 @@ import 'package:eso/api/api.dart';
 import 'package:eso/api/api_from_rule.dart';
 import 'package:eso/database/rule.dart';
 import 'package:eso/database/search_item.dart';
+import 'package:eso/hive/theme_box.dart';
 import 'package:eso/model/discover_page_controller.dart';
 import 'package:eso/model/edit_source_provider.dart';
 import 'package:eso/page/enum/content_type.dart';
@@ -52,16 +53,16 @@ class _RecommendPageState extends State<RecommendPage> {
     await _provider.refreshData();
   }
 
-
   List<Widget> _yourFavorite({ListDataItem dataItem}) {
-    return dataItem.items.sublist(0,6).map((searchItem) {
+    return dataItem.items.sublist(0, 6).map((searchItem) {
       return GestureDetector(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context) => ChapterPage(searchItem: searchItem)),
-        ),
-          child: ProductItemWidget(item: searchItem,)
-      );
+          onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => ChapterPage(searchItem: searchItem)),
+              ),
+          child: ProductItemWidget(
+            item: searchItem,
+          ));
     }).toList();
   }
 
@@ -107,20 +108,20 @@ class _RecommendPageState extends State<RecommendPage> {
                   ),
                   Expanded(
                     child: GridView(
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 155 / 93,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 10,
-                      ),
-                      children: item.items.isEmpty
-                          ? [Container()]  :  _yourFavorite(dataItem: item)
-                    ),
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 155 / 93,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 10,
+                        ),
+                        children: item.items.isEmpty
+                            ? [Container()]
+                            : _yourFavorite(dataItem: item)),
                   )
                 ],
               ),
@@ -140,7 +141,8 @@ class _RecommendPageState extends State<RecommendPage> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => ChapterPage(searchItem: searchItem)),
+                            builder: (context) =>
+                                ChapterPage(searchItem: searchItem)),
                       );
                     },
                     child: HotRecommendItem(
@@ -195,7 +197,11 @@ class _RecommendPageState extends State<RecommendPage> {
                 return Text("error: ${snapshot.error}");
               }
               if (!snapshot.hasData) {
-                return Text("");
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Color(primaryColor),
+                  ),
+                );
               }
               return ChangeNotifierProvider<DiscoverPageController>(
                   create: (context) {
