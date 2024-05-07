@@ -1,18 +1,15 @@
-import 'package:eso/database/rule.dart';
 import 'package:eso/database/search_item.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HotRecommendItem extends StatelessWidget {
-  final SearchItem rule;
-  const HotRecommendItem({Key key,this.rule}) : super(key: key);
+  final SearchItem searchItem;
+  const HotRecommendItem({Key key,this.searchItem}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final iconUrl = rule.icon != null && rule.icon.isNotEmpty
-    //     ? rule.icon
-    //     : Uri.tryParse(rule.host)?.resolve("/favicon.ico")?.toString();
+    
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -29,7 +26,7 @@ class HotRecommendItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              rule.cover,
+              searchItem.cover,
               fit: BoxFit.cover,
             ),
           ),
@@ -40,7 +37,7 @@ class HotRecommendItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  rule.name,
+                  searchItem.name,
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -52,14 +49,14 @@ class HotRecommendItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      rule.origin,
+                      searchItem.origin,
                       style: TextStyle(
                           fontSize: 12, color: ColorsUtil.contractColor("#86909C"),
                       ),
                       maxLines: 1,
                     ),
                     Text(
-                      rule.author,
+                      searchItem.author,
                       style: TextStyle(
                           fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
                     ),

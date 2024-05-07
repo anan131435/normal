@@ -27,8 +27,6 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage> {
   List<ProductItem> itemList;
   EditSourceProvider _provider;
-  Rule _rule = null;
-  List<DiscoverMap> _discoverMap;
   int contentTypeTag(HomeContentType type) {
     switch (type) {
       case HomeContentType.Novel:
@@ -54,8 +52,17 @@ class _RecommendPageState extends State<RecommendPage> {
     await _provider.refreshData();
   }
 
-  void _findDataSource() async {
-    _discoverMap = await APIFromRUle(_rule).discoverMap();
+
+  List<Widget> _yourFavorite({ListDataItem dataItem}) {
+    return dataItem.items.sublist(0,6).map((searchItem) {
+      return GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) => ChapterPage(searchItem: searchItem)),
+        ),
+          child: ProductItemWidget(item: searchItem,)
+      );
+    }).toList();
   }
 
   Widget findListView({BuildContext context}) {
@@ -112,13 +119,7 @@ class _RecommendPageState extends State<RecommendPage> {
                         horizontal: 10,
                       ),
                       children: item.items.isEmpty
-                          ? [Container()]
-                          : item.items
-                              .sublist(0, 6)
-                              .map((e) => ProductItemWidget(
-                                item: e,
-                              ))
-                              .toList(),
+                          ? [Container()]  :  _yourFavorite(dataItem: item)
                     ),
                   )
                 ],
@@ -143,7 +144,7 @@ class _RecommendPageState extends State<RecommendPage> {
                       );
                     },
                     child: HotRecommendItem(
-                      rule: searchItem,
+                      searchItem: searchItem,
                     ),
                   );
                 },
@@ -189,7 +190,7 @@ class _RecommendPageState extends State<RecommendPage> {
                 return Text("error: ${snapshot.error}");
               }
               if (!snapshot.hasData) {
-                return Text("loading");
+                return Text("");
               }
               return ChangeNotifierProvider<DiscoverPageController>(
                   create: (context) {
