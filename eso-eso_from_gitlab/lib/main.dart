@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:eso/hive/theme_box.dart';
 import 'package:eso/page/add_local_item_page.dart';
 import 'package:eso/utils.dart';
+import 'package:eso/utils/auto_insert_data.dart';
 import 'package:eso/utils/local_cupertion_delegate.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -14,6 +16,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:uni_links/uni_links.dart';
 // import 'package:video_player_win/video_player_win.dart';
 import 'package:window_manager/window_manager.dart';
+import 'database/rule.dart';
 import 'eso_theme.dart';
 import 'global.dart';
 import 'hive/theme_mode_box.dart';
@@ -28,6 +31,7 @@ import 'ui/ui_add_rule_dialog.dart';
 import 'utils/auto_decode_cli.dart';
 import 'utils/rule_comparess.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
+import 'package:http/http.dart' as http;
  HjRewardAd hjRewardAd;//全局对象
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
@@ -89,19 +93,15 @@ Future<void> onLink(String linkPath) async {
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
+
+
+
 void main() async {
   if (Platform.isAndroid) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
   WidgetsFlutterBinding.ensureInitialized();
-  // if (!Platform.isWindows)
-  // await JustAudioBackground.init(
-  //   androidNotificationChannelId: 'com.eso.channel.audio',
-  //   androidNotificationChannelName: '亦搜音频',
-  //   androidNotificationOngoing: true,
-  //   androidNotificationIcon: 'mipmap/eso_logo',
-  // );
   if (Platform.isAndroid || Platform.isIOS) {
     final linkPath = await getInitialLink();
 
@@ -110,7 +110,7 @@ void main() async {
       onLink(linkPath);
     }
     linkStream.listen(onLink);
-    await HjAd.init("37686");
+    // await HjAd.init("37686");
     // await HjAd.init("37686",rewardId: "5847726571825805",interstitialId: "4132313425498304",fullScreenId: "6325145517824350");
   }
 
@@ -195,6 +195,7 @@ class _MyAppState extends State<MyApp> {
             Utils.toast("msg");
           },
         });
+        await DataManager.addUrlDecode();
         globalDecoration = BoxDecoration(
           image:
               DecorationImage(image: AssetImage(decorationImage), fit: BoxFit.fitWidth),

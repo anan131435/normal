@@ -1,6 +1,7 @@
 import 'package:eso/page/enum/content_type.dart';
 import 'package:eso/page/home/view_model/home_view_model.dart';
 import 'package:eso/page/recommand/recommand_page.dart';
+import 'package:eso/page/search_page.dart';
 import 'package:eso/page/short_video/short_video_page.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
@@ -55,26 +56,21 @@ class _HomeContentPageState extends State<HomeContentPage>
   }
 
   Widget searchBar() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Text(
-            "下拉分类",
-            style: TextStyle(fontSize: 14, color: Colors.black),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchPage(),));
+      },
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 16,
           ),
-        ),
-        const SizedBox(
-          width: 16,
-        ),
-        Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            GestureDetector(
-              child: Container(
+          Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              Container(
                 height: 32,
-                width: 300,
-
+                width: MediaQuery.of(context).size.width - 32,
                 decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -83,34 +79,31 @@ class _HomeContentPageState extends State<HomeContentPage>
                       width: 1,
                     )),
               ),
-              onTap: () async {
-
-              },
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 9,
-                ),
-                Image.asset(
-                  "assets/ba/home_search.png",
-                  width: 14,
-                  height: 14,
-                ),
-                const SizedBox(
-                  width: 9,
-                ),
-                Text(
-                  "输入搜索内容",
-                  style: TextStyle(
-                      fontSize: 14, color: ColorsUtil.contractColor("#86909C")),
-                )
-              ],
-            )
-          ],
-        ),
-      ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 9,
+                  ),
+                  Image.asset(
+                    "assets/ba/home_search.png",
+                    width: 14,
+                    height: 14,
+                  ),
+                  const SizedBox(
+                    width: 9,
+                  ),
+                  Text(
+                    "输入搜索内容",
+                    style: TextStyle(
+                        fontSize: 14, color: ColorsUtil.contractColor("#86909C")),
+                  )
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 

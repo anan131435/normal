@@ -200,6 +200,7 @@ class Assets {
   static const String uiUiTextField = 'lib/ui/ui_text_field.dart';
   static const String uiZoomView = 'lib/ui/zoom_view.dart';
   static const String utilsAutoDecodeCli = 'lib/utils/auto_decode_cli.dart';
+  static const String utilsAutoInsertData = 'lib/utils/auto_insert_data.dart';
   static const String utilsCacheUtil = 'lib/utils/cache_util.dart';
   static const String utilsCustomTabView = 'lib/utils/custom_tab_view.dart';
   static const String utilsDecodeBody = 'lib/utils/decode_body.dart';

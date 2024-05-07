@@ -181,7 +181,7 @@ class _RecommendPageState extends State<RecommendPage> {
         if (value.rules.isEmpty) {
           return Container();
         } else {
-          Rule rule = value.rules[1];
+          Rule rule = value.rules[5];
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
