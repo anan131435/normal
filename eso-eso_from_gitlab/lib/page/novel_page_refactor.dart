@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ import 'package:win32/win32.dart';
 import '../database/text_config_manager.dart';
 import '../fonticons_icons.dart';
 import '../utils.dart';
+import 'home/model/reward_listener.dart';
 import 'novel_auto_cache_page.dart';
 import 'setting/about_page.dart';
 
@@ -43,13 +45,44 @@ class NovelPage extends StatefulWidget {
 class _NovelPageState extends State<NovelPage> {
   SearchItem searchItem;
   TextCompositionConfig _config;
-
+  HjBannerAd _bannerAd;
+  HjRewardAd _rewardAd;
+  int _count = 0;
   @override
   void initState() {
+    _requestRewardAd();
     super.initState();
     _config = TextConfigManager.config;
     initBrightness();
     searchItem = widget.searchItem;
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      _count++;
+      print(_count);
+      if (_count == 30 || _count == 60 || _count == 90) {
+        _showRewardAd();
+        // _requestRewardAd();
+      }
+      if (_count > 100) {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _requestRewardAd() {
+    HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
+    _rewardAd = HjRewardAd(request: request, listener: EsoRewardListener());
+    _rewardAd.loadAdData();
+  }
+
+  void _showRewardAd() async {
+    bool isReady = await _rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      _rewardAd.showAd();
+    } else {
+      _rewardAd.loadAdData();
+    }
   }
 
   @override

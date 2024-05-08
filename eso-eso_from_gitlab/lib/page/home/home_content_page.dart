@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:eso/page/enum/content_type.dart';
 import 'package:eso/page/home/view_model/home_view_model.dart';
 import 'package:eso/page/recommand/recommand_page.dart';
@@ -22,43 +24,38 @@ class _HomeContentPageState extends State<HomeContentPage>
     with SingleTickerProviderStateMixin {
   HomeViewModel viewModel = null;
   TabController controller = null;
-  HjBannerAd _bannerAd;
-  HjRewardAd _rewardAd;
+
+
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
+
+
+    super.initState();
   }
 
-  void _rewardBanner() {
-    HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
-    _rewardAd = HjRewardAd(request: request,listener: EsoRewardListener());
-    _rewardAd.loadAdData();
-  }
 
-  void _adBanner() {
-    HjAdRequest request = HjAdRequest(placementId: "8533172371714945");
-    _bannerAd = HjBannerAd(request: request,width: 300,height: 100, listener: EsoHjBannerListener());
-    _bannerAd.loadAd();
-    print("_adBanner $_bannerAd");
-  }
 
-  void _showRewardAd() async {
-    bool isReady = await _rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
-    if (isReady) {
-      _rewardAd.showAd();
-    } else {
-      _rewardAd.loadAdData();
-    }
-  }
+  // void _adBanner() {
+  //   HjAdRequest request = HjAdRequest(placementId: "8533172371714945");
+  //   _bannerAd = HjBannerAd(
+  //       request: request,
+  //       width: 300,
+  //       height: 100,
+  //       listener: EsoHjBannerListener());
+  //   _bannerAd.loadAd();
+  //   print("_adBanner $_bannerAd");
+  // }
+
+
 
   Widget searchBar() {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchPage(),));
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SearchPage(),
+        ));
       },
       child: Row(
         children: [
@@ -96,7 +93,8 @@ class _HomeContentPageState extends State<HomeContentPage>
                   Text(
                     "输入搜索内容",
                     style: TextStyle(
-                        fontSize: 14, color: ColorsUtil.contractColor("#86909C")),
+                        fontSize: 14,
+                        color: ColorsUtil.contractColor("#86909C")),
                   )
                 ],
               )
@@ -120,7 +118,9 @@ class _HomeContentPageState extends State<HomeContentPage>
             body: Column(
           children: [
             searchBar(),
-            const SizedBox(height: 16,),
+            const SizedBox(
+              height: 16,
+            ),
             TabBar(
               onTap: (value) async {
 
@@ -149,11 +149,21 @@ class _HomeContentPageState extends State<HomeContentPage>
             ),
             Expanded(
               child: TabBarView(controller: controller, children: [
-               RecommendPage(contentType: HomeContentType.Novel,),
-                RecommendPage(contentType: HomeContentType.Novel,),
-                RecommendPage(contentType: HomeContentType.Picture,),
-                RecommendPage(contentType: HomeContentType.Audio,),
-                RecommendPage(contentType: HomeContentType.Video,),
+                RecommendPage(
+                  contentType: HomeContentType.Novel,
+                ),
+                RecommendPage(
+                  contentType: HomeContentType.Novel,
+                ),
+                RecommendPage(
+                  contentType: HomeContentType.Picture,
+                ),
+                RecommendPage(
+                  contentType: HomeContentType.Audio,
+                ),
+                RecommendPage(
+                  contentType: HomeContentType.Video,
+                ),
                 ShortVideoPage(),
               ]),
             )

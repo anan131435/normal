@@ -110,8 +110,7 @@ void main() async {
       onLink(linkPath);
     }
     linkStream.listen(onLink);
-    // await HjAd.init("37686");
-    // await HjAd.init("37686",rewardId: "5847726571825805",interstitialId: "4132313425498304",fullScreenId: "6325145517824350");
+    await HjAd.init("37686");
   }
 
   await Hive.initFlutter("eso");

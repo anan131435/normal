@@ -1,16 +1,16 @@
 class DataBaseEntity {
   String name;
-  String release;
-  String URL;
+  String version;
+  String url;
   DataBaseEntity({
     this.name,
-    this.release,
-    this.URL,
+    this.version,
+    this.url,
   });
   DataBaseEntity.fromJson(Map<String,dynamic> json) {
     name = json["name"];
-    release = json["release"];
-    URL = json["URL"];
+    version = json["version"];
+    url = json["url"];
   }
 }
 

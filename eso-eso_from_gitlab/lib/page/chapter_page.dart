@@ -49,7 +49,7 @@ class _NextPageAnimationState extends State<NextPageAnimation> {
   void start() {
     if (count == -1 || !mounted) return;
     if (kDebugMode) {
-      print("播放动画 $count");
+      // print("播放动画 $count");
     }
     Future.delayed(const Duration(milliseconds: 200), start);
     setState(() {
@@ -399,43 +399,7 @@ class _ChapterPageState extends State<ChapterPage> {
         ),
       );
     });
-    // final theme = Theme.of(context);
-    // return Consumer<ChapterPageProvider>(
-    //   builder: (context, provider, child) => Padding(
-    //     padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
-    //     child: Row(
-    //       children: [
-    //         Text(
-    //           '全部 ${searchItem.chapters?.length ?? 0} (阅至 ${searchItem.durChapterIndex + 1}) ',
-    //           style: TextStyle(fontSize: 16),
-    //         ),
-    //         if (searchItem.chapters != null && searchItem.chapters.isNotEmpty)
-    //           () {
-    //             try {
-    //               final chapter = searchItem.chapters[searchItem.durChapterIndex];
-    //               return Expanded(
-    //                 child: OutlinedButton(
-    //                   onPressed: () => Navigator.of(context)
-    //                       .push(ContentPageRoute().route(searchItem))
-    //                       .whenComplete(provider.adjustScroll),
-    //                   child: Text(
-    //                     "${chapter.name}",
-    //                     textAlign: TextAlign.start,
-    //                     style: TextStyle(color: Theme.of(context).primaryColor),
-    //                     overflow: TextOverflow.ellipsis,
-    //                     maxLines: 1,
-    //                   ),
-    //                   style: ButtonStyle(alignment: Alignment.centerLeft),
-    //                 ),
-    //               );
-    //             } catch (e) {
-    //               return Container();
-    //             }
-    //           }(),
-    //       ],
-    //     ),
-    //   ),
-    // );
+
   }
 
   List<ChapterRoad> parseChapers(List<ChapterItem> chapters) {

@@ -18,7 +18,7 @@ class DataManager {
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
       print(response.body);
-      final uri = Uri.tryParse(entity.URL);
+      final uri = Uri.tryParse(entity.url);
       if (uri == null) {
         print("地址格式错误");
       } else {
@@ -29,8 +29,6 @@ class DataManager {
         insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
       }
     }
-
-
   }
 
   static void insertOrUpdateRuleInMain(String s, [List l]) async {

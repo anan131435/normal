@@ -30,6 +30,7 @@ class ContentPageRoute {
         return ChangeNotifierProvider<ContentProvider>(
           create: (context) => ContentProvider(searchItem),
           builder: (context, child) {
+            print("ContentPageRoute build");
             final provider = Provider.of<ContentProvider>(context);
             if (provider.showInfo) {
               return Material(

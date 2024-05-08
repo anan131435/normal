@@ -118,7 +118,7 @@ class ChapterPageProvider with ChangeNotifier {
     };
     
     await Duration(milliseconds: 500); // 随意休息一下
-    print("加载目录$page");
+    // print("加载目录$page");
     final durChapters =
         await APIManager.getChapter(searchItem.originTag, searchItem.url, _page);
     if (durChapters.isEmpty) {
