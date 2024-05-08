@@ -76,6 +76,7 @@ class Assets {
   static const String editorHighlight = 'lib/page/source/editor/highlight.dart';
   static const String editorHighlightCodeEditor = 'lib/page/source/editor/highlight_code_editor.dart';
   static const String editorHighlightCodeEditorTheme = 'lib/page/source/editor/highlight_code_editor_theme.dart';
+  static const String entityDataBaseEntity = 'lib/page/home/entity/data_base_entity.dart';
   static const String entityProductItem = 'lib/page/recommand/entity/product_item.dart';
   static const String enumContentType = 'lib/page/enum/content_type.dart';
   static const String esoEsoFromGitlabAssetsJsDecoder = 'assets/JsDecoder.js';
