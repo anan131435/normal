@@ -7,6 +7,7 @@ import 'package:eso/menu/menu_chapter.dart';
 import 'package:eso/eso_theme.dart';
 import 'package:eso/page/photo_view_page.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:text_composition/text_composition.dart';
 import 'package:eso/ui/ui_image_item.dart';
 import 'package:eso/utils.dart';
@@ -193,9 +194,10 @@ class _ChapterPageState extends State<ChapterPage> {
 
   static double lastTopHeight = 0.0;
 
-  //漫画详情
+  //漫画详情 头部视图
   Widget _comicDetail(BuildContext context) {
     double _top = MediaQuery.of(context).padding.top;
+    print("top$_top");
     if (_top <= 0) {
       _top = lastTopHeight;
     } else {
@@ -223,15 +225,55 @@ class _ChapterPageState extends State<ChapterPage> {
                         SizedBox(height: 45),
                         Expanded(
                           child: Container(
-                            child: GestureDetector(
-                              child: UIImageItem(cover: searchItem.cover, hero: _hero),
-                              onTap: () {
-                                Utils.startPageWait(
-                                    context,
-                                    PhotoViewPage(
-                                        items: [PhotoItem.parse(searchItem.cover)],
-                                        heroTag: _hero));
-                              },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  child: Container(
+                                    width: 180,
+                                    height: 180,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Image.network(
+                                        searchItem.cover,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Utils.startPageWait(
+                                        context,
+                                        PhotoViewPage(
+                                            items: [PhotoItem.parse(searchItem.cover)],
+                                            heroTag: _hero));
+                                  },
+                                ),
+                                const SizedBox(width: 16.0,),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      searchItem.name,
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: ESOTheme.staticFontFamily,
+                                        fontSize: 18,
+                                        shadows: [Shadow(blurRadius: 2, color: Colors.grey)],
+                                      ),
+                                    ),
+                                    Text(
+                                      searchItem.author,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: ESOTheme.staticFontFamily,
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
                             decoration: BoxDecoration(boxShadow: [
                               BoxShadow(blurRadius: 8, color: Colors.white70)
@@ -239,25 +281,15 @@ class _ChapterPageState extends State<ChapterPage> {
                           ),
                         ),
                         SizedBox(height: 12),
-                        Text(
-                          searchItem.name,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyText1.color,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: ESOTheme.staticFontFamily,
-                            fontSize: 18,
-                            shadows: [Shadow(blurRadius: 2, color: Colors.grey)],
-                          ),
+                        Container(
+                          color: Colors.red,
+                          width: double.infinity,
+                          height: 60,
+                          child: Center(child: Text("广告位",style: TextStyle(color: Colors.black),)),
                         ),
+
                         SizedBox(height: 4),
-                        Text(
-                          searchItem.author,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: ESOTheme.staticFontFamily,
-                            color: Theme.of(context).textTheme.bodyText1.color,
-                          ),
-                        ),
+
                       ],
                     ),
                   ),

@@ -171,10 +171,10 @@ class _RecommendPageState extends State<RecommendPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("recommand build");
+    print("${widget.contentType} recommand build");
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<EditSourceProvider>(
           create: (context) => _provider,
         ),
       ],

@@ -7,7 +7,7 @@ import '../global.dart';
 import 'auto_decode_cli.dart';
 class DataManager {
   static void addUrlDecode() async {
-    final uri = Uri.tryParse("https://cdn.jsdelivr.net/gh/nanchengling/eso-repo/manifest");
+    final uri = Uri.tryParse("https://cdn.jsdelivr.net/gh/mabDc/eso_source/manifest");
     if (uri == null) {
       print("地址格式错误");
     } else {
