@@ -50,7 +50,12 @@ class _NovelPageState extends State<NovelPage> {
   int _count = 0;
   @override
   void initState() {
-    _requestRewardAd();
+    if (Platform.isIOS) {
+      _requestRewardAd();
+    } else {
+      _requestAndroidRewardAd();
+    }
+
     super.initState();
     _config = TextConfigManager.config;
     initBrightness();
@@ -60,7 +65,12 @@ class _NovelPageState extends State<NovelPage> {
       _count++;
       print(_count);
       if (_count == 30 || _count == 60 || _count == 90) {
-        _showRewardAd();
+        if (Platform.isIOS) {
+          _showRewardAd();
+        } else {
+          _showAndroidRewardAd();
+        }
+
         // _requestRewardAd();
       }
       if (_count > 100) {
@@ -76,6 +86,22 @@ class _NovelPageState extends State<NovelPage> {
   }
 
   void _showRewardAd() async {
+    bool isReady = await _rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      _rewardAd.showAd();
+    } else {
+      _rewardAd.loadAdData();
+    }
+  }
+
+  void _requestAndroidRewardAd() {
+    HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
+    _rewardAd = HjRewardAd(request: request, listener: EsoRewardListener());
+    _rewardAd.loadAdData();
+  }
+
+  void _showAndroidRewardAd() async {
     bool isReady = await _rewardAd.isReady();
     print("_rewardAd isReady $isReady");
     if (isReady) {

@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mabdc.eso"
+        applicationId "com.cb.tiaoma.jh"
         minSdkVersion 22
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

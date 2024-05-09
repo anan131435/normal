@@ -110,8 +110,16 @@ void main() async {
       onLink(linkPath);
     }
     linkStream.listen(onLink);
+
+  }
+
+  if (Platform.isAndroid) {
+    await HjAd.init("appId");
+  }
+  if (Platform.isIOS) {
     await HjAd.init("37686");
   }
+
 
   await Hive.initFlutter("eso");
   await openThemeModeBox();
