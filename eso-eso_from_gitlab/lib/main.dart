@@ -114,7 +114,7 @@ void main() async {
   }
 
   if (Platform.isAndroid) {
-    await HjAd.init("appId");
+    await HjAd.init("27091");
   }
   if (Platform.isIOS) {
     await HjAd.init("37686");

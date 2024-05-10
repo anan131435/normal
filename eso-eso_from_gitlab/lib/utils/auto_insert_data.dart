@@ -18,14 +18,17 @@ class DataManager {
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
       print(response.body);
-      final uri = Uri.tryParse(entity.url);
+      // final uri = Uri.tryParse(entity.url);
+      final uri = Uri.tryParse("https://raw.githubusercontent.com/mabDc/eso_source/master/manifest");
       if (uri == null) {
         print("地址格式错误");
       } else {
+        print("开始请求");
         final res = await http.get(uri, headers: {
           'User-Agent':
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
         });
+        print("请求结束");
         insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
       }
     }
