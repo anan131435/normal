@@ -45,8 +45,7 @@ class NovelPage extends StatefulWidget {
 class _NovelPageState extends State<NovelPage> {
   SearchItem searchItem;
   TextCompositionConfig _config;
-  HjBannerAd _bannerAd;
-  HjRewardAd _rewardAd;
+
   int _count = 0;
   @override
   void initState() {
@@ -63,12 +62,11 @@ class _NovelPageState extends State<NovelPage> {
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _count++;
-      print(_count);
       if (_count == 30 || _count == 60 || _count == 90) {
         if (Platform.isIOS) {
-          _showRewardAd();
+          _requestRewardAd();
         } else {
-          _showAndroidRewardAd();
+          _requestAndroidRewardAd();
         }
 
         // _requestRewardAd();
@@ -79,35 +77,69 @@ class _NovelPageState extends State<NovelPage> {
     });
   }
 
-  void _requestRewardAd() {
-    HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
-    _rewardAd = HjRewardAd(request: request, listener: EsoRewardListener());
-    _rewardAd.loadAdData();
+  @override
+  void deactivate() {
+
+    super.deactivate();
   }
 
-  void _showRewardAd() async {
-    bool isReady = await _rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
-    if (isReady) {
-      _rewardAd.showAd();
+  void _requestRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
+
+      rewardAd = HjRewardAd(
+          request: request,
+          listener: EsoRewardListener(
+              loadCallBack: (ad) async {
+                ad.showAd();
+              },
+              closeCallBack: () {},
+              rewardCallBack: () {}));
+      rewardAd.loadAdData();
     } else {
-      _rewardAd.loadAdData();
+      _showRewardAd();
     }
   }
 
-  void _requestAndroidRewardAd() {
-    HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
-    _rewardAd = HjRewardAd(request: request, listener: EsoRewardListener());
-    _rewardAd.loadAdData();
+  void _showRewardAd() async {
+    bool isReady = await rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      rewardAd.showAd();
+    } else {
+      rewardAd.loadAdData();
+    }
+  }
+
+  void _requestAndroidRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
+      rewardAd = HjRewardAd(
+          request: request,
+          listener: EsoRewardListener(
+            loadCallBack: (ad) async {
+              ad.showAd();
+            },
+            rewardCallBack: () {
+              print("_rewardAd rewardCallBack");
+            },
+            closeCallBack: () {
+              print("_rewardAd closeCallBack");
+            },
+          ));
+      rewardAd.loadAdData();
+    } else {
+      _showAndroidRewardAd();
+    }
   }
 
   void _showAndroidRewardAd() async {
-    bool isReady = await _rewardAd.isReady();
+    bool isReady = await rewardAd.isReady();
     print("_rewardAd isReady $isReady");
     if (isReady) {
-      _rewardAd.showAd();
+      rewardAd.showAd();
     } else {
-      _rewardAd.loadAdData();
+      rewardAd.loadAdData();
     }
   }
 
@@ -124,7 +156,8 @@ class _NovelPageState extends State<NovelPage> {
     final hiveESOBoolConfig = await Hive.openBox<bool>(HiveBool.boxKey);
     final novelKeepOn = hiveESOBoolConfig.get(HiveBool.novelKeepOn,
         defaultValue: HiveBool.novelKeepOnDefault);
-    if (novelKeepOn == true) DeviceDisplayBrightness.keepOn(enabled: novelKeepOn);
+    if (novelKeepOn == true)
+      DeviceDisplayBrightness.keepOn(enabled: novelKeepOn);
   }
 
   @override
@@ -202,8 +235,8 @@ class SpeakService {
     final spVoice = SpVoice(ptr);
     final pwcs = s.toNativeUtf16();
     try {
-      return spVoice.Speak(
-          pwcs, SPEAKFLAGS.SPF_PURGEBEFORESPEAK | SPEAKFLAGS.SPF_IS_NOT_XML, nullptr);
+      return spVoice.Speak(pwcs,
+          SPEAKFLAGS.SPF_PURGEBEFORESPEAK | SPEAKFLAGS.SPF_IS_NOT_XML, nullptr);
     } finally {
       free(pwcs);
     }
@@ -226,7 +259,8 @@ class SpeakService {
     if (rate < 5) {
       _rate++;
       if (!Platform.isWindows)
-        return tts.setSpeechRate(range.min + (range.max - range.min) * (_rate + 5) / 10);
+        return tts.setSpeechRate(
+            range.min + (range.max - range.min) * (_rate + 5) / 10);
       return 0 == spVoice?.SetRate(rate);
     }
     return false;
@@ -236,7 +270,8 @@ class SpeakService {
     if (rate > -5) {
       _rate--;
       if (!Platform.isWindows)
-        return tts.setSpeechRate(range.min + (range.max - range.min) * (_rate + 5) / 10);
+        return tts.setSpeechRate(
+            range.min + (range.max - range.min) * (_rate + 5) / 10);
       return 0 == spVoice?.SetRate(rate);
     }
     return false;
@@ -408,7 +443,8 @@ class NovelMenu extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   final page = composition.textPages[composition.currentIndex];
-                  final controllerChaptersNum = TextEditingController(text: "0");
+                  final controllerChaptersNum =
+                      TextEditingController(text: "0");
                   final TextEditingController controllerPagesNum =
                       TextEditingController(text: page.number.toString());
                   return AlertDialog(
@@ -417,7 +453,8 @@ class NovelMenu extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("章节（当前${page.chIndex + 1} / ${searchItem.chaptersCount}）："),
+                        Text(
+                            "章节（当前${page.chIndex + 1} / ${searchItem.chaptersCount}）："),
                         Row(
                           children: [
                             Container(
@@ -429,13 +466,16 @@ class NovelMenu extends StatelessWidget {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  final n = int.tryParse(controllerChaptersNum.text);
+                                  final n =
+                                      int.tryParse(controllerChaptersNum.text);
                                   if (n == null) {
-                                    Utils.toast("请输入1到${searchItem.chaptersCount}以内的整数");
+                                    Utils.toast(
+                                        "请输入1到${searchItem.chaptersCount}以内的整数");
                                     return;
                                   }
                                   if (n < 0 || n >= searchItem.chaptersCount) {
-                                    Utils.toast("请输入1到${searchItem.chaptersCount}以内的整数");
+                                    Utils.toast(
+                                        "请输入1到${searchItem.chaptersCount}以内的整数");
                                     return;
                                   }
                                   composition.gotoChapter(n - 1);
@@ -456,7 +496,8 @@ class NovelMenu extends StatelessWidget {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  final n = int.tryParse(controllerPagesNum.text);
+                                  final n =
+                                      int.tryParse(controllerPagesNum.text);
                                   if (n == null) {
                                     Utils.toast("请输入1到${page.total}的整数");
                                     return;
@@ -470,7 +511,9 @@ class NovelMenu extends StatelessWidget {
                                     return;
                                   }
                                   composition.goToPage(
-                                      composition.currentIndex + n - page.number);
+                                      composition.currentIndex +
+                                          n -
+                                          page.number);
                                   Navigator.of(context).pop();
                                 },
                                 child: Text("跳页数")),
@@ -484,12 +527,15 @@ class NovelMenu extends StatelessWidget {
             break;
           case AUTO_CACHE:
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NovelAutoCachePage(searchItem: searchItem)));
+                builder: (context) =>
+                    NovelAutoCachePage(searchItem: searchItem)));
             break;
           case TO_CLICPBOARD:
-            final rule = await Global.ruleDao.findRuleById(searchItem.originTag);
+            final rule =
+                await Global.ruleDao.findRuleById(searchItem.originTag);
             final chapter = searchItem.chapters[searchItem.durChapterIndex];
-            final url = chapter.contentUrl ?? Utils.getUrl(rule.host, chapter.url);
+            final url =
+                chapter.contentUrl ?? Utils.getUrl(rule.host, chapter.url);
             if (url != null) {
               Clipboard.setData(ClipboardData(text: url));
               Utils.toast("已复制地址\n" + url);
@@ -498,9 +544,11 @@ class NovelMenu extends StatelessWidget {
             }
             break;
           case LAUCH:
-            final rule = await Global.ruleDao.findRuleById(searchItem.originTag);
+            final rule =
+                await Global.ruleDao.findRuleById(searchItem.originTag);
             final chapter = searchItem.chapters[searchItem.durChapterIndex];
-            final url = chapter.contentUrl ?? Utils.getUrl(rule.host, chapter.url);
+            final url =
+                chapter.contentUrl ?? Utils.getUrl(rule.host, chapter.url);
             if (url != null) {
               launch(url);
             } else {
@@ -509,10 +557,12 @@ class NovelMenu extends StatelessWidget {
             break;
           case ADD_ITEM:
             () async {
-              if (SearchItemManager.isFavorite(searchItem.originTag, searchItem.url)) {
+              if (SearchItemManager.isFavorite(
+                  searchItem.originTag, searchItem.url)) {
                 Utils.toast("已在收藏中", duration: Duration(seconds: 1));
               } else {
-                final success = await SearchItemManager.addSearchItem(searchItem);
+                final success =
+                    await SearchItemManager.addSearchItem(searchItem);
                 if (success) {
                   Utils.toast("添加收藏成功！", duration: Duration(seconds: 1));
                 } else {
@@ -523,10 +573,11 @@ class NovelMenu extends StatelessWidget {
             break;
           case REFRESH:
             // 清理当前章节
-            final cIndex = composition.textPages[composition.currentIndex]?.chIndex ??
-                searchItem.durChapterIndex;
-            final _fileCache =
-                CacheUtil(basePath: "cache${Platform.pathSeparator}${searchItem.id}");
+            final cIndex =
+                composition.textPages[composition.currentIndex]?.chIndex ??
+                    searchItem.durChapterIndex;
+            final _fileCache = CacheUtil(
+                basePath: "cache${Platform.pathSeparator}${searchItem.id}");
             await CacheUtil.requestPermission();
             await File(await _fileCache.cacheDir() + '$cIndex.txt').delete();
             Utils.toast("已删除当前章节缓存");
@@ -534,16 +585,18 @@ class NovelMenu extends StatelessWidget {
             composition.gotoChapter(cIndex);
             break;
           case CLEARCACHE:
-            final _fileCache =
-                CacheUtil(basePath: "cache${Platform.pathSeparator}${searchItem.id}");
+            final _fileCache = CacheUtil(
+                basePath: "cache${Platform.pathSeparator}${searchItem.id}");
             await CacheUtil.requestPermission();
             await _fileCache.clear();
             Utils.toast("清理成功");
             break;
           case TEXT_TO_CLICPBOARD:
-            final cIndex = composition.textPages[composition.currentIndex]?.chIndex ??
-                searchItem.durChapterIndex;
-            final p = "    " + (await composition.loadChapter(cIndex)).join("\n    ");
+            final cIndex =
+                composition.textPages[composition.currentIndex]?.chIndex ??
+                    searchItem.durChapterIndex;
+            final p =
+                "    " + (await composition.loadChapter(cIndex)).join("\n    ");
             final title = searchItem.name + "    " + searchItem.durChapter;
             final config = composition.config;
             TextEditingController controller = TextEditingController(text: p);
@@ -735,7 +788,8 @@ class NovelMenu extends StatelessWidget {
                   child: FlutterSlider(
                     values: [
                       1.0 +
-                          (composition.textPages[composition.currentIndex]?.chIndex ??
+                          (composition.textPages[composition.currentIndex]
+                                  ?.chIndex ??
                               searchItem.durChapterIndex)
                     ],
                     max: searchItem.chaptersCount * 1.0,
@@ -743,7 +797,8 @@ class NovelMenu extends StatelessWidget {
                     step: FlutterSliderStep(step: 1),
                     onDragCompleted: (handlerIndex, lowerValue, upperValue) {
                       // provider.loadChapter((lowerValue as double).toInt() - 1);
-                      composition.gotoChapter((lowerValue as double).toInt() - 1);
+                      composition
+                          .gotoChapter((lowerValue as double).toInt() - 1);
                     },
                     // disabled: provider.isLoading,
                     handlerWidth: 6,
@@ -754,7 +809,8 @@ class NovelMenu extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
                           color: bgColor,
-                          border: Border.all(color: color.withOpacity(0.65), width: 1),
+                          border: Border.all(
+                              color: color.withOpacity(0.65), width: 1),
                         ),
                       ),
                     ),
@@ -851,12 +907,14 @@ class NovelMenu extends StatelessWidget {
                   InkWell(
                     child: Column(
                       children: [
-                        Icon(Icons.format_list_bulleted, color: color, size: 22),
+                        Icon(Icons.format_list_bulleted,
+                            color: color, size: 22),
                         Text("目录", style: TextStyle(color: color))
                       ],
                     ),
                     onTap: () {
-                      final x = composition.textPages[composition.currentIndex]?.chIndex;
+                      final x = composition
+                          .textPages[composition.currentIndex]?.chIndex;
                       if (x != null) searchItem.durChapterIndex = x;
                       showDialog(
                           context: context,
@@ -885,7 +943,8 @@ class NovelMenu extends StatelessWidget {
                           contentPadding: EdgeInsets.zero,
                           content: Container(
                             width: 520,
-                            child: myConfigSettingBuilder(context, composition.config),
+                            child: myConfigSettingBuilder(
+                                context, composition.config),
                           ),
                         ),
                       );
@@ -903,7 +962,8 @@ class NovelMenu extends StatelessWidget {
                   InkWell(
                     child: Column(
                       children: [
-                        Icon(Icons.brightness_medium_outlined, color: color, size: 22),
+                        Icon(Icons.brightness_medium_outlined,
+                            color: color, size: 22),
                         Text("亮度", style: TextStyle(color: color))
                       ],
                     ),
@@ -956,7 +1016,8 @@ class _BrightnessSettingsState extends State<BrightnessSettings> {
     try {
       brightness = await DeviceDisplayBrightness.getBrightness();
     } catch (e) {}
-    if (brightness == null || brightness <= 0 || brightness > 1) brightness = 0.5;
+    if (brightness == null || brightness <= 0 || brightness > 1)
+      brightness = 0.5;
     // await DeviceDisplayBrightness.keepOn(enabled: keepOn);
     setState(() {});
   }
@@ -1002,7 +1063,8 @@ class _BrightnessSettingsState extends State<BrightnessSettings> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
                     color: bgColor,
-                    border: Border.all(color: color.withOpacity(0.65), width: 1),
+                    border:
+                        Border.all(color: color.withOpacity(0.65), width: 1),
                   ),
                 ),
               ),
@@ -1023,7 +1085,8 @@ class _BrightnessSettingsState extends State<BrightnessSettings> {
                   color: bgColor,
                   child: Text((value as double).toStringAsFixed(0)),
                 ),
-                positionOffset: FlutterSliderTooltipPositionOffset(left: -20, right: -20),
+                positionOffset:
+                    FlutterSliderTooltipPositionOffset(left: -20, right: -20),
               ),
             ),
           )

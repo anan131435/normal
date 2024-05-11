@@ -2,14 +2,19 @@
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 
 class EsoRewardListener extends HjRewardListener<HjRewardAd> {
+  Function(HjRewardAd rewardAd) loadCallBack;
+  Function rewardCallBack;
+  Function closeCallBack;
+  EsoRewardListener({this.loadCallBack,this.rewardCallBack, this.closeCallBack});
   @override
   void onAdClicked() {
-    // TODO: implement onAdClicked
+    print('rewardAdonAdClicked');
   }
 
   @override
   void onAdClose() {
-    // TODO: implement onAdClose
+    closeCallBack();
+    print('rewardAdonAdClose');
   }
 
   @override
@@ -19,23 +24,24 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
 
   @override
   void onAdFailed(HjError error) {
-    print('flu-reward --- onAdFailed ${error.message} and ${error.code}');
+    print('rewardAdonAdFailed ${error.message} and ${error.code}');
   }
 
   @override
   void onAdReward(String transId) {
-    // TODO: implement onAdReward
+    rewardCallBack();
+    print('rewardAdonAdReward');
   }
 
   @override
   void onAdSucceed(HjRewardAd ad) {
-    // TODO: implement onAdSucceed
-    print('flu-reward --- onAdSucceed');
+    print('rewardAdonAdSucceed');
+    loadCallBack(ad);
   }
 
   @override
   void onVideoComplete() {
-    print('flu-reward --- onVideoComplete');
+    print('rewardAdonVideoComplete');
   }
 
 

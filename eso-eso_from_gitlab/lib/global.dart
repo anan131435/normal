@@ -9,6 +9,7 @@ import 'package:eso/eso_theme.dart';
 import 'package:eso/model/edit_source_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -23,6 +24,8 @@ import 'database/rule_dao.dart';
 import 'database/search_item.dart';
 import 'page/novel_page_refactor.dart';
 import 'utils/cache_util.dart';
+
+HjRewardAd rewardAd;
 
 class Global with ChangeNotifier {
   static String appName = '亦搜';
