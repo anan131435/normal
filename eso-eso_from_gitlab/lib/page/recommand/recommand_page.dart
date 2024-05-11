@@ -69,10 +69,10 @@ class _RecommendPageState extends State<RecommendPage> {
   Widget findListView({BuildContext context}) {
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
-      print("findListView has data ${controller.items.length}");
-      for (var item in controller.items) {
-        print("itemListCount ${item.items.length}");
-      }
+      // print("findListView has data ${controller.items.length}");
+      // for (var item in controller.items) {
+      //   print("itemListCount ${item.items.length}");
+      // }
       ListDataItem item = controller.items[0];
       DiscoverMap map = controller.discoverMap[0];
       return ListView.builder(
