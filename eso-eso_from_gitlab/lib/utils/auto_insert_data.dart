@@ -2,60 +2,44 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:eso/page/home/entity/data_base_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../database/rule.dart';
 import '../global.dart';
 import 'auto_decode_cli.dart';
-class DataManager {
-  static Dio _dio = Dio();
-  static void addUrlDecode() async {
+class DataManager extends ChangeNotifier{
+
+   void addUrlDecode() async {
 
     final requestUri = Uri.tryParse("https://eso.hanpeki.online/index.json");
     if (requestUri == null) {
       print("接口返回错误");
     } else {
       final response = await http.get(requestUri);
-      print("接口返回");
+      print("接口返回 ${response.body}");
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
-      print(response.body);
+      print(entity.url);
       final uri = Uri.tryParse(entity.url);
-      // final uri = Uri.tryParse("https://raw.githubusercontent.com/mabDc/eso_source/master/manifest");
+      // "https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest"
+      // final uri = Uri.tryParse("https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest");
       if (uri == null) {
         print("地址格式错误");
       } else {
         print("开始请求");
-        _dio.options.headers["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36";
-       final response =  await _dio.getUri(uri);
-        print("请求结束");
-       if (response.statusCode == 200) {
-         print("请求结果200");
-         // insertOrUpdateRuleInMain(autoReadBytes(response.data));
-         insertOrUpdateRuleInMain(response.data);
-       } else {
-         //重新请求
-         print("第一个接口报错，重新请求第二个");
-         final uri = Uri.tryParse(entity.url2);
-         final response =  await _dio.getUri(uri);
-         if (response.statusCode == 200) {
-
-         } else {
-
-         }
-       }
+        final res = await http.get(uri);
         // final res = await http.get(uri, headers: {
         //   'User-Agent':
         //   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
         // });
-        // print("请求结束");
-
-        // insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
+        print("请求结束");
+        insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
       }
     }
   }
 
-  static void insertOrUpdateRuleInMain(String s, [List l]) async {
+   void insertOrUpdateRuleInMain(String s, [List l]) async {
     try {
       dynamic json;
       if (l != null) {
@@ -67,6 +51,7 @@ class DataManager {
         final id = await Global.ruleDao.insertOrUpdateRule(Rule.fromJson(json));
         if (id != null) {
           print("成功 1 条规则");
+
         }
       } else if (json is List) {
         final okrules = json
@@ -80,8 +65,8 @@ class DataManager {
           print("失败，未导入规则！");
         }
       }
-      //TODO 要刷新UI了
-      // refresh();
+      print("要发送监听");
+      notifyListeners();
     } catch (e) {
       print("格式不对$e");
     }

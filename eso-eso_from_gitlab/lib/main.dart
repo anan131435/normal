@@ -126,22 +126,6 @@ void main() async {
 
   runApp(const MyApp());
 
-  // 必须加上这一行。
-  if (Platform.isWindows) {
-    // WindowsVideoPlayer.registerWith();
-    // await windowManager.ensureInitialized();
-    // initVideoPlayerMediaKitIfNeeded();
-  }
-  // if (Platform.isWindows) {
-  //   final server = await HttpMultiServer.loopback(51532);
-  //   final html = await rootBundle.loadString("player.html", cache: false);
-  //   shelf_io.serveRequests(server, (request) {
-  //     return shelf.Response.ok(
-  //       html,
-  //       headers: {"content-type": "text/html;charset=utf-8"},
-  //     );
-  //   });
-  // }
 }
 
 class ErrorApp extends StatelessWidget {
@@ -202,7 +186,7 @@ class _MyAppState extends State<MyApp> {
             Utils.toast("msg");
           },
         });
-        await DataManager.addUrlDecode();
+
         globalDecoration = BoxDecoration(
           image:
               DecorationImage(image: AssetImage(decorationImage), fit: BoxFit.fitWidth),
@@ -215,6 +199,7 @@ class _MyAppState extends State<MyApp> {
         });
         initFlag = InitFlag.ok;
         setState(() {});
+
       } catch (e, st) {
         _error = e;
         _stackTrace = st;
@@ -280,6 +265,7 @@ class _MyAppState extends State<MyApp> {
               darkTheme: ThemeData.dark(),
               scrollBehavior: MyCustomScrollBehavior(),
               title: Global.appName,
+              debugShowCheckedModeBanner: false,
               home: FirstPage(),
             );
         }

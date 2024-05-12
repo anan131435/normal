@@ -68,8 +68,6 @@ class _NovelPageState extends State<NovelPage> {
         } else {
           _requestAndroidRewardAd();
         }
-
-        // _requestRewardAd();
       }
       if (_count > 100) {
         timer.cancel();
