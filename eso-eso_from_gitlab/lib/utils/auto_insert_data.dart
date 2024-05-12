@@ -28,12 +28,17 @@ class DataManager extends ChangeNotifier{
         print("地址格式错误");
       } else {
         print("开始请求");
-        final res = await http.get(uri);
-        // final res = await http.get(uri, headers: {
-        //   'User-Agent':
-        //   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
-        // });
+        // final res = await http.get(uri);
+        final res = await http.get(uri, headers: {
+          'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
+        });
         print("请求结束");
+        if (res.statusCode == 200) {
+          print("请求成功");
+        } else {
+          print("请求报错");
+        }
         insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
       }
     }

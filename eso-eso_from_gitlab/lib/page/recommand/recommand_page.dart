@@ -44,6 +44,7 @@ class _RecommendPageState extends State<RecommendPage> {
   @override
   void initState() {
     createProvider();
+    print("recommand initState");
     super.initState();
   }
 
@@ -181,6 +182,7 @@ class _RecommendPageState extends State<RecommendPage> {
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
         print("Consumer<EditSourceProvider>");
         if (value.rules.isEmpty) {
+          print("value.rules.isEmpty");
           return Container();
         } else {
           Rule rule;

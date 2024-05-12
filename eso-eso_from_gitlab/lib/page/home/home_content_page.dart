@@ -32,13 +32,12 @@ class _HomeContentPageState extends State<HomeContentPage>
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
     dataManager = DataManager();
-  loadData();
+    loadData();
     super.initState();
   }
 
   void loadData() async{
    await dataManager.addUrlDecode();
-
   }
 
 
