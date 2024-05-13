@@ -1,7 +1,9 @@
 
 import 'package:eso/utils/local_storage_utils.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 
 class EsoRewardListener extends HjRewardListener<HjRewardAd> {
   Function(HjRewardAd rewardAd) loadCallBack;
@@ -33,13 +35,14 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
 
   @override
   void onAdReward(String transId) {
-    rewardCallBack();
+
     //拿到奖励算一次
     DateTime now = DateTime.now();
     String dateStr = DateFormat.yMd().format(now);
     print("xiuxiu${dateStr}拿到奖励了");
     int showCount = LocalStorage.getInstance().get(dateStr);
     print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+    Fluttertoast.showToast(msg: "激励回调了");
     if (showCount == null ) {
       showCount = 1;
     } else {
@@ -47,6 +50,7 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
     }
     print("xiuxiu${dateStr}拿到了${showCount}次奖励");
     LocalStorage.getInstance().setData(dateStr, showCount);
+    rewardCallBack();
   }
 
   @override
