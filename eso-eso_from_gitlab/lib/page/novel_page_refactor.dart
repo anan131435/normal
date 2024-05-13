@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:eso/utils/local_storage_utils.dart';
 import 'package:ffi/ffi.dart';
 import 'package:device_display_brightness/device_display_brightness.dart';
 import 'package:eso/database/history_item_manager.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +49,7 @@ class _NovelPageState extends State<NovelPage> {
   TextCompositionConfig _config;
   HjRewardAd rewardAd;
   int _count = 0;
+  String todayStr;
   @override
   void initState() {
     if (Platform.isIOS) {
@@ -54,7 +57,7 @@ class _NovelPageState extends State<NovelPage> {
     } else {
       _requestAndroidRewardAd();
     }
-
+    todayStr = _fetchCurrentDate();
     super.initState();
     _config = TextConfigManager.config;
     initBrightness();
@@ -63,22 +66,34 @@ class _NovelPageState extends State<NovelPage> {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _count++;
       print(_count);
-      if (_count == 30 || _count == 60 || _count == 90) {
-        if (Platform.isIOS) {
-          _requestRewardAd();
-        } else {
-          _requestAndroidRewardAd();
+      int showCount = LocalStorage.getInstance().get(todayStr);
+      if (showCount != null && showCount >= 3) {
+        print("xiuxiu超过了3次，停着计时");
+        timer.cancel();
+      } else {
+        if (_count == 60 || _count == 120) {
+          if (Platform.isIOS) {
+            _requestRewardAd();
+          } else {
+            _requestAndroidRewardAd();
+          }
+        }
+        if (_count >= 120) {
+          timer.cancel();
         }
       }
-      if (_count > 100) {
-        timer.cancel();
-      }
+
     });
+  }
+
+  String _fetchCurrentDate() {
+    DateTime now = DateTime.now();
+    String dateStr = DateFormat.yMd().format(now);
+    return dateStr;
   }
 
   @override
   void deactivate() {
-
     super.deactivate();
   }
 
@@ -90,8 +105,16 @@ class _NovelPageState extends State<NovelPage> {
           request: request,
           listener: EsoRewardListener(
               loadCallBack: (ad) async {
-                print("_rewardAdLoadCallback");
-                ad.showAd();
+                int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
+                if (showCount == null ) {
+                  print("xiuxiu第一次展示广告");
+                  ad.showAd();
+                } else {
+                  if (showCount <= 3) {
+                    ad.showAd();
+                  }
+                }
+
               },
               closeCallBack: () {
                 print("_rewardAdCloseCallback");
@@ -122,8 +145,16 @@ class _NovelPageState extends State<NovelPage> {
           request: request,
           listener: EsoRewardListener(
             loadCallBack: (ad) async {
-              print("_rewardAdLoadCallback");
-              ad.showAd();
+              int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
+              if (showCount == null ) {
+                print("xiuxiu第一次展示广告");
+                ad.showAd();
+              } else {
+                if (showCount <= 3) {
+                  ad.showAd();
+                }
+              }
+
             },
             rewardCallBack: () {
               print("_rewardAd rewardCallBack");

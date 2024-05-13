@@ -5,6 +5,7 @@ import 'package:eso/page/home/view_model/home_view_model.dart';
 import 'package:eso/page/recommand/recommand_page.dart';
 import 'package:eso/page/search_page.dart';
 import 'package:eso/page/short_video/short_video_page.dart';
+import 'package:eso/utils/local_storage_utils.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
@@ -33,6 +34,7 @@ class _HomeContentPageState extends State<HomeContentPage>
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
     dataManager = DataManager();
     loadData();
+    LocalStorage.preInit();
     super.initState();
   }
 
