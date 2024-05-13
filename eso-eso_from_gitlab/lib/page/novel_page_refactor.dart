@@ -45,7 +45,7 @@ class NovelPage extends StatefulWidget {
 class _NovelPageState extends State<NovelPage> {
   SearchItem searchItem;
   TextCompositionConfig _config;
-
+  HjRewardAd rewardAd;
   int _count = 0;
   @override
   void initState() {
@@ -62,6 +62,7 @@ class _NovelPageState extends State<NovelPage> {
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _count++;
+      print(_count);
       if (_count == 30 || _count == 60 || _count == 90) {
         if (Platform.isIOS) {
           _requestRewardAd();
@@ -89,10 +90,15 @@ class _NovelPageState extends State<NovelPage> {
           request: request,
           listener: EsoRewardListener(
               loadCallBack: (ad) async {
+                print("_rewardAdLoadCallback");
                 ad.showAd();
               },
-              closeCallBack: () {},
-              rewardCallBack: () {}));
+              closeCallBack: () {
+                print("_rewardAdCloseCallback");
+              },
+              rewardCallBack: () {
+                print("_rewardAdRewardCallback");
+              }));
       rewardAd.loadAdData();
     } else {
       _showRewardAd();
@@ -116,6 +122,7 @@ class _NovelPageState extends State<NovelPage> {
           request: request,
           listener: EsoRewardListener(
             loadCallBack: (ad) async {
+              print("_rewardAdLoadCallback");
               ad.showAd();
             },
             rewardCallBack: () {

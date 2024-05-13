@@ -9,7 +9,9 @@ class HotRecommendItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    double screenWidth = MediaQuery.of(context).size.width;
+    double itemWidth = (screenWidth - 74 ) / 2;
+    print("itemWidth $itemWidth");
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
@@ -18,8 +20,8 @@ class HotRecommendItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 157,
-            height: 188,
+            width: itemWidth - 2,
+            height: (itemWidth - 2) * 1.18,
             margin: const EdgeInsets.all(8),
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(

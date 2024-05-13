@@ -25,7 +25,8 @@ class RecommendPage extends StatefulWidget {
   State<RecommendPage> createState() => _RecommendPageState();
 }
 
-class _RecommendPageState extends State<RecommendPage> {
+class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveClientMixin{
+
   List<ProductItem> itemList;
   EditSourceProvider _provider;
   int fetchRuletype(HomeContentType type) {
@@ -40,6 +41,10 @@ class _RecommendPageState extends State<RecommendPage> {
         return 2;
     }
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -68,6 +73,7 @@ class _RecommendPageState extends State<RecommendPage> {
   }
 
   Widget findListView({BuildContext context}) {
+    double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
       // print("findListView has data ${controller.items.length}");
@@ -81,7 +87,7 @@ class _RecommendPageState extends State<RecommendPage> {
           if (index == 0) {
             return Container(
               margin: const EdgeInsets.all(16),
-              height: 374,
+              height:  (394 / 928) * screenH,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(15)),

@@ -139,6 +139,7 @@
 
 - (void)rewardVideoAdDidLoad:(WindMillRewardVideoAd *)rewardVideoAd didFailWithError:(NSError *)error {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"_rewardVideoAdDidLoad");
     [self.channel invokeMethod:HuijingEventAdFailed arguments:@{
         @"code": @(error.code),
         @"message": error.localizedDescription
@@ -148,12 +149,13 @@
 - (void)rewardVideoAdDidVisible:(WindMillRewardVideoAd *)rewardVideoAd {
     NSLog(@"%@", NSStringFromSelector(_cmd));
     self.adinfo = [rewardVideoAd adInfo];
-
+    NSLog(@"_rewardVideoAdDidVisible");
     [self.channel invokeMethod:HuijingEventAdExposure arguments:@{}];
 }
 
 - (void)rewardVideoAdDidClick:(WindMillRewardVideoAd *)rewardVideoAd {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"_rewardVideoAdDidClick");
     [self.channel invokeMethod:HuijingEventAdClicked arguments:@{}];
 }
 
@@ -164,7 +166,7 @@
 
 - (void)rewardVideoAd:(WindMillRewardVideoAd *)rewardVideoAd reward:(WindMillRewardInfo *)reward {
     NSLog(@"%@", NSStringFromSelector(_cmd));
-
+    NSLog(@"_rewardVideoAdreward");
 
     [self.channel invokeMethod:HuijingEventAdReward arguments:@{
           @"user_id":reward.userId,
@@ -174,6 +176,7 @@
 
 - (void)rewardVideoAdDidClose:(WindMillRewardVideoAd *)rewardVideoAd {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    NSLog(@"_rewardVideoAdDidClose");
     [self.channel invokeMethod:HuijingEventAdClose arguments:@{}];
 }
 

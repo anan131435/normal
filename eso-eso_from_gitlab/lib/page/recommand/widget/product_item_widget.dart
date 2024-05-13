@@ -10,6 +10,8 @@ class ProductItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   double screenWidth = MediaQuery.of(context).size.width;
+   double itemWidth = (screenWidth - 62 ) / 2;
 
     return Container(
       color: Colors.white,
@@ -20,8 +22,8 @@ class ProductItemWidget extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(8.0),
-            width: 65,
-            height: 83,
+            width: itemWidth * 0.4 ,
+            height: 1.27 * itemWidth * 0.4,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -36,7 +38,6 @@ class ProductItemWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 16.0,right: 8.0,bottom: 8.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(item.name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: Colors.black,),maxLines: 1,),
                   const SizedBox(height: 4,),

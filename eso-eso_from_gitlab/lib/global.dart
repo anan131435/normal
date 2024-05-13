@@ -25,7 +25,7 @@ import 'database/search_item.dart';
 import 'page/novel_page_refactor.dart';
 import 'utils/cache_util.dart';
 
-HjRewardAd rewardAd;
+
 
 class Global with ChangeNotifier {
   static String appName = '亦搜';

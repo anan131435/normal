@@ -86,6 +86,7 @@ dependencies:
   audio_service: ^0.18.12
   auto_orientation: ^2.3.1
   video_player: ^2.4.1
+  flutter_screenutil: ^5.0.0
   huijing_ads_plugin:
     path: modules/huijing_ads_plugin/
 

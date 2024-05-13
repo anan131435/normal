@@ -8,13 +8,13 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
   EsoRewardListener({this.loadCallBack,this.rewardCallBack, this.closeCallBack});
   @override
   void onAdClicked() {
-    print('rewardAdonAdClicked');
+    print('_rewardAdonAdClickedEsoRewardListener');
   }
 
   @override
   void onAdClose() {
     closeCallBack();
-    print('rewardAdonAdClose');
+    print('_rewardAdonAdCloseEsoRewardListener');
   }
 
   @override
@@ -24,24 +24,24 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
 
   @override
   void onAdFailed(HjError error) {
-    print('rewardAdonAdFailed ${error.message} and ${error.code}');
+    print('_rewardAdonAdFailedEsoRewardListener ${error.message} and ${error.code}');
   }
 
   @override
   void onAdReward(String transId) {
     rewardCallBack();
-    print('rewardAdonAdReward');
+    print('_rewardAdonAdRewardEsoRewardListener');
   }
 
   @override
   void onAdSucceed(HjRewardAd ad) {
-    print('rewardAdonAdSucceed');
+    print('_rewardAdonAdSucceedEsoRewardListener');
     loadCallBack(ad);
   }
 
   @override
   void onVideoComplete() {
-    print('rewardAdonVideoComplete');
+    print('_rewardAdonVideoCompleteEsoRewardListener');
   }
 
 
