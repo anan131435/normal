@@ -14,7 +14,7 @@ class SearchItem extends HiveObject{
   @override
   int get hashCode => id;
 
-  int id;
+  int id = 0;
 
   /// 源名
   String origin;
@@ -41,40 +41,40 @@ class SearchItem extends HiveObject{
   List<String> tags;
 
   /// 搜索结果
-  String url;
+  String? url;
   // Future<String> get absoloteUrl async => (await Global.ruleDao.findRuleById(originTag));
-  int ruleContentType;
-  int chapterListStyle;
-  String durChapter;
-  int durChapterIndex;
-  int durContentIndex;
-  int chaptersCount;
-  bool reverseChapter;
-  List<ChapterItem> chapters;
+  int? ruleContentType;
+  int? chapterListStyle;
+  String? durChapter;
+  int? durChapterIndex;
+  int? durContentIndex;
+  int? chaptersCount;
+  bool? reverseChapter;
+  List<ChapterItem>? chapters;
 
   /// 收藏时间
-  int createTime;
+  int? createTime;
 
   /// 更新时间
-  int updateTime;
+  int? updateTime;
 
   /// 最后阅读时间
   int lastReadTime;
 
   SearchItem({
-    this.searchUrl,
-    this.chapterUrl,
-    @required this.cover,
-    @required this.name,
-    @required this.author,
-    @required this.chapter,
-    @required this.description,
-    @required this.url,
-    @required API api,
-    this.chaptersCount,
-    this.reverseChapter,
-    this.chapters,
-    @required this.tags,
+    required this.searchUrl,
+    required this.chapterUrl,
+    required this.cover,
+    required this.name,
+    required this.author,
+    required this.chapter,
+    required this.description,
+    required this.url,
+    required API api,
+    required this.chaptersCount,
+    required this.reverseChapter,
+    required this.chapters,
+    required this.tags,
   }) {
     if (chaptersCount == null) {
       chaptersCount = 0;

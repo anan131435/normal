@@ -4,7 +4,7 @@ import 'package:html/dom.dart';
 import 'analyzer.dart';
 
 class AnalyzerMatch implements Analyzer {
-  String _content;
+  String _content = "";
 
   @override
   AnalyzerMatch parse(content) {

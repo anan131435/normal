@@ -37,7 +37,7 @@ class AnalyzerJSonPath implements Analyzer {
     if (rule.contains("{\$.")) {
       return rule.splitMapJoin(
         _jsonRulePattern,
-        onMatch: (match) => getString(match.group(1)),
+        onMatch: (match) => getString(match.group(1)!),
         onNonMatch: (nonMatch) => nonMatch,
       );
     }

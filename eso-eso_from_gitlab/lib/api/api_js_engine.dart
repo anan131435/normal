@@ -32,8 +32,8 @@ class APIConst {
 }
 
 class JSEngine {
-  static IsolateQjs _engine;
-  static Rule _rule;
+  static late IsolateQjs _engine;
+  static late Rule _rule;
   static Rule get rule => _rule;
   static Future<void> initEngine() async {
     if (_engine != null) return;
@@ -47,7 +47,7 @@ class JSEngine {
       "__http__",
       IsolateFunction((dynamic url) async {
         final res = await AnalyzeUrl.parser(url, _rule);
-        return DecodeBody().decode(res.bodyBytes, res.headers["content-type"]);
+        return DecodeBody().decode(res.bodyBytes, res.headers["content-type"]!);
       }),
     ]);
     await setToGlobalObject.invoke([
@@ -158,9 +158,9 @@ class JSEngine {
     setToGlobalObject.free();
   }
 
-  static String thisBaseUrl;
+  static String thisBaseUrl = "";
 
-  static String environment;
+  static String environment = "";
 
   static Future<void> setEnvironment(
     int page,

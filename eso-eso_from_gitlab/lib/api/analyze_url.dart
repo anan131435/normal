@@ -13,8 +13,8 @@ class AnalyzeUrl {
     Rule rule, {
     String keyword = "",
     String result = "",
-    int page,
-    int pageSize,
+    int page = 0,
+    int? pageSize,
   }) async {
     url = url.trim();
     if (url == "null") return originalHttp.Response("", 200);
@@ -24,8 +24,7 @@ class AnalyzeUrl {
       final re = await JSEngine.evaluate(
           "${JSEngine.environment};1+1;${JSEngine.rule.loadJs};1+1;${url.substring(4)}");
       if ((re is String && re == "null") || re == null) {
-        // return originalHttp.Response("null url", 200);
-        return null;
+        return originalHttp.Response("null url", 200);
       }
       final res = await parser(re, rule);
       // if (res.statusCode > 400) {

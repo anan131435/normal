@@ -9,7 +9,7 @@ import 'package:flutter_webview/flutter_webview.dart';
 import 'analyzer.dart';
 
 class AnalyzerWebview implements Analyzer {
-  String _content;
+  String _content = "";
   @override
   AnalyzerWebview parse(content) {
     if (content == null) {

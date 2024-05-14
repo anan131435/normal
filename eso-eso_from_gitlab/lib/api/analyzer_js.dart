@@ -7,7 +7,7 @@ import 'analyzer.dart';
 class AnalyzerJS implements Analyzer {
   static bool needSetEnvironmentFlag = true;
 
-  String _content;
+  String _content = "";
 
   @override
   AnalyzerJS parse(content) {

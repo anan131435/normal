@@ -78,7 +78,7 @@ class AnalyzerManager {
     }
   }
 
-  Future<dynamic> _getElements(SingleRule r, [String rule]) async {
+  Future<dynamic> _getElements(SingleRule r, [String rule = ""]) async {
     if (null == rule) {
       rule = r.rule;
     }
@@ -121,7 +121,7 @@ class AnalyzerManager {
     return result;
   }
 
-  Future<dynamic> _getStringList(SingleRule r, [String rule]) async {
+  Future<dynamic> _getStringList(SingleRule r, [String rule = ""]) async {
     if (null == rule) {
       rule = r.rule;
     }
@@ -173,12 +173,12 @@ class AnalyzerManager {
     final pRight = rule.lastIndexOf("}}");
     if (-1 < pLeft && pLeft < pRight) {
       var position = 0;
-      int minCount;
+      int? minCount;
       final rs = <dynamic>[];
       for (final match in expressionPattern.allMatches(rule)) {
         rs.add(rule.substring(position, match.start));
         position = match.end;
-        final temp = await getStringList(match.group(1));
+        final temp = await getStringList(match.group(1)!);
         if (temp.isEmpty) continue;
         if (temp.length == 1) {
           rs.add(temp[0]);
@@ -289,7 +289,7 @@ class AnalyzerManager {
       for (final match in expressionPattern.allMatches(rule)) {
         rs.add(rule.substring(position, match.start));
         position = match.end;
-        rs.add(await getString(match.group(1)));
+        rs.add(await getString(match.group(1)!));
       }
       if (position < rule.length) {
         rs.add(rule.substring(position));

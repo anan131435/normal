@@ -14,11 +14,11 @@ import 'api_js_engine.dart';
 
 class APIFromRUle implements API {
   final Rule rule;
-  String _origin;
-  String _originTag;
+  late String _origin;
+  late String _originTag;
   int _ruleContentType;
 
-  static Map<String, String> _nextUrl;
+  static Map<String, String> _nextUrl = {};
   static Map<String, String> get nextUrl => _nextUrl;
   static void setNextUrl(String url, String next) {
     if (_nextUrl == null) {
@@ -41,7 +41,7 @@ class APIFromRUle implements API {
   @override
   int get ruleContentType => _ruleContentType;
 
-  APIFromRUle(this.rule, [int engineId]) {
+  APIFromRUle(this.rule, [int engineId = 0]) {
     _origin = rule.name;
     _originTag = rule.id;
     _ruleContentType = rule.contentType;

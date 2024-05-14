@@ -8,7 +8,7 @@ import 'search_item.dart';
 import '../global.dart';
 
 class SearchItemManager {
-  static List<SearchItem> _searchItem;
+  static List<SearchItem> _searchItem = [];
   static List<SearchItem> get searchItem => _searchItem;
   static String get key => Global.searchItemKey;
 
@@ -16,7 +16,7 @@ class SearchItemManager {
 
   /// 根据类型和排序规则取出收藏
   static List<SearchItem> getSearchItemByType(int contentType, SortType sortType,
-      [String tag]) {
+      [String? tag]) {
     if (tag == "全部") {
       tag = null;
     }
@@ -131,7 +131,7 @@ class SearchItemManager {
   static Future<void> refreshAll() async {
     // 先用单并发，加延时5s判定
     for (var item in _searchItem) {
-      var current = item.name;
+      String? current = item.name;
       await Future.any([
         refreshItem(item),
         (SearchItem temp) async {
@@ -164,7 +164,7 @@ class SearchItemManager {
     if (newCount > 0) {
       Utils.toast("${item.name} 新增 $newCount 章节");
       item.chapters = chapters;
-      item.chapter = chapters.last?.name;
+      item.chapter = chapters.last!.name;
       item.chaptersCount = chapters.length;
       await item.save();
       // await SearchItemManager.saveChapter(item.id, item.chapters);

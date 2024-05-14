@@ -8,7 +8,7 @@ import '../main.dart';
 import 'analyzer.dart';
 
 class AnalyzerHetu implements Analyzer {
-  String _content;
+  String? _content;
   static bool needSetEnvironmentFlag = true;
 
   @override

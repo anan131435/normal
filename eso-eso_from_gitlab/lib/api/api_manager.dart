@@ -28,7 +28,7 @@ class APIManager {
     return <SearchItem>[];
   }
 
-  static Future<List<ChapterItem>> getChapter(String originTag, String url, [int page]) async {
+  static Future<List<ChapterItem>> getChapter(String originTag, String url, [int page = 0]) async {
     if (originTag != null) {
       final api = await chooseAPI(originTag);
       if (api != null) return api.chapter(url, page);

@@ -2,7 +2,7 @@ import 'analyzer.dart';
 import 'package:html/dom.dart';
 
 class AnalyzerRegExp implements Analyzer {
-  String _string;
+  String _string = "";
 
   @override
   AnalyzerRegExp parse(content) {
@@ -47,7 +47,7 @@ class AnalyzerRegExp implements Analyzer {
         final builder = <String>[];
         for (var m in matcherList) {
           final value = m.group(0);
-          if (value.isNotEmpty) {
+          if (value!.isNotEmpty) {
             // 因为是正则匹配，所以不使用trim()去掉空格
             builder.add(value);
           }

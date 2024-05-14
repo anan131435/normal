@@ -3,7 +3,7 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart' as parser;
 
 class AnalyzerHtml implements Analyzer {
-  Element _element;
+   Element? _element;
 
   @override
   AnalyzerHtml parse(content) {
@@ -73,15 +73,15 @@ class AnalyzerHtml implements Analyzer {
          */
     final imgReg = RegExp(r"<img[^>]*>");
     final html = outerHtml
-        .replaceAllMapped(imgReg, (match) => "\n" + match.group(0) + "\n")
+        .replaceAllMapped(imgReg, (match) => "\n" + match.group(0)! + "\n")
         .replaceAll(RegExp(r"</?(?:div|p|br|hr|h\d|article|dd|dl)[^>]*>"), "\n");
     //  .replaceAll(RegExp(r"^\s*|</?(?!img)\w+[^>]*>"), "");
     return html.splitMapJoin(
       imgReg,
-      onMatch: (match) => match.group(0) + "\n",
+      onMatch: (match) => match.group(0)! + "\n",
       onNonMatch: (noMatch) => noMatch.trim().isEmpty
           ? ""
-          : parser.parse("$noMatch").documentElement.text + "\n",
+          : parser.parse("$noMatch").documentElement!.text! + "\n",
     );
   }
 
@@ -108,34 +108,7 @@ class AnalyzerHtml implements Analyzer {
         /// 块级元素 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Block-level_elements
         /// <article> <dd> <div> <dl> <h1>, <h2>, <h3>, <h4>, <h5>, <h6> <hr> <p> <br>
         /// 网页编码转文本
-        /*
-         *北方酱保佑代码能用**********************************
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣤⠤⢤⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠤⠖⠚⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠈⠉⠑⠲⠤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠲⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⢶⣒⡒⠒⠒⠋⠉⠁⠀⠀⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⣠⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠲⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⢛⡖⠀⠀⠀⠀⠀⠀⣆⡤⠚⢩⠏⠀⣠⠞⠁⠹⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⡀⠀⠀⠀⠈⠳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠏⠀⠀⠀⠀⣠⠞⠙⠋⠀⠀⢸⠖⠚⠁⠀⠀⠀⠈⠳⣄⡞⠳⡄⠀⠀⠀⠀⠀⢿⣍⠛⠲⣄⡀⠀⠹⡄⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⠏⠀⠀⠀⣠⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⡄⠀⠀⠀⠀⠘⣧⠀⠀⠀⣙⣶⡀⢳⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⡞⢡⠇⠀⠀⠀⢐⡟⠁⠀⠀⠀⠀⠀⣀⣠⠴⠀⠀⠀⠀⠤⣄⠀⠀⠀⠀⠀⢹⡀⣆⠀⠀⠀⢿⡀⣠⣾⣿⣿⠁⠈⣇⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠳⡿⢸⡆⠀⠀⡏⠀⠀⠀⠀⠀⠙⠉⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⠓⠲⠀⠀⠀⠓⢾⠀⠀⠀⢸⣿⣿⣿⡟⠁⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⢸⠃⠀⢸⠀⠀⠀⣀⣤⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⡀⠀⠀⢸⠀⠀⠀⠈⣿⠟⠋⠀⠀⠀⠀⠀⢧⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠀⣸⠀⢀⡞⡭⣤⡤⣌⠻⣆⠀⠀⠀⠀⠀⠀⠀⢠⠟⢩⣬⣭⣙⠳⣄⣽⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠘⡆⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⠀⠀⢹⠀⡜⣼⣿⣿⣿⡿⡆⠙⠀⠀⠀⠀⠀⠀⠀⠋⣼⣾⣿⣿⣿⣧⠈⣿⠀⠀⠀⠀⢹⠀⠀⠀⠀⠀⠀⠀⠀⢷⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡇⠀⠀⢸⠀⠃⣿⣿⣿⣯⣷⡇⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⢻⣿⣺⠄⣿⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⢸⠀⠀⢻⡿⣿⣿⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⠀⣿⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⠀⡼⠉⠀⠀⠀⠙⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⠿⠽⠞⠁⠀⡟⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀
-        ⠀⠀⠀⠀⢀⡤⠤⣄⣠⡇⠀⡀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⢀⣀⠠⣸⡇⠀⠀⠀⠀
-        ⠀⠀⠀⠀⢸⣄⠀⠀⠈⠑⢻⣷⡞⣆⡀⢀⣠⣶⢖⣄⠀⠀⢀⣀⣤⣤⠀⠀⢀⣀⣤⡦⣄⠀⠀⠀⠀⢀⡇⠀⠀⠀⠀⢸⠀⣠⣶⡔⠋⠁⠀⠀⣠⣇⠀⠀⠀⠀
-        ⠀⡠⠚⠉⠉⠉⠁⠀⠀⠀⢸⣿⣿⣴⣿⣿⣿⣿⣯⣮⣷⣮⣿⣿⣿⣿⣷⣶⣿⣿⣿⣿⣧⣷⢦⢔⢋⣹⠀⠀⠀⠀⠀⣿⣐⣿⣿⡷⠀⠀⠀⠈⠉⠉⠑⠢⡀⠀
-        ⠀⣇⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⡟⢿⣛⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣆⣀⡀⠀⠀⠀⠀⠀⢸⠀
-        ⠀⠈⠑⠒⠒⠒⠚⣿⡿⣿⠟⠋⠃⠀⠻⣿⣟⡿⣿⣿⣿⣿⣿⣿⣿⣟⣿⢟⡟⣿⣿⣿⠿⢿⠋⣸⣻⠃⠀⠀⠀⠀⢸⡿⠛⠁⠛⠛⠿⢿⣿⠉⠛⠒⠛⢻⡁⠀
-        ⠀⠀⠀⠀⠀⠀⠀⢸⡇⠙⣆⠀⠀⠀⠀⢸⡟⠉⠁⠀⠈⠛⠛⠉⠀⠀⠈⠑⠊⠊⠁⠀⠀⠀⠙⢡⠃⠀⠀⠀⠀⠀⡾⠀⠀⠀⠀⠀⣠⠃⠀⠁⠀⠀⠀⠈⢷⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠘⡇⠀⠘⣆⠀⠀⠀⢸⠇⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⢀⡏⠀⠀⠀⠀⠀⣼⡇⠀⠀⠀⠀⡰⠃⠀⠀⠀⠀⠀⠀⠀⢸⡆
-        ⠀⠀⠀⠀⠀⠀⠀⠀⢳⡀⠀⠘⣆⠀⠀⡾⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⠃⠀⠀⠀⠀⡴⠁⡇⠀⠀⢀⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠓⠦⡄⠀⠀⡼⠁⠀⠀⠀⠀⠀⠀⠛⠻⠻⠛⠁⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⢀⡼⠁⠀⢹⡀⠀⠚⠀⠀⠀⠀⠀⠀⠀⠀⣀⡴⠃⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠀⢀⡠⠊⠀⠀⠀⠀⠳⠀⠀⠀⠀⠀⠀⠀⠀⠐⠊⠁⠀⠀⠀
-         */
+
         e.querySelectorAll("script,style").forEach((element) => element.remove());
         return getHtmlString(e.outerHtml);
       default:
@@ -152,13 +125,13 @@ class AnalyzerHtml implements Analyzer {
   @override
   List<String> getStringList(String rule) {
     if (!rule.contains('@')) {
-      return <String>[_getResult(_element, rule)];
+      return <String>[_getResult(_element!, rule)];
     }
     final result = <String>[];
     final split = rule.lastIndexOf("@");
     final lastRule = rule.substring(split + 1);
-    final elementList = _element.querySelectorAll(rule.substring(0, split));
-    for (var e in elementList) {
+    final elementList = _element?.querySelectorAll(rule.substring(0, split));
+    for (var e in elementList!) {
       final r = _getResult(e, lastRule);
       if (r.isNotEmpty) result.add(r);
     }
@@ -167,6 +140,6 @@ class AnalyzerHtml implements Analyzer {
 
   @override
   List<Element> getElements(String rule) {
-    return _element.querySelectorAll(rule);
+    return _element!.querySelectorAll(rule);
   }
 }

@@ -7,14 +7,14 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'analyzer.dart';
 
 Future<dynamic> webviewIOS({
-  String url,
-  int duration,
-  bool Function(dynamic args) callback,
-  String ua,
-  String cookies,
+  required String url,
+  required int duration,
+  required bool Function(dynamic args) callback,
+  required String ua,
+  required String cookies,
 }) async {
   Completer c = new Completer();
-  InAppWebViewController webViewController;
+  InAppWebViewController? webViewController;
   Map<String, String> headers;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
     crossPlatform: InAppWebViewOptions(
@@ -54,8 +54,8 @@ Future<dynamic> webviewIOS({
       webViewController = controller;
     }
   }
-
-  onLoadStop(InAppWebViewController controller, Uri uri) {
+// void Function(InAppWebViewController controller, Uri? url)? onLoadStop;
+  onLoadStop(InAppWebViewController controller, Uri? uri) {
     if ((uri as String).isNotEmpty) {
       Future.delayed(Duration(seconds: duration), () {
         c.completeError("网络错误;嗅探失败!");
@@ -65,7 +65,7 @@ Future<dynamic> webviewIOS({
 
   HeadlessInAppWebView hlswebview = HeadlessInAppWebView(
     shouldOverrideUrlLoading: (controller, navigationAction) async {
-      headers = navigationAction.request.headers;
+      headers = navigationAction.request.headers!;
       return NavigationActionPolicy.ALLOW;
     },
     onLoadResource: onLoadResource,
@@ -74,7 +74,7 @@ Future<dynamic> webviewIOS({
     onLoadStop: onLoadStop,
   );
   await hlswebview.run();
-  await webViewController.loadUrl(
+  await webViewController?.loadUrl(
     urlRequest: URLRequest(
       url: Uri.parse(url),
       headers: {
@@ -89,17 +89,17 @@ Future<dynamic> webviewIOS({
   try {
     return await c.future;
   } finally {
-    await webViewController.stopLoading();
+    await webViewController?.stopLoading();
     await hlswebview.dispose();
   }
 }
 
 Future<dynamic> webview({
-  String url,
-  int duration,
-  bool Function(dynamic args) callback,
-  String ua,
-  String cookies,
+  required String url,
+  required int duration,
+  required bool Function(dynamic args) callback,
+  required String ua,
+  required String cookies,
 }) async {
   Completer c = new Completer();
   var webview = FlutterWebview();
@@ -131,7 +131,7 @@ Future<dynamic> webview({
 }
 
 class AnalyzerFilter implements Analyzer {
-  String url;
+  String url = "";
 
   @override
   AnalyzerFilter parse(content) {

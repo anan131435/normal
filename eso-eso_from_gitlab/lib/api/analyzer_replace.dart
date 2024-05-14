@@ -4,7 +4,7 @@ import 'package:html/dom.dart';
 import 'analyzer.dart';
 
 class AnalyzerReplace implements Analyzer {
-  String _content;
+  String _content = "";
 
   @override
   AnalyzerReplace parse(content) {
@@ -27,7 +27,7 @@ class AnalyzerReplace implements Analyzer {
 
   /// from https://github.com/dart-lang/sdk/issues/2336
   String Function(Match) _replacement(String pattern) => (Match match) =>
-      pattern.replaceAllMapped(RegExp(r'\$(\d+)'), (m) => match[int.parse(m[1])]);
+      pattern.replaceAllMapped(RegExp(r'\$(\d+)'), (m) => match[int.parse(m[1]!)]!);
 
   String Function(String) replaceSmart(String replace) {
     if (null == replace || replace.isEmpty) return (String s) => s;

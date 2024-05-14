@@ -4,8 +4,8 @@ import '../database/chapter_item.dart';
 import '../database/search_item.dart';
 
 abstract class API {
-  static String chapterUrl;
-  static String contentUrl;
+  static String chapterUrl = "";
+  static String contentUrl = "";
 
   static const MANGA = 0;
   static const NOVEL = 1;
@@ -58,24 +58,24 @@ abstract class API {
 
   int get ruleContentType;
 
-  Future<List<SearchItem>> discover(
+  Future<List<SearchItem>>? discover(
       Map<String, DiscoverPair> params, int page, int pageSize);
 
-  Future<List<SearchItem>> search(String query, int page, int pageSize);
+  Future<List<SearchItem>>? search(String query, int page, int pageSize);
 
-  Future<List<ChapterItem>> chapter(String url);
+  Future<List<ChapterItem>>? chapter(String url);
 
-  Future<List<String>> content(String url);
+  Future<List<String>>? content(String url);
 
-  Future<List<DiscoverMap>> discoverMap();
+  Future<List<DiscoverMap>>?  discoverMap();
 }
 
 class BaseAPI implements API {
-  String _origin;
-  String _originTag;
-  int _ruleContentType;
+  late String _origin;
+  late String _originTag;
+  late int _ruleContentType;
 
-  BaseAPI({String origin, String originTag, int ruleContentType}) {
+  BaseAPI({required String origin, required String originTag, required int ruleContentType}) {
     _origin = origin;
     _originTag = originTag;
     _ruleContentType = ruleContentType;
@@ -87,24 +87,24 @@ class BaseAPI implements API {
 
   int get ruleContentType => _ruleContentType;
 
-  Future<List<SearchItem>> discover(
+  Future<List<SearchItem>>? discover(
       Map<String, DiscoverPair> params, int page, int pageSize) {
     return null;
   }
 
-  Future<List<SearchItem>> search(String query, int page, int pageSize) {
+  Future<List<SearchItem>>? search(String query, int page, int pageSize) {
     return null;
   }
 
-  Future<List<ChapterItem>> chapter(String url) {
+  Future<List<ChapterItem>>? chapter(String url) {
     return null;
   }
 
-  Future<List<String>> content(String url) {
+  Future<List<String>>? content(String url) {
     return null;
   }
 
-  Future<List<DiscoverMap>> discoverMap() {
+  Future<List<DiscoverMap>>? discoverMap() {
     return null;
   }
 }

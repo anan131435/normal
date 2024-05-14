@@ -5,7 +5,7 @@ import 'package:floor/floor.dart';
 @dao
 abstract class RuleDao {
   static String get order => "$sortName $sortOrder";
-  static String sortName = sortMap["置顶"];
+  static String sortName = sortMap["置顶"]!;
   static String sortOrder = desc;
   // 逆序
   static const String desc = "desc";
