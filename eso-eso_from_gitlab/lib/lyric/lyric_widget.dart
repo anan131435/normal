@@ -7,7 +7,7 @@ import 'lyric_controller.dart';
 import 'lyric_painter.dart';
 
 class LyricWidget extends StatefulWidget {
-  final List<Lyric> lyrics;
+  final List<Lyric>? lyrics;
   final List<Lyric> remarkLyrics;
   final Size size;
   final LyricController controller;

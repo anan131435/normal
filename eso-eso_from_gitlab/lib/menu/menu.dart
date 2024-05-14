@@ -11,18 +11,18 @@ class Menu<T> extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String tooltip;
-  final FutureOr Function(T value) onSelect;
+  final FutureOr Function(T? value) onSelect;
   final Widget child;
 
   const Menu({
-    Key key,
+     super.key,
     this.icon = OMIcons.moreVert,
-    this.color,
+    required this.color,
     this.tooltip = "更多",
-    this.child,
-    this.items,
+    required this.child,
+    required this.items,
     this.onSelect = voidValueFunction,
-  }) : super(key: key);
+  }) ;
 
   @override
   Widget build(BuildContext context) {

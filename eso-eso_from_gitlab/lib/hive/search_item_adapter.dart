@@ -93,7 +93,7 @@ class SearchItemAdapter extends TypeAdapter<SearchItem> {
     writer.writeInt(cast(item.updateTime, now.microsecondsSinceEpoch));
     writer.writeInt(cast(item.lastReadTime, now.microsecondsSinceEpoch));
     writer.writeInt(item.chapters?.length ?? 0);
-    for (var chapter in item.chapters) {
+    for (var chapter in item.chapters!) {
       ChapterItemAdapter().write(writer, chapter);
     }
   }

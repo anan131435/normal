@@ -8,10 +8,10 @@ class MenuItemEso<T> {
   final Color textColor;
 
   const MenuItemEso({
-    this.value,
-    this.text,
-    this.icon,
-    this.color,
-    this.textColor,
+    required this.value,
+    required this.text,
+    required this.icon,
+    required this.color,
+    required this.textColor,
   });
 }
