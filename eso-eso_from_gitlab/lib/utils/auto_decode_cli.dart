@@ -58,7 +58,7 @@ import 'dart:typed_data';
 // 思路 探测bom -> 读取ascii -> 根据第一个非ascii确定编码 -> 解码
 String autoReadFile(
   String path, {
-  Encoding encoding,
+  Encoding? encoding,
 }) {
   final file = File(path);
   if (encoding != null) return file.readAsStringSync(encoding: encoding);
@@ -203,7 +203,7 @@ class BomPair {
 }
 
 extension on int {
-  int getBit(int position) {
+  int? getBit(int position) {
     if (this == null) return null;
     // print([
     //   '1',

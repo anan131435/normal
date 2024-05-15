@@ -21,7 +21,7 @@ class DataManager extends ChangeNotifier{
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
       print(entity.url);
-      final uri = Uri.tryParse(entity.url);
+      final uri = Uri.tryParse(entity.url!);
       // "https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest"
       // final uri = Uri.tryParse("https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest");
       if (uri == null) {
@@ -44,7 +44,7 @@ class DataManager extends ChangeNotifier{
     }
   }
 
-   void insertOrUpdateRuleInMain(String s, [List l]) async {
+   void insertOrUpdateRuleInMain(String s, [List? l]) async {
     try {
       dynamic json;
       if (l != null) {
