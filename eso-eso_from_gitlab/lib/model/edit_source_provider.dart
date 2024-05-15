@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class EditSourceProvider with ChangeNotifier {
-  List<Rule> _rulesFilter;
-  List<Rule> _rules;
+  List<Rule> _rulesFilter = [];
+  List<Rule> _rules = [];
   final int type;
 
   final Map<String, bool> checkSelectMap = {};
-  void toggleSelect(String id, [bool value]) {
+  void toggleSelect(String id, [bool? value]) {
     if (value == null) {
       checkSelectMap[id] = !(checkSelectMap[id] == true);
       notifyListeners();
@@ -26,10 +26,10 @@ class EditSourceProvider with ChangeNotifier {
   }
 
   List<Rule> get rules => _ruleContentType < 0 ? _rules : _rulesFilter;
-  bool _isLoading;
+  bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  bool _isLoadingUrl;
+  bool _isLoadingUrl = false;
   bool get isLoadingUrl => _isLoadingUrl;
 
   /// 内容类型
@@ -38,15 +38,13 @@ class EditSourceProvider with ChangeNotifier {
   set ruleContentType(v) => _setRuleContentType(v);
 
   EditSourceProvider({this.type = 1}) {
-    _isLoadingUrl = false;
-    _isLoading = false;
     refreshData();
   }
 
   _setRuleContentType(int value) {
     _ruleContentType = value;
     if (_ruleContentType < 0) {
-      _rulesFilter = null;
+      _rulesFilter = [];
       return;
     }
     _rulesFilter = [];
@@ -82,8 +80,8 @@ class EditSourceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void handleSelect(List<Rule> rules, MenuEditSource type,
-      {int index, String group}) async {
+  void handleSelect(List<Rule> rules , MenuEditSource type,
+      {int index = 0, String group = ""}) async {
     if (_isLoading) return;
     if (type != MenuEditSource.all && (rules == null || rules.isEmpty)) return;
     bool updateFlag = false;
@@ -184,7 +182,7 @@ class EditSourceProvider with ChangeNotifier {
   }
 
   DateTime _loadKey = DateTime.now();
-  String _searchName;
+  String _searchName = "";
   void getRuleListByNameDebounce(String name) {
     _loadKey = DateTime.now();
     _searchName = name;

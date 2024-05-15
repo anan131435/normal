@@ -49,7 +49,7 @@ class Menu<T> extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      item.text,
+                      item.text ?? "",
                       style: TextStyle(color: item.textColor),
                     ),
                     Icon(item.icon, color: item.color ?? iconColor),

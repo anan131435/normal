@@ -3,11 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  battery_plus_windows
+  battery_plus
   flutter_qjs
   flutter_tts
   flutter_webview
   just_audio_windows
+  permission_handler_windows
+  screen_retriever
   url_launcher_windows
   webview_windows
   window_manager

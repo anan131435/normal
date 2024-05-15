@@ -8,7 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../global.dart';
 
 class FavoriteListProvider with ChangeNotifier {
-  List<SearchItem> _searchList;
+  List<SearchItem> _searchList = [];
   List<SearchItem> get searchList => _searchList;
   List<SearchItem> get allSearchList =>
       SearchItemManager.getSearchItemByType(type, _sortType, "全部");
@@ -27,10 +27,10 @@ class FavoriteListProvider with ChangeNotifier {
   //   }
   // }
 
-  final int type;
+  final int type ;
 
   FavoriteListProvider(this.type) {
-    _tags = box.get(type, defaultValue: ["全部"]);
+    _tags = box.get(type, defaultValue: ["全部"])!;
     updateList();
   }
 
@@ -64,7 +64,7 @@ class FavoriteListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateList([String tag]) {
+  void updateList([String? tag]) {
     _searchList =
         SearchItemManager.getSearchItemByType(type, _sortType, tag ?? selectTag);
    if (type == API.AUDIO) checkAudioInList(_searchList);

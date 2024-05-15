@@ -19,11 +19,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../database/chapter_item.dart';
 
 class DebugRuleProvider with ChangeNotifier {
-  DateTime _startTime;
+  DateTime _startTime = DateTime.now();
   final Rule rule;
   final Color textColor;
-  bool disposeFlag;
-  ScrollController _controller;
+  bool disposeFlag = false;
+  ScrollController _controller = ScrollController();
   ScrollController get controller => _controller;
 
   DebugRuleProvider(this.rule, this.textColor) {
@@ -74,7 +74,7 @@ class DebugRuleProvider with ChangeNotifier {
     );
   }
 
-  void _addContent(String sInfo, [String s, bool isUrl = false, bool fromJS = false]) {
+  void _addContent(String sInfo, [String s = "", bool isUrl = false, bool fromJS = false]) {
     final d = DateTime.now().difference(_startTime).inMicroseconds;
     rows.add(Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +205,7 @@ class DebugRuleProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void handle([String _rule]) async {
+  void handle([String? _rule]) async {
     updateMap();
     rows.clear();
     _startTime = DateTime.now();
@@ -250,7 +250,7 @@ class DebugRuleProvider with ChangeNotifier {
     }
   }
 
-  void discover([String _rule]) async {
+  void discover([String? _rule]) async {
     if (_rule == null) {
       _startTime = DateTime.now();
       rows.clear();
@@ -297,9 +297,9 @@ class DebugRuleProvider with ChangeNotifier {
             _addContent("响应内容为空，终止解析！");
             return;
           }
-          discoverUrl = discoverResult.request.url.toString();
+          discoverUrl = discoverResult.request!.url.toString();
           body = DecodeBody()
-              .decode(discoverResult.bodyBytes, discoverResult.headers["content-type"]);
+              .decode(discoverResult.bodyBytes, discoverResult.headers["content-type"] ?? "");
           _addContent("地址", discoverUrl, true);
         }
       }
@@ -307,13 +307,13 @@ class DebugRuleProvider with ChangeNotifier {
       await JSEngine.setEnvironment(1, rule, "", discoverUrl, "", "");
       _addContent("初始化js");
       final analyzer = AnalyzerManager(body);
-      String next;
+      String? next;
       if (rule.discoverNextUrl != null && rule.discoverNextUrl.isNotEmpty) {
         next = await analyzer.getString(rule.discoverNextUrl);
       } else {
         next = null;
       }
-      _addContent("下一页", next);
+      _addContent("下一页", next ?? "");
       final discoverList = await analyzer.getElements(rule.discoverList);
       final resultCount = discoverList.length;
       if (resultCount == 0) {
@@ -377,7 +377,7 @@ class DebugRuleProvider with ChangeNotifier {
 
   final TextEditingController searchController = TextEditingController();
 
-  void search(String value, [String _rule]) async {
+  void search(String value, [String? _rule]) async {
     if (_rule == null) {
       _startTime = DateTime.now();
       rows.clear();
@@ -404,22 +404,22 @@ class DebugRuleProvider with ChangeNotifier {
             _addContent("响应内容为空，终止解析！");
             return;
           }
-          searchUrl = searchResult.request.url.toString();
+          searchUrl = searchResult.request!.url.toString();
           _addContent("地址", searchUrl, true);
           body = DecodeBody()
-              .decode(searchResult.bodyBytes, searchResult.headers["content-type"]);
+              .decode(searchResult.bodyBytes, searchResult.headers["content-type"] ?? "");
         }
       }
       await JSEngine.setEnvironment(1, rule, "", searchUrl, value, "");
       _addContent("初始化js");
       final analyzer = AnalyzerManager(body);
-      String next;
+      String? next;
       if (rule.searchNextUrl != null && rule.searchNextUrl.isNotEmpty) {
         next = await analyzer.getString(rule.searchNextUrl);
       } else {
         next = null;
       }
-      _addContent("下一页", next);
+      _addContent("下一页", next ?? "");
       final searchList = await analyzer.getElements(rule.searchList);
       final resultCount = searchList.length;
       if (resultCount == 0) {
@@ -490,8 +490,8 @@ class DebugRuleProvider with ChangeNotifier {
     _beginEvent("目录");
     _addContent("如果有分页，只尝试加载两页作为测试");
     dynamic firstChapter;
-    String next;
-    String chapterUrlRule;
+    String? next;
+    String? chapterUrlRule;
     final hasNextUrlRule = rule.chapterNextUrl != null && rule.chapterNextUrl.isNotEmpty;
     for (var page = 1; page < 3; page++) {
       if (disposeFlag) return;
@@ -533,9 +533,9 @@ class DebugRuleProvider with ChangeNotifier {
               _addContent("响应内容为空，终止解析！");
               break;
             }
-            chapterUrl = res.request.url.toString();
+            chapterUrl = res.request!.url.toString();
             _addContent("地址", chapterUrl, true);
-            body = DecodeBody().decode(res.bodyBytes, res.headers["content-type"]);
+            body = DecodeBody().decode(res.bodyBytes, res.headers["content-type"] ?? "");
           }
         }
 
@@ -650,8 +650,8 @@ class DebugRuleProvider with ChangeNotifier {
     final hasNextUrlRule = rule.contentNextUrl != null && rule.contentNextUrl.isNotEmpty;
     final url =
         rule.contentUrl != null && rule.contentUrl.isNotEmpty ? rule.contentUrl : result;
-    String next;
-    String contentUrlRule;
+    String? next;
+    String? contentUrlRule;
     for (var page = 1;; page++) {
       if (disposeFlag) return;
       contentUrlRule = null;
@@ -693,9 +693,9 @@ class DebugRuleProvider with ChangeNotifier {
               _addContent("响应内容为空，终止解析！");
               return;
             }
-            contentUrl = res.request.url.toString();
+            contentUrl = res.request!.url.toString();
             _addContent("地址", contentUrl, true);
-            body = DecodeBody().decode(res.bodyBytes, res.headers["content-type"]);
+            body = DecodeBody().decode(res.bodyBytes, res.headers["content-type"] ?? "");
           }
         }
         if (page == 1) {
@@ -710,7 +710,7 @@ class DebugRuleProvider with ChangeNotifier {
         } else {
           next = null;
         }
-        _addContent("下一页", next);
+        _addContent("下一页", next ?? "");
         var contentItems = await analyzer.getStringList(rule.contentItems);
         if (rule.contentType == API.NOVEL) {
           contentItems = contentItems.join("\n").split(RegExp(r"\n\s*|\s{2,}"));

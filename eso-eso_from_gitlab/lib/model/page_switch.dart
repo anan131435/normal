@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PageSwitch with ChangeNotifier {
-  PageController _pageController;
-  PageController get pageController => _pageController;
-  int _currentIndex;
+  PageController? _pageController;
+  PageController? get pageController => _pageController;
+  int _currentIndex = 0;
   int get currentIndex => _currentIndex;
 
   PageSwitch([this._currentIndex = 0]) {
-    if(_currentIndex == null){
-      _currentIndex = 0;
-    }
+
     updatePageController();
   }
 
@@ -22,7 +20,7 @@ class PageSwitch with ChangeNotifier {
     if (currentIndex != index) {
       _currentIndex = index;
       if (needUpdatePage) {
-        await _pageController.animateToPage(index,
+        await _pageController?.animateToPage(index,
             duration: Duration(microseconds: 10), curve: Curves.linear);
       }
       notifyListeners();
@@ -35,7 +33,7 @@ class PageSwitch with ChangeNotifier {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController?.dispose();
     super.dispose();
   }
 }

@@ -13,8 +13,8 @@ import 'package:path/path.dart' as path;
 class Utils {
   static Future<String> pickFolder(
     BuildContext context, {
-    String title,
-    String initialDirectory,
+    String? title,
+    String? initialDirectory,
   }) async {
     var p = initialDirectory != null
         ? Directory(initialDirectory).parent
@@ -97,14 +97,14 @@ class Utils {
     } else {
       toast("选择文件夹 " + x);
     }
-    return x;
+    return x!;
   }
 
   static Future<String> pickFile(
     BuildContext context,
     List<String> allowedExtensions,
     String defaultFile, {
-    String title,
+    String? title,
   }) async {
     // return FilesystemPicker.openDialog(
     //     title: '选择本地播放器',
@@ -207,7 +207,7 @@ class Utils {
     } else {
       toast("选择文件 " + x);
     }
-    return x;
+    return x!;
   }
 
   static const join = path.join;
@@ -246,9 +246,9 @@ class Utils {
 
   /// 显示 Toast 消息
   static toast(msg,
-      {Duration duration,
+      {Duration? duration,
       ToastPosition position = ToastPosition.bottom,
-      bool dismissOtherToast}) {
+      bool? dismissOtherToast}) {
     if (msg == null) return;
     showToast('$msg',
         position: position, duration: duration, dismissOtherToast: dismissOtherToast);
@@ -261,17 +261,17 @@ class Utils {
   }
 
   /// 开始一个页面，并等待结束
-  static Future<Object> startPageWait(BuildContext context, Widget page,
-      {bool replace}) async {
+  static Future<Object?> startPageWait(BuildContext context, Widget page,
+      {bool? replace}) async {
     if (page == null) return null;
-    var rote = Platform.isIOS
+    Route<Object> rote = Platform.isIOS
         ? CupertinoPageRoute(builder: (context) => page)
         : MaterialPageRoute(builder: (_) => page);
     if (replace == true) return await Navigator.pushReplacement(context, rote);
     return await Navigator.push(context, rote);
   }
 
-  static String _downloadPath;
+  static String _downloadPath = "";
 
   /// 提取文件名（不包含路径和扩展名）
   static String getFileName(final String file) {
@@ -298,7 +298,7 @@ class Utils {
       return (await getApplicationDocumentsDirectory()).path;
     else {
       if (_downloadPath == null) {
-        _downloadPath = (await getExternalStorageDirectory()).path;
+        _downloadPath = (await getExternalStorageDirectory())!.path;
         if (!(existPath(_downloadPath)))
           _downloadPath = (await getTemporaryDirectory()).path;
       }
@@ -318,7 +318,7 @@ class _StrBuilder {
   final String divider;
   _StrBuilder(this.value, {this.divider: ' '});
 
-  _StrBuilder link(String value, {String divider}) {
+  _StrBuilder link(String value, {String? divider}) {
     bool _a = this.value == null || this.value.isEmpty;
     bool _b = value == null || value.isEmpty;
     this.value = _a || _b

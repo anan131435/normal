@@ -8,7 +8,7 @@ import 'lyric_painter.dart';
 
 class LyricWidget extends StatefulWidget {
   final List<Lyric>? lyrics;
-  final List<Lyric> remarkLyrics;
+  final List<Lyric>? remarkLyrics;
   final Size size;
   final LyricController controller;
   final TextStyle lyricStyle;
@@ -28,24 +28,24 @@ class LyricWidget extends StatefulWidget {
   final List<TextPainter> subLyricTextPaints = [];
 
   //字体最大宽度
-  final double lyricMaxWidth;
+  final double? lyricMaxWidth;
 
   LyricWidget(
-      {Key key,
-      @required this.lyrics,
+      {super.key,
+      required this.lyrics,
       this.remarkLyrics,
-      @required this.size,
-      this.controller,
+      required this.size,
+      required this.controller,
       this.lyricStyle = const TextStyle(color: Colors.grey, fontSize: 14),
       this.remarkStyle = const TextStyle(color: Colors.black, fontSize: 14),
       this.currLyricStyle = const TextStyle(color: Colors.red, fontSize: 14),
       this.lyricGap: 10,
       this.remarkLyricGap: 20,
-      TextStyle draggingLyricStyle,
-      TextStyle draggingRemarkLyricStyle,
+      TextStyle? draggingLyricStyle,
+      TextStyle? draggingRemarkLyricStyle,
       this.enableDrag: true,
       this.lyricMaxWidth,
-      TextStyle currRemarkLyricStyle})
+      TextStyle? currRemarkLyricStyle})
       : assert(enableDrag != null),
         assert(lyrics != null && lyrics.isNotEmpty),
         assert(size != null),
@@ -55,7 +55,7 @@ class LyricWidget extends StatefulWidget {
         assert(controller != null)
   {
       //歌词转画笔
-      lyricTextPaints.addAll(lyrics
+      lyricTextPaints.addAll(lyrics!
           .map(
             (l) => TextPainter(
                 text: TextSpan(text: l.lyric, style: lyricStyle),
@@ -64,8 +64,8 @@ class LyricWidget extends StatefulWidget {
           .toList());
 
       //翻译/音译歌词转画笔
-      if (remarkLyrics != null && remarkLyrics.isNotEmpty) {
-        subLyricTextPaints.addAll(remarkLyrics
+      if (remarkLyrics != null && remarkLyrics!.isNotEmpty) {
+        subLyricTextPaints.addAll(remarkLyrics!
             .map((l) => TextPainter(
                 text: TextSpan(text: l.lyric, style: remarkStyle),
                 textDirection: TextDirection.ltr))
@@ -78,10 +78,10 @@ class LyricWidget extends StatefulWidget {
 }
 
 class _LyricWidgetState extends State<LyricWidget> {
-  LyricPainter _lyricPainter;
-  AnimationController _animationController;
-  Animation<double> animation;
-  double lyricMaxWidth;
+  LyricPainter? _lyricPainter;
+  late AnimationController _animationController;
+  Animation<double>? animation;
+  double? lyricMaxWidth;
   double totalHeight = 0;
 
   @override
@@ -93,7 +93,7 @@ class _LyricWidgetState extends State<LyricWidget> {
   @override
   void initState() {
     _animationController = AnimationController(
-        vsync: widget.controller.vsync,
+        vsync: widget.controller.vsync!,
         duration: Duration(milliseconds: 500));
     _animationController.addListener(_updateOffset);
 
@@ -101,22 +101,22 @@ class _LyricWidgetState extends State<LyricWidget> {
     widget.controller.draggingComplete = () {
       cancelTimer();
       widget.controller.progress = widget.controller.draggingProgress;
-      _lyricPainter.draggingLine = null;
+      _lyricPainter?.draggingLine = null;
       widget.controller.isDragging = false;
     };
     WidgetsBinding.instance.addPostFrameCallback((call) {
-      totalHeight = computeScrollY(widget.lyrics.length - 1);
+      totalHeight = computeScrollY(widget.lyrics!.length - 1);
     });
     widget.controller.addListener(() {
       var curLine =
-          findLyricIndexByDuration(widget.controller.progress, widget.lyrics);
+          findLyricIndexByDuration(widget.controller.progress, widget.lyrics!);
       if (widget.controller.oldLine != curLine) {
-        _lyricPainter.currentLyricIndex = curLine;
+        _lyricPainter?.currentLyricIndex = curLine;
         if (!widget.controller.isDragging) {
           if (widget.controller.vsync == null) {
-            _lyricPainter.offset = -computeScrollY(curLine);
+            _lyricPainter?.offset = -computeScrollY(curLine);
           } else {
-            animationScrollY(curLine, widget.controller.vsync);
+            animationScrollY(curLine, widget.controller.vsync!);
           }
         }
         widget.controller.oldLine = curLine;
@@ -129,8 +129,8 @@ class _LyricWidgetState extends State<LyricWidget> {
 
   _updateOffset() {
     // print("$aniBegin, $aniEnd, ${_animationController.value}");
-    _lyricPainter.offset = -(aniBegin + (aniEnd - aniBegin) * _animationController.value);
-    _lastOffset = _lyricPainter.offset;
+    _lyricPainter?.offset = -(aniBegin + (aniEnd - aniBegin) * _animationController.value);
+    _lastOffset = _lyricPainter?.offset;
   }
 
   ///因空行高度与非空行高度不一致，获取非空行的位置
@@ -144,7 +144,7 @@ class _LyricWidgetState extends State<LyricWidget> {
       lyricMaxWidth = MediaQuery.of(context).size.width;
     }
     _lyricPainter = LyricPainter(
-        widget.lyrics, widget.lyricTextPaints, widget.subLyricTextPaints,
+        widget.lyrics!, widget.lyricTextPaints, widget.subLyricTextPaints,
         // vsync: widget.controller.vsync,
         subLyrics: widget.remarkLyrics,
         lyricTextStyle: widget.lyricStyle,
@@ -156,29 +156,29 @@ class _LyricWidgetState extends State<LyricWidget> {
         draggingLyricTextStyle: widget._draggingLyricStyle,
         draggingSubLyricTextStyle: widget._draggingRemarkLyricStyle,
         currSubLyricTextStyle: widget._currRemarkLyricStyle);
-    _lyricPainter.currentLyricIndex =
-        findLyricIndexByDuration(widget.controller.progress, widget.lyrics);
+    _lyricPainter?.currentLyricIndex =
+        findLyricIndexByDuration(widget.controller.progress, widget.lyrics!);
     if (widget.controller.isDragging) {
-      _lyricPainter.draggingLine = widget.controller.draggingLine;
-      _lyricPainter.offset = widget.controller.draggingOffset;
+      _lyricPainter?.draggingLine = widget.controller.draggingLine;
+      _lyricPainter?.offset = widget.controller.draggingOffset;
     } else {
-      _lyricPainter.offset = _lastOffset;
+      _lyricPainter?.offset = _lastOffset;
     }
     return widget.enableDrag
         ? GestureDetector(
             onVerticalDragUpdate: (e) {
               cancelTimer();
-              double temOffset = (_lyricPainter.offset + e.delta.dy);
+              double temOffset = (_lyricPainter?.offset + e.delta.dy);
               if (temOffset < 0 && temOffset >= -totalHeight) {
                 widget.controller.draggingOffset = temOffset;
                 widget.controller.draggingLine =
                     getCurrentDraggingLine(temOffset+widget.lyricGap);
-                _lyricPainter.draggingLine = widget.controller.draggingLine;
+                _lyricPainter?.draggingLine = widget.controller.draggingLine;
                 widget.controller.draggingProgress =
-                    widget.lyrics[widget.controller.draggingLine].startTime +
+                    widget.lyrics![widget.controller.draggingLine].startTime +
                         Duration(milliseconds: 1);
                 widget.controller.isDragging = true;
-                _lyricPainter.offset = temOffset;
+                _lyricPainter?.offset = temOffset;
               }
             },
             onVerticalDragEnd: (e) {
@@ -202,17 +202,17 @@ class _LyricWidgetState extends State<LyricWidget> {
   }
 
   void resetDragging() {
-    _lyricPainter.currentLyricIndex =
-        findLyricIndexByDuration(widget.controller.progress, widget.lyrics);
+    _lyricPainter?.currentLyricIndex =
+        findLyricIndexByDuration(widget.controller.progress, widget.lyrics!);
 
     widget.controller.previousRowOffset = -widget.controller.draggingOffset;
-    animationScrollY(_lyricPainter.currentLyricIndex, widget.controller.vsync);
-    _lyricPainter.draggingLine = null;
+    animationScrollY(_lyricPainter?.currentLyricIndex, widget.controller.vsync!);
+    _lyricPainter?.draggingLine = null;
     widget.controller.isDragging = false;
   }
 
   int getCurrentDraggingLine(double offset) {
-    for (int i = 0; i < widget.lyrics.length; i++) {
+    for (int i = 0; i < widget.lyrics!.length; i++) {
       var scrollY = computeScrollY(i);
       if (offset > -1) {
         offset = 0;
@@ -221,13 +221,13 @@ class _LyricWidgetState extends State<LyricWidget> {
         return i;
       }
     }
-    return widget.lyrics.length;
+    return widget.lyrics!.length;
   }
 
   void cancelTimer() {
     if (widget.controller.draggingTimer != null) {
-      if (widget.controller.draggingTimer.isActive) {
-        widget.controller.draggingTimer.cancel();
+      if (widget.controller.draggingTimer!.isActive) {
+        widget.controller.draggingTimer!.cancel();
         widget.controller.draggingTimer = null;
       }
     }
@@ -255,7 +255,7 @@ class _LyricWidgetState extends State<LyricWidget> {
   int findLyricIndexByDuration(Duration curDuration, List<Lyric> lyrics) {
     for (int i = 0; i < lyrics.length; i++) {
       if (curDuration >= lyrics[i].startTime &&
-          curDuration <= lyrics[i].endTime) {
+          curDuration <= lyrics[i].endTime!) {
         return i;
       }
     }
@@ -268,21 +268,21 @@ class _LyricWidgetState extends State<LyricWidget> {
     for (var i = 0; i < curLine; i++) {
       var currPaint = widget.lyricTextPaints[i]
         ..text =
-            TextSpan(text: widget.lyrics[i].lyric, style: widget.lyricStyle);
-      currPaint.layout(maxWidth: lyricMaxWidth);
+            TextSpan(text: widget.lyrics![i].lyric, style: widget.lyricStyle);
+      currPaint.layout(maxWidth: lyricMaxWidth ?? 0);
       totalHeight += currPaint.height + widget.lyricGap;
     }
     if (widget.remarkLyrics != null) {
       //增加 当前行之前的翻译歌词的偏移量
-      widget.remarkLyrics
+      widget.remarkLyrics!
           .where(
-              (subLyric) => subLyric.endTime <= widget.lyrics[curLine].endTime)
+              (subLyric) => subLyric.endTime! <= widget.lyrics![curLine].endTime!)
           .toList()
           .forEach((subLyric) {
         var currentPaint = widget
-            .subLyricTextPaints[widget.remarkLyrics.indexOf(subLyric)]
+            .subLyricTextPaints[widget.remarkLyrics!.indexOf(subLyric)]
           ..text = TextSpan(text: subLyric.lyric, style: widget.remarkStyle);
-        currentPaint.layout(maxWidth: lyricMaxWidth);
+        currentPaint.layout(maxWidth: lyricMaxWidth ?? 0);
         totalHeight += widget.remarkLyricGap + currentPaint.height;
       });
     }
