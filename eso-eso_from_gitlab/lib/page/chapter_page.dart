@@ -435,7 +435,7 @@ class _ChapterPageState extends State<ChapterPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Colors.blue,
+            color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -450,7 +450,9 @@ class _ChapterPageState extends State<ChapterPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Colors.blue
+            color: chapterIndex == searchItem.durChapterIndex
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).textTheme.bodyText1.color,
           ),
         ),
         subtitle: chapter.time == null || chapter.time.isEmpty
