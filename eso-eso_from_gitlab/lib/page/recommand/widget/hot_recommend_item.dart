@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class HotRecommendItem extends StatelessWidget {
   final SearchItem searchItem;
-  const HotRecommendItem({Key key,this.searchItem}) : super(key: key);
+  const HotRecommendItem({super.key,required this.searchItem});
 
   @override
   Widget build(BuildContext context) {

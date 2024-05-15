@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../entity/product_item.dart';
 class ProductItemWidget extends StatelessWidget {
   SearchItem item;
-  ProductItemWidget({Key key, this.item}) : super(key: key);
+  ProductItemWidget({super.key,required this.item}) ;
 
   @override
   Widget build(BuildContext context) {

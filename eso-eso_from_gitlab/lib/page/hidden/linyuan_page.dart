@@ -9,35 +9,34 @@ import 'package:webview_windows/webview_windows.dart';
 
 import '../../utils.dart';
 
-class LinyuanPage extends StatelessWidget {
-  const LinyuanPage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final yuque = "https://www.yuque.com/mrlinyuan";
-    final icon =
-        "https://cdn.nlark.com/yuque/0/2021/png/12924434/1628124182247-avatar/48d73035-8ee5-44ac-bbb2-0583092a4985.png?x-oss-process=image%2Fresize%2Cm_fill%2Cw_328%2Ch_328%2Fformat%2Cpng";
-    return LaunchUrlWithWebview(
-      title: "临渊的语雀",
-      url: yuque,
-      icon: icon,
-    );
-  }
-}
+// class LinyuanPage extends StatelessWidget {
+//   const LinyuanPage({Key key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final yuque = "https://www.yuque.com/mrlinyuan";
+//     final icon =
+//         "https://cdn.nlark.com/yuque/0/2021/png/12924434/1628124182247-avatar/48d73035-8ee5-44ac-bbb2-0583092a4985.png?x-oss-process=image%2Fresize%2Cm_fill%2Cw_328%2Ch_328%2Fformat%2Cpng";
+//     return LaunchUrlWithWebview(
+//       title: "临渊的语雀",
+//       url: yuque,
+//       icon: icon,
+//     );
+//   }
+// }
 
 class LaunchUrlWithWebview extends StatelessWidget {
-  final String url;
-  final String title;
-  final String icon;
-  const LaunchUrlWithWebview({Key key, this.url, this.title, this.icon})
-      : super(key: key);
+  final String? url;
+  final String? title;
+  final String? icon;
+  const LaunchUrlWithWebview({super.key, this.url, this.title, this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Platform.isWindows
-        ? WebInAppWindows(url: url, title: title, icon: icon)
+        ? WebInAppWindows(url: url!, title: title!, icon: icon!)
         : Platform.isAndroid
-            ? WebInAppAndroid(url: url, title: title, icon: icon)
+            ? WebInAppAndroid(url: url!, title: title!, icon: icon!)
             : Scaffold(
                 appBar: AppBar(
                   leadingWidth: 30,
@@ -45,32 +44,32 @@ class LaunchUrlWithWebview extends StatelessWidget {
                       ? null
                       : ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(icon),
+                            backgroundImage: NetworkImage(icon!),
                           ),
-                          title: Text(title, maxLines: 1),
-                          subtitle: Text(url, maxLines: 1),
+                          title: Text(title ?? "", maxLines: 1),
+                          subtitle: Text(url!, maxLines: 1),
                         ),
                   //Column(children: [Text(title)]),
                   actions: [
                     IconButton(
                         onPressed: () {
-                          launchUrl(Uri.parse(url));
+                          launchUrl(Uri.parse(url!));
                         },
                         tooltip: "在浏览器打开",
                         icon: Icon(Icons.open_in_browser))
                   ],
                 ),
                 body: Container(
-                  child: Text(url),
+                  child: Text(url!),
                 ));
   }
 }
 
 class WebInAppAndroid extends StatelessWidget {
-  final String url;
-  final String title;
-  final String icon;
-  WebInAppAndroid({Key key, this.url, this.title, this.icon}) : super(key: key);
+  final String? url;
+  final String? title;
+  final String? icon;
+  WebInAppAndroid({super.key, this.url, this.title, this.icon});
 
   // Future<bool> setCookies() async {
   //   return await MethodChannel('plugins.flutter.io/cookie_manager').invokeMethod<bool>(
@@ -125,10 +124,10 @@ class WebInAppAndroid extends StatelessWidget {
               leading: icon == null
                 ? null
                 : CircleAvatar(
-                backgroundImage: NetworkImage(icon),
+                backgroundImage: NetworkImage(icon!),
               ),
-              title: Text(title, maxLines: 1),
-              subtitle: Text(url, maxLines: 1),
+              title: Text(title!, maxLines: 1),
+              subtitle: Text(url!, maxLines: 1),
             ),
             actions: [
               IconButton(
@@ -159,7 +158,7 @@ class WebInAppAndroid extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
-                    launchUrl(Uri.parse(url));
+                    launchUrl(Uri.parse(url!));
                   },
                   tooltip: "在浏览器打开",
                   icon: Icon(Icons.open_in_browser))
@@ -179,10 +178,10 @@ class WebInAppAndroid extends StatelessWidget {
 }
 
 class WebInAppWindows extends StatefulWidget {
-  final String url;
-  final String title;
-  final String icon;
-  WebInAppWindows({Key key, this.url, this.title, this.icon}) : super(key: key);
+  final String? url;
+  final String? title;
+  final String? icon;
+  WebInAppWindows({super.key, this.url, this.title, this.icon});
 
   @override
   State<WebInAppWindows> createState() => _WebInAppWindowsState();
@@ -199,7 +198,7 @@ class _WebInAppWindowsState extends State<WebInAppWindows> {
   initWindows() async {
     if (!webviewController.value.isInitialized) {
       await webviewController.initialize();
-      await webviewController.loadUrl(widget.url);
+      await webviewController.loadUrl(widget.url!);
       if (mounted) setState(() {});
     }
   }
@@ -222,10 +221,10 @@ class _WebInAppWindowsState extends State<WebInAppWindows> {
             leading: widget.icon == null
                 ? null
                 : CircleAvatar(
-                    backgroundImage: NetworkImage(widget.icon),
+                    backgroundImage: NetworkImage(widget.icon!),
                   ),
-            title: Text(widget.title, maxLines: 1),
-            subtitle: Text(widget.url, maxLines: 1),
+            title: Text(widget.title!, maxLines: 1),
+            subtitle: Text(widget.url!, maxLines: 1),
           ),
           //Column(children: [Text(title)]),
           actions: [
@@ -251,7 +250,7 @@ class _WebInAppWindowsState extends State<WebInAppWindows> {
             ),
             IconButton(
                 onPressed: () {
-                  launchUrl(Uri.parse(widget.url));
+                  launchUrl(Uri.parse(widget.url!));
                 },
                 tooltip: "在浏览器打开",
                 icon: Icon(Icons.open_in_browser))

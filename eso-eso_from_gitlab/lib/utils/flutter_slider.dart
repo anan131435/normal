@@ -53,7 +53,7 @@ class FlutterSlider extends StatefulWidget {
       {this.key,
       this.min,
       this.max,
-      @required this.values,
+      required this.values,
       this.fixedValues,
       this.axis = Axis.horizontal,
       this.handler,

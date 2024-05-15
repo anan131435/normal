@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../fonticons_icons.dart';
 
 class UISetting extends StatelessWidget {
-  const UISetting({Key key}) : super(key: key);
+  const UISetting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class UISetting extends StatelessWidget {
           ),
           body: ValueListenableBuilder<Box<dynamic>>(
               valueListenable: globalConfigBox.listenable(),
-              builder: (BuildContext context, Box<dynamic> _, Widget child) {
+              builder: (BuildContext context, Box<dynamic> _, Widget? child) {
                 return ListView(
                   children: [
                     Card(
@@ -79,13 +79,13 @@ class UISetting extends StatelessWidget {
                             title: Text('收藏-发现'),
                             value: 2,
                             groupValue: profile.bottomCount,
-                            onChanged: (int value) => profile.bottomCount = value,
+                            onChanged: (int? value) => profile.bottomCount = value!,
                           ),
                           RadioListTile<int>(
                             title: Text('收藏-发现-历史-关于'),
                             value: 4,
                             groupValue: profile.bottomCount,
-                            onChanged: (int value) => profile.bottomCount = value,
+                            onChanged: (int? value) => profile.bottomCount = value!,
                           ),
                           Divider(),
                           ListTile(
@@ -96,19 +96,19 @@ class UISetting extends StatelessWidget {
                             title: Text('凹陷'),
                             value: ESOTheme.searchDocker,
                             groupValue: profile.searchPostion,
-                            onChanged: (int value) => profile.searchPostion = value,
+                            onChanged: (int? value) => profile.searchPostion = value!,
                           ),
                           RadioListTile<int>(
                             title: Text('浮动'),
                             value: ESOTheme.searchFloat,
                             groupValue: profile.searchPostion,
-                            onChanged: (int value) => profile.searchPostion = value,
+                            onChanged: (int? value) => profile.searchPostion = value!,
                           ),
                           RadioListTile<int>(
                             title: Text('顶部'),
                             value: ESOTheme.searchAction,
                             groupValue: profile.searchPostion,
-                            onChanged: (int value) => profile.searchPostion = value,
+                            onChanged: (int? value) => profile.searchPostion = value!,
                           ),
                           Divider(),
                           SwitchListTile(

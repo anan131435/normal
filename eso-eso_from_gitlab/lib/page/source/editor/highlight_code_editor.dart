@@ -7,8 +7,8 @@ class HighLightCodeEditor extends StatefulWidget {
   final Key key;
   final String code;
   final bool readOnly;
-  final EdgeInsets padding;
-  final FocusNode focusNode;
+  final EdgeInsets? padding;
+  final FocusNode? focusNode;
 
   HighLightCodeEditor(this.key, this.code,
       {this.readOnly = false, this.padding, this.focusNode})
@@ -21,12 +21,12 @@ class HighLightCodeEditor extends StatefulWidget {
 class HighLightCodeEditorState extends State<HighLightCodeEditor> {
   final String engineId = "_CODE_FORMAT_ENGINE_ID_";
 
-  int _lastTextLength;
-  CodeInputController codeTextController;
-  IsolateQjs _jsEngine;
+  late int _lastTextLength;
+  late CodeInputController codeTextController;
+  late IsolateQjs _jsEngine;
   int _lines = 0;
-  ScrollController textScrollerController;
-  ScrollController lineCodeScrollerController;
+  late ScrollController textScrollerController;
+  late ScrollController lineCodeScrollerController;
 
   CodeInputController get controller => codeTextController;
 

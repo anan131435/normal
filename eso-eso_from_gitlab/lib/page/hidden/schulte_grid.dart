@@ -6,17 +6,22 @@ class SchulteGrid extends StatefulWidget {
   @override
   _SchulteGridState createState() => _SchulteGridState();
 }
-
+/*
+*  nextNum = 0;
+    curNum = 0;
+    secondsPassed = 0;
+    millPassed = 0;
+* */
 class _SchulteGridState extends State<SchulteGrid> with SingleTickerProviderStateMixin {
-  int count;
-  int nextNum;
-  int curNum;
-  int secondsPassed;
-  int millPassed;
-  List<int> data = List<int>();
-  AnimationController controller;
-  Animation<Color> animation;
-  Timer timer;
+  int count = 0;
+  int nextNum = 0;
+  int curNum = 0;
+  int secondsPassed = 0;
+  int millPassed = 0;
+  List<int> data = [];
+  late AnimationController controller;
+  late Animation<Color?> animation;
+  Timer? timer;
   @override
   void initState() {
     super.initState();
@@ -30,10 +35,7 @@ class _SchulteGridState extends State<SchulteGrid> with SingleTickerProviderStat
   void init(int count) {
     timer?.cancel();
     this.count = count;
-    nextNum = 0;
-    curNum = 0;
-    secondsPassed = 0;
-    millPassed = 0;
+
     animation = ColorTween(
       begin: Colors.white,
       end: Colors.purple,
@@ -80,7 +82,7 @@ class _SchulteGridState extends State<SchulteGrid> with SingleTickerProviderStat
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () async {
-                      if (nextNum == 0 && (timer == null || !timer.isActive)) {
+                      if (nextNum == 0 && (timer == null || !timer!.isActive)) {
                         startTick();
                       }
                       curNum = data[index];
@@ -106,7 +108,7 @@ class _SchulteGridState extends State<SchulteGrid> with SingleTickerProviderStat
                       await controller.reverse();
                       if (nextNum == count) {
                         nextNum++;
-                        timer.cancel();
+                        timer!.cancel();
                         showDialog(
                             context: context,
                             builder: (context) {

@@ -13,17 +13,17 @@ class RSSPage extends StatefulWidget {
   final SearchItem searchItem;
 
   const RSSPage({
-    this.searchItem,
-    Key key,
-  }) : super(key: key);
+    required this.searchItem,
+    super.key,
+  });
 
   @override
   _RSSPageState createState() => _RSSPageState();
 }
 
 class _RSSPageState extends State<RSSPage> {
-  Widget page;
-  RSSPageProvider __provider;
+  late Widget page;
+  late RSSPageProvider __provider;
   @override
   Widget build(BuildContext context) {
     if (page == null) {
@@ -49,7 +49,7 @@ class _RSSPageState extends State<RSSPage> {
           }
           return Scaffold(
             appBar: AppBar(
-              title: Text(widget.searchItem.durChapter),
+              title: Text(widget.searchItem.durChapter!),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.list),
@@ -83,18 +83,18 @@ class _RSSContentPage extends StatefulWidget {
   final List<String> content;
 
   _RSSContentPage({
-    this.searchItem,
-    this.content,
-    Key key,
-  }) : super(key: key);
+    required this.searchItem,
+    required this.content,
+    super.key,
+  });
 
   @override
   __RSSContentPageState createState() => __RSSContentPageState();
 }
 
 class __RSSContentPageState extends State<_RSSContentPage> {
-  WebViewController _controller;
-  Widget _webView;
+  late WebViewController _controller;
+  late Widget _webView;
   int _durChapterIndex = -1;
 
   @override
@@ -106,7 +106,7 @@ class __RSSContentPageState extends State<_RSSContentPage> {
     ).toString();
     if (_controller != null &&
         _durChapterIndex != widget.searchItem.durChapterIndex) {
-      _durChapterIndex = widget.searchItem.durChapterIndex;
+      _durChapterIndex = widget.searchItem.durChapterIndex!;
       _controller.loadUrl(content);
     }
     if (_webView == null) {
@@ -115,7 +115,7 @@ class __RSSContentPageState extends State<_RSSContentPage> {
             _controller = controller,
         initialUrl: content,
       );
-      _durChapterIndex = widget.searchItem.durChapterIndex;
+      _durChapterIndex = widget.searchItem.durChapterIndex!;
     }
     return _webView;
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class ShortVideoPage extends StatefulWidget {
-  const ShortVideoPage({Key key}) : super(key: key);
+  const ShortVideoPage({super.key}) ;
 
   @override
   State<ShortVideoPage> createState() => _ShortVideoPageState();
@@ -13,7 +13,7 @@ class ShortVideoPage extends StatefulWidget {
 
 class _ShortVideoPageState extends State<ShortVideoPage> {
   final PageController _pageController = PageController();
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
   List<String> list = [
     "https://static.ybhospital.net/test-video-10.MP4",
     "https://static.ybhospital.net/test-video-6.mp4",
@@ -60,7 +60,7 @@ class _ShortVideoPageState extends State<ShortVideoPage> {
         child: PageView.builder(
           controller: _pageController,
           scrollDirection: Axis.vertical,
-          physics: const QuickerScrollPhysics(),
+          // physics: QuickerScrollPhysics(parent: this),
           itemCount: list.length,
           onPageChanged: (value) {
             print("要跳转$value");

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 class DisplayHighRate extends StatefulWidget {
-  DisplayHighRate({Key key}) : super(key: key);
+  DisplayHighRate({super.key}) ;
 
   @override
   State<DisplayHighRate> createState() => _DisplayHighRateState();
@@ -12,8 +12,8 @@ class DisplayHighRate extends StatefulWidget {
 
 class _DisplayHighRateState extends State<DisplayHighRate> {
   var supportedModes = <DisplayMode>[];
-  DisplayMode preferredMode;
-  DisplayMode activeMode;
+  late DisplayMode preferredMode;
+  late DisplayMode activeMode;
 
   @override
   void initState() {

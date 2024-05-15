@@ -3,8 +3,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
-  SharedPreferences _preferences;
-  static LocalStorage _instance;
+  late SharedPreferences _preferences;
+  static late LocalStorage _instance;
   LocalStorage.of() {
     init();
   }
@@ -42,7 +42,7 @@ class LocalStorage {
     }
   }
 
-  T get<T>(String key) {
+  T? get<T>(String key) {
     var value = _preferences.get(key);
     if (value !=null ) {
       return value as T;

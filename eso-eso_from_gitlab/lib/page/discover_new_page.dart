@@ -15,7 +15,7 @@ import 'langding_page.dart';
 
 class DiscoverNewPage extends StatefulWidget {
   final Rule rule;
-  DiscoverNewPage({Key key, this.rule}) : super(key: key);
+  DiscoverNewPage({super.key,required this.rule});
 
   @override
   State<DiscoverNewPage> createState() => _DiscoverNewPageState();
@@ -43,17 +43,17 @@ class DiscoverNewPage extends StatefulWidget {
 T cast<T>(x, T v) => x is T ? x : v;
 
 class DiscoverRule {
-  String js;
-  List<Rules> rules;
+  String? js;
+  List<Rules>? rules;
 
   DiscoverRule({this.js, this.rules});
 
   DiscoverRule.fromJson(Map<String, dynamic> json) {
     js = json['js'];
     if (json['rules'] != null) {
-      rules = new List<Rules>();
+      rules = [];
       json['rules'].forEach((v) {
-        rules.add(new Rules.fromJson(v));
+        rules?.add(new Rules.fromJson(v));
       });
     }
   }
@@ -62,7 +62,7 @@ class DiscoverRule {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['js'] = this.js;
     if (this.rules != null) {
-      data['rules'] = this.rules.map((v) => v.toJson()).toList();
+      data['rules'] = this.rules!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -19,7 +19,7 @@ import 'entity/product_item.dart';
 
 class RecommendPage extends StatefulWidget {
   final HomeContentType contentType;
-  const RecommendPage({Key key, this.contentType}) : super(key: key);
+  const RecommendPage({super.key,required this.contentType});
 
   @override
   State<RecommendPage> createState() => _RecommendPageState();
@@ -27,8 +27,8 @@ class RecommendPage extends StatefulWidget {
 
 class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveClientMixin{
 
-  List<ProductItem> itemList;
-  EditSourceProvider _provider;
+  // List<ProductItem> itemList;
+  late EditSourceProvider _provider;
   int fetchRuletype(HomeContentType type) {
     switch (type) {
       case HomeContentType.Novel:
@@ -56,11 +56,11 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
   void createProvider() async {
     _provider = EditSourceProvider(type: 2);
     _provider.ruleContentType = fetchRuletype(widget.contentType);
-    await _provider.refreshData();
+    _provider.refreshData();
   }
 
-  List<Widget> _yourFavorite({ListDataItem dataItem}) {
-    return dataItem.items.sublist(0, 6).map((searchItem) {
+  List<Widget> _yourFavorite({required ListDataItem dataItem}) {
+    return dataItem.items!.sublist(0, 6).map((searchItem) {
       return GestureDetector(
           onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -72,15 +72,15 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
     }).toList();
   }
 
-  Widget findListView({BuildContext context}) {
+  Widget findListView({required BuildContext context}) {
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
-    if (controller.items != null && controller.items.isNotEmpty) {
+    if (controller.items != null && controller.items!.isNotEmpty) {
       // print("findListView has data ${controller.items.length}");
       // for (var item in controller.items) {
       //   print("itemListCount ${item.items.length}");
       // }
-      ListDataItem item = controller.items[0];
+      ListDataItem item = controller.items![0];
       DiscoverMap map = controller.discoverMap[0];
       return ListView.builder(
         itemBuilder: (context, index) {
@@ -126,7 +126,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                           vertical: 8,
                           horizontal: 10,
                         ),
-                        children: item.items.isEmpty
+                        children: item.items!.isEmpty
                             ? [Container()]
                             : _yourFavorite(dataItem: item)),
                   )
@@ -143,7 +143,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10),
                 itemBuilder: (context, index) {
-                  SearchItem searchItem = item.items[index];
+                  SearchItem searchItem = item.items![index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -159,7 +159,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                 },
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: item.items.length,
+                itemCount: item.items!.length,
               ),
             );
           }
@@ -215,7 +215,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                   create: (context) {
                 return DiscoverPageController(
                     originTag: rule.id,
-                    discoverMap: snapshot.data,
+                    discoverMap: snapshot.data!,
                     origin: rule.name,
                     searchUrl: rule.searchUrl);
               }, child: LayoutBuilder(

@@ -49,7 +49,7 @@ class ContentPageRoute {
               // case API.RSS:
               //   return RSSPage(searchItem: searchItem);
               case API.VIDEO:
-                if (Global.isDesktop) return VideoPageDesktop(searchItem: searchItem);
+
                 return VideoPage(searchItem: searchItem);
               case API.AUDIO:
                 return AudioPage(searchItem: searchItem);
@@ -67,14 +67,14 @@ class ContentPageRoute {
 class ContentProvider with ChangeNotifier {
   final SearchItem searchItem;
 
-  String _info;
+  String _info = "";
   String get info => _info;
-  bool _showInfo;
+  bool _showInfo = false;
   bool get showInfo => _showInfo != false;
 
-  CacheUtil _cache;
+  late CacheUtil _cache;
   CacheUtil get cache => _cache;
-  bool _canUseCache;
+  bool _canUseCache = true;
   bool get canUseCache => _canUseCache == true;
 
   final MemoryCache<int, List<String>> _memoryCache;
@@ -93,15 +93,15 @@ class ContentProvider with ChangeNotifier {
 
   Future<void> init() async {
     try {
-      if (searchItem.chapters == null || searchItem.chapters.isEmpty) {
+      if (searchItem.chapters == null || searchItem.chapters!.isEmpty) {
         _addInfo("目录为空 重新获取目录");
         // if (SearchItemManager.isFavorite(searchItem.originTag, searchItem.url)) {
         //   searchItem.chapters = SearchItemManager.getChapter(searchItem.id);
         // } else {
         searchItem.chapters =
-            await APIManager.getChapter(searchItem.originTag, searchItem.url);
+            await APIManager.getChapter(searchItem.originTag, searchItem.url!);
         // }
-        _addInfo("结束 得到${searchItem.chapters.length}个章节");
+        _addInfo("结束 得到${searchItem.chapters!.length}个章节");
       }
       _cache = CacheUtil(basePath: "cache${Platform.pathSeparator}${searchItem.id}");
       _canUseCache = await CacheUtil.requestPermission();
@@ -109,7 +109,7 @@ class ContentProvider with ChangeNotifier {
       _showInfo = false;
       notifyListeners();
     } catch (e, st) {
-      _addInfo(e);
+      _addInfo(e.toString());
       _addInfo("$st");
     }
   }
@@ -120,7 +120,7 @@ class ContentProvider with ChangeNotifier {
   }
 
   Future<List<String>> refresh() {
-    return loadChapter(searchItem.durChapterIndex, false, false);
+    return loadChapter(searchItem.durChapterIndex!, false, false);
   }
 
   Future<List<String>> loadChapter(int chapterIndex,
@@ -137,7 +137,7 @@ class ContentProvider with ChangeNotifier {
           await retryUseCache();
         }
       }
-      final chapter = searchItem.chapters[chapterIndex];
+      final chapter = searchItem.chapters![chapterIndex];
       final content = await APIManager.getContent(searchItem.originTag, chapter.url);
       chapter.contentUrl = API.contentUrl;
       final resp = content.join("\n").split(RegExp(r"\n\s*|\s{2,}"));
@@ -152,12 +152,12 @@ class ContentProvider with ChangeNotifier {
 
     () async {
       if (loadNext) {
-        if (chapterIndex + 2 < searchItem.chapters.length &&
+        if (chapterIndex + 2 < searchItem.chapters!.length &&
             !_memoryCache.containsKey(chapterIndex + 1)) {
           await Future.delayed(Duration(milliseconds: 100));
           await loadChapter(chapterIndex + 1, useCache, false, false);
         }
-        if (chapterIndex + 3 < searchItem.chapters.length &&
+        if (chapterIndex + 3 < searchItem.chapters!.length &&
             !_memoryCache.containsKey(chapterIndex + 2)) {
           await Future.delayed(Duration(milliseconds: 100));
           await loadChapter(chapterIndex + 2, useCache, false, false);
@@ -165,7 +165,7 @@ class ContentProvider with ChangeNotifier {
       }
     }();
 
-    return r;
+    return r!;
   }
 
   void changeChapter(int index) async {

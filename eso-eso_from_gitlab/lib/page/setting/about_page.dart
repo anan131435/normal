@@ -34,7 +34,7 @@ class AboutPage extends StatefulWidget {
 
 class _AboutPageState extends State<AboutPage> {
   var isLargeScreen = false;
-  Widget detailPage;
+  late Widget detailPage;
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +75,9 @@ class _AboutPageState extends State<AboutPage> {
 
 class AboutPage2 extends StatelessWidget {
   final void Function(Widget) invokeTap;
-  const AboutPage2({Key key, this.invokeTap}) : super(key: key);
+  const AboutPage2({super.key,required this.invokeTap});
 
-  joinGroup([String group]) {
+  joinGroup([String? group]) {
     final key =
         "7588a53508787a254b910d39476959823e3f36a7c894a6fc72504ac92e782ec2"; //1群key
     if (Global.isDesktop) {
@@ -453,14 +453,14 @@ class AboutPage2 extends StatelessWidget {
 }
 
 class ConfigSettingPage extends StatefulWidget {
-  const ConfigSettingPage({Key key}) : super(key: key);
+  const ConfigSettingPage({super.key});
 
   @override
   _ConfigSettingPageState createState() => _ConfigSettingPageState();
 }
 
 class _ConfigSettingPageState extends State<ConfigSettingPage> {
-  TextCompositionConfig config;
+  late TextCompositionConfig config;
   @override
   void initState() {
     config = TextConfigManager.config;

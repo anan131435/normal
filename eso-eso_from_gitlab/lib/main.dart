@@ -32,7 +32,7 @@ import 'utils/auto_decode_cli.dart';
 import 'utils/rule_comparess.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:http/http.dart' as http;
- HjRewardAd hjRewardAd;//全局对象
+
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   // Override behavior methods and getters like dragDevices
   @override
@@ -44,7 +44,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 }
 
 Future<void> onLink(String linkPath) async {
-  PlatformFile platformFile;
+  PlatformFile? platformFile;
   var name = "本地文件";
   try {
     final _uri = Uri.parse(linkPath);
@@ -58,7 +58,7 @@ Future<void> onLink(String linkPath) async {
     return;
   }
 
-  String fileContent = autoReadFile(platformFile.path).trim();
+  String fileContent = autoReadFile(platformFile.path!).trim();
   if (platformFile.name.contains(".json") ||
       fileContent.startsWith(RuleCompress.tag) ||
       (fileContent.startsWith('[') && fileContent.endsWith(']')) ||
@@ -72,7 +72,7 @@ Future<void> onLink(String linkPath) async {
           RuleCompress.decompassString(fileContent.substring(1, fileContent.length - 1));
     }
     showDialog(
-      context: navigatorKey.currentState.context,
+      context: navigatorKey!.currentState!.context,
       builder: (context) => UIAddRuleDialog(
           refresh: () {
             editSourceProviderTemp?.refreshData();
@@ -82,9 +82,9 @@ Future<void> onLink(String linkPath) async {
     );
   } else if (platformFile.name.contains(".txt") || platformFile.name.contains(".epub")) {
     Navigator.push(
-        navigatorKey.currentState.context,
+        navigatorKey.currentState!.context,
         MaterialPageRoute(
-          builder: (context) => AddLocalItemPage(platformFile: platformFile),
+          builder: (context) => AddLocalItemPage(platformFile: platformFile!),
         ));
   } else {
     Utils.toast("未知的文件类型");
@@ -131,8 +131,8 @@ void main() async {
 class ErrorApp extends StatelessWidget {
   final error;
   final stackTrace;
-  final MethodChannel channel;
-  const ErrorApp({Key key, this.error, this.stackTrace,this.channel}) : super(key: key);
+  final MethodChannel? channel;
+  const ErrorApp({super.key, this.error, this.stackTrace,this.channel});
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +156,7 @@ BoxDecoration globalDecoration;
 final hetu = Hetu();
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();

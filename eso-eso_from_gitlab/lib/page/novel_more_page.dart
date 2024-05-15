@@ -17,14 +17,14 @@ import 'dart:ui' as ui;
 
 class NovelMorePage extends StatelessWidget {
   final SearchItem searchItem;
-  NovelMorePage({Key key, this.searchItem}) : super(key: key);
+  NovelMorePage({ super.key, required this.searchItem});
 
   @override
   Widget build(BuildContext context) {
     final contentProvider = Provider.of<ContentProvider>(context);
     return Scaffold(
       body: FutureBuilder<List<String>>(
-        future: contentProvider.loadChapter(searchItem.durChapterIndex),
+        future: contentProvider.loadChapter(searchItem.durChapterIndex!),
         initialData: null,
         builder: (BuildContext _, AsyncSnapshot<List<String>> snapshot) {
           if (!snapshot.hasData) {
@@ -40,9 +40,9 @@ class NovelMorePage extends StatelessWidget {
                       child: RichText(
                           text: TextSpan(
                               style: TextStyle(
-                                  color: Theme.of(context).textTheme.titleSmall.color),
+                                  color: Theme.of(context).textTheme.titleSmall!.color),
                               children:
-                                  buildSpansFlatter(snapshot.data, searchItem.chapter))),
+                                  buildSpansFlatter(snapshot.data!, searchItem.chapter))),
                     ),
                   ),
                 ],
@@ -53,43 +53,6 @@ class NovelMorePage extends StatelessWidget {
               // 按下时触发
               if (event.runtimeType.toString() == 'RawKeyUpEvent') return;
 
-              if (event.data is RawKeyEventDataMacOs) {
-                RawKeyEventDataMacOs data = event.data;
-                print(data.keyCode);
-                switch (data.keyCode) {
-                  case 123: // 方向键左
-                    break;
-                  case 124: // 方向键右
-                    break;
-                  case 53: // esc
-                    Navigator.of(context).pop();
-                    break;
-                  case 27: // -
-                    break;
-                  case 24: // +
-                    break;
-                  case 36: //enter
-                    break;
-                }
-              } else if (event.data is RawKeyEventDataWindows) {
-                RawKeyEventDataWindows data = event.data;
-                print(data.keyCode);
-                switch (data.keyCode) {
-                  // case 123: // 方向键左
-                  //   break;
-                  // case 124: // 方向键右
-                  //   break;
-                  case 27: // esc
-                    Navigator.of(context).pop();
-                    break;
-                  // case 27: // -
-                  //   break;
-                  // case 24: // +
-                  //   break;
-                  // case 36: //enter
-                  //   break;
-                }
-              }
             },
           );
         },
@@ -191,14 +154,14 @@ List<List<TextSpan>> buildSpans(List<String> content, String chapter) {
       }
       final img = RegExp(r"""(src|data\-original)[^'"]*('|")([^'"]*)""")
           .firstMatch(paragraph)
-          .group(3);
+          !.group(3);
       spanss.add([
         TextSpan(
           children: [
             WidgetSpan(
                 child: Container(
               width: width,
-              child: UIImageItem(cover: img, hero: img),
+              child: UIImageItem(cover: img!, hero: img),
             )),
             newLine,
           ],

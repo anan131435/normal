@@ -1,13 +1,13 @@
 class DataBaseEntity {
-  String name;
-  String version;
-  String url;
-  String url2;
+  String? name;
+  String? version;
+  String? url;
+  String? url2;
   DataBaseEntity({
-    this.name,
-    this.version,
-    this.url,
-    this.url2
+    required this.name,
+    required this.version,
+    required this.url,
+    required this.url2
   });
   DataBaseEntity.fromJson(Map<String,dynamic> json) {
     name = json["name"];

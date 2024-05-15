@@ -20,15 +20,14 @@ class SharePage extends HookWidget {
   final String addInfo;
   final String fileName;
   const SharePage(
-      {Key key, @required this.text, @required this.addInfo, @required this.fileName})
-      : super(key: key);
+      {super.key, required this.text, required this.addInfo, required this.fileName});
 
   @override
   Widget build(BuildContext context) {
     final share = useTextEditingController(text: text);
     share.text = text;
     final netcut = useTextEditingController(text: Uuid().v4());
-    String id;
+    String? id;
     return Container(
       decoration: globalDecoration,
       child: Scaffold(
@@ -105,7 +104,7 @@ class SharePage extends HookWidget {
                         Utils.toast("错误 名称至少六个字符");
                         return;
                       }
-                      if (id == null || id.isEmpty) {
+                      if (id == null || id!.isEmpty) {
                         final u = "https://netcut.cn/${netcut.text}";
                         final res = await http.get(Uri.parse(u));
                         final ids = AnalyzerHtml()

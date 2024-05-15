@@ -28,7 +28,7 @@ import 'content_page_manager.dart';
 
 class VideoPage extends StatelessWidget {
   final SearchItem searchItem;
-  const VideoPage({this.searchItem, Key key}) : super(key: key);
+  const VideoPage({required this.searchItem, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +236,7 @@ class VideoPage extends StatelessWidget {
             padding: EdgeInsets.zero,
             icon: Icon(Icons.open_in_browser),
             onPressed: () =>
-                launch(searchItem.chapters[searchItem.durChapterIndex].contentUrl),
+                launch(searchItem.chapters![searchItem.durChapterIndex!].contentUrl),
             tooltip: "查看原网页",
           ),
         ),
@@ -264,8 +264,8 @@ class VideoPage extends StatelessWidget {
                       textColor: (speed - value).abs() < 0.1 ? primaryColor : null,
                     ))
                 .toList(),
-            onSelect: (double value) async {
-              provider.changeSpeed(value);
+            onSelect: (double? value) async {
+              provider.changeSpeed(value!);
             },
           ),
         ),
@@ -304,7 +304,7 @@ class VideoPage extends StatelessWidget {
   Widget _buildBottomBar(BuildContext context) {
     return Consumer<VideoPageProvider>(
       builder: (context, provider, child) {
-        final value = provider.isLoading ? 0 : provider.position.inSeconds.toDouble();
+        double value = provider.isLoading ? 0 : provider.position.inSeconds.toDouble();
         return SafeArea(
           top: false,
           child: Column(
@@ -318,7 +318,7 @@ class VideoPage extends StatelessWidget {
                       backgroundColor: VideoProgressColors().backgroundColor,
                     )
                   : FlutterSlider(
-                      values: [value > 0 ? value : 0],
+                      values: [value > 0.0 ? value : 0.0],
                       min: 0,
                       max: provider.duration.inSeconds.toDouble(),
                       onDragging: (handlerIndex, lowerValue, upperValue) {
@@ -390,7 +390,7 @@ class VideoPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: Icon(Icons.skip_previous),
                     onPressed: () =>
-                        provider.parseContent(searchItem.durChapterIndex - 1),
+                        provider.parseContent(searchItem.durChapterIndex! - 1),
                     tooltip: "上一集",
                   ),
                   IconButton(
@@ -409,7 +409,7 @@ class VideoPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: Icon(Icons.skip_next),
                     onPressed: () =>
-                        provider.parseContent(searchItem.durChapterIndex + 1),
+                        provider.parseContent(searchItem.durChapterIndex! + 1),
                     tooltip: "下一集",
                   ),
                   if (provider.screenAxis == Axis.horizontal)
@@ -440,7 +440,7 @@ class VideoPage extends StatelessWidget {
 }
 
 class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
-  bool _allowPlaybackground;
+  bool _allowPlaybackground = true;
   bool get allowPlaybackground => _allowPlaybackground == true;
   set allowPlaybackground(bool value) {
     if (_allowPlaybackground != value) {
@@ -470,15 +470,15 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   final SearchItem searchItem;
-  String _titleText;
+  String _titleText = "";
   String get titleText => _titleText;
-  List<String> _content;
+  List<String> _content = [];
   List<String> get content => _content;
 
   final loadingText = <String>[];
-  bool _disposed;
+  bool _disposed = false;
 
-  VideoPlayerController _controller;
+  late VideoPlayerController _controller;
   VideoPlayerController get controller => _controller;
   bool get isPlaying => _controller.value.isPlaying;
   Duration get position => _controller.value.position;
@@ -487,7 +487,7 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
   String get durationString => Utils.formatDuration(_controller.value.duration);
 
   final ContentProvider contentProvider;
-  VideoPageProvider({@required this.searchItem, @required this.contentProvider}) {
+  VideoPageProvider({required this.searchItem, required this.contentProvider}) {
     WidgetsBinding.instance.addObserver(this);
     // if (searchItem.chapters?.length == 0 &&
     //     SearchItemManager.isFavorite(searchItem.originTag, searchItem.url)) {
@@ -503,7 +503,7 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
 
   bool _isLoading;
   bool get isLoading => _isLoading != false;
-  void parseContent(int chapterIndex) async {
+  void parseContent(int? chapterIndex) async {
     if (chapterIndex != null &&
         (_isLoading == true ||
             chapterIndex < 0 ||
@@ -753,11 +753,11 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
-  bool _showController;
+  bool _showController = false;
   bool get showController => _showController != false;
-  bool _showChapter;
+  bool _showChapter = false;
   bool get showChapter => _showChapter ?? false;
-  DateTime _controllerTime;
+  late DateTime _controllerTime;
   final _controllerDelay = Duration(seconds: 4);
 
   void toggleControllerBar() {
@@ -796,8 +796,8 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
-  VideoAspectRatio _aspectRatio;
-  VideoAspectRatio get aspectRatio => _aspectRatio;
+  VideoAspectRatio? _aspectRatio;
+  VideoAspectRatio? get aspectRatio => _aspectRatio;
   double getAspectRatio() {
     switch (_aspectRatio) {
       case VideoAspectRatio.auto:

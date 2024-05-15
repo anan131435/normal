@@ -14,14 +14,14 @@ import '../../utils.dart';
 class ColorPick extends StatefulWidget {
   final int color;
   final void Function(Color) onColorChanged;
-  ColorPick({Key key, this.color, this.onColorChanged}) : super(key: key);
+  ColorPick({super.key, required this.color, required this.onColorChanged});
 
   @override
   State<ColorPick> createState() => _ColorPickState();
 }
 
 class _ColorPickState extends State<ColorPick> {
-  Color pickerColor;
+  late Color pickerColor;
   @override
   void initState() {
     super.initState();
@@ -50,7 +50,7 @@ class _ColorPickState extends State<ColorPick> {
 }
 
 class ThemePage extends StatelessWidget {
-  const ThemePage({Key key}) : super(key: key);
+  const ThemePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class ThemePage extends StatelessWidget {
           title: Text(title),
           trailing: ValueListenableBuilder<Box>(
             valueListenable: themeBox.listenable(keys: <String>[key]),
-            builder: (BuildContext context, Box _, Widget child) {
+            builder: (BuildContext context, Box _, Widget? child) {
               return Container(
                 color: Color(themeBox.get(key, defaultValue: dColor)),
                 width: 20,
@@ -79,7 +79,7 @@ class ThemePage extends StatelessWidget {
 
     return ValueListenableBuilder<Box>(
         valueListenable: themeBox.listenable(keys: <String>[decorationImageKey]),
-        builder: (BuildContext context, Box _, Widget child) {
+        builder: (BuildContext context, Box _, Widget? child) {
           return Container(
             decoration: globalDecoration,
             child: Scaffold(
@@ -156,8 +156,8 @@ class ThemePage extends StatelessWidget {
                                       onPressed: () async {
                                         final text = (await Clipboard.getData(
                                                 Clipboard.kTextPlain))
-                                            .text;
-                                        controller.text = text;
+                                            !.text;
+                                        controller.text = text!;
                                         Utils.toast("已从剪贴板更新");
                                       },
                                       child: Text("粘贴")),
@@ -235,15 +235,15 @@ class ThemePage extends StatelessWidget {
                             leading: const Icon(Icons.color_lens),
                             title: const Text("调色板"),
                           ),
-                          pick('主题色', primaryColorKey, tomatoCat[primaryColorKey]),
-                          pick('图标色', iconColorKey, tomatoCat[iconColorKey]),
+                          pick('主题色', primaryColorKey, tomatoCat[primaryColorKey] as int),
+                          pick('图标色', iconColorKey, tomatoCat[iconColorKey] as int),
                         ],
                       ),
                     ),
                     Card(
                       child: ValueListenableBuilder<Box<int>>(
                         valueListenable: themeModeBox.listenable(),
-                        builder: (BuildContext context, Box<int> box, Widget child) {
+                        builder: (BuildContext context, Box<int> box, Widget? child) {
                           const done = const Icon(Icons.done, size: 32);
                           return Column(
                             children: [
@@ -262,24 +262,24 @@ class ThemePage extends StatelessWidget {
                                     ThemeMode.light.index == themeMode ? done : null,
                               ),
                               pick('顶栏前景色', appBarForegroundColorKey,
-                                  tomatoCat[appBarForegroundColorKey]),
+                                  tomatoCat[appBarForegroundColorKey] as int),
                               pick('顶栏背景色', appBarBackgroundColorKey,
-                                  tomatoCat[appBarBackgroundColorKey]),
+                                  tomatoCat[appBarBackgroundColorKey] as int),
                               pick('页面背景色', scaffoldBackgroundColorKey,
-                                  tomatoCat[scaffoldBackgroundColorKey]),
+                                  tomatoCat[scaffoldBackgroundColorKey] as int),
                               pick('卡片背景色', cardBackgroundColorKey,
-                                  tomatoCat[cardBackgroundColorKey]),
+                                  tomatoCat[cardBackgroundColorKey] as int),
                               ListTile(
                                 leading: const Icon(Icons.dark_mode_outlined),
                                 title: Text("黑夜模式"),
                                 onTap: () => themeMode = ThemeMode.dark.index,
                                 trailing: ThemeMode.dark.index == themeMode ? done : null,
                               ),
-                              pick('顶栏前景色', appBarForegroundDarkColorKey, colors["象牙色"]),
-                              pick('顶栏背景色', appBarBackgroundDarkColorKey, colors["星空灰"]),
+                              pick('顶栏前景色', appBarForegroundDarkColorKey, colors["象牙色"] ?? 0),
+                              pick('顶栏背景色', appBarBackgroundDarkColorKey, colors["星空灰"] ??0),
                               pick(
-                                  '页面背景色', scaffoldBackgroundDarkColorKey, colors["星空灰"]),
-                              pick('卡片背景色', cardBackgroundDarkColorKey, colors["星空灰"]),
+                                  '页面背景色', scaffoldBackgroundDarkColorKey, colors["星空灰"] ?? 0),
+                              pick('卡片背景色', cardBackgroundDarkColorKey, colors["星空灰"] ??0),
                             ],
                           );
                         },

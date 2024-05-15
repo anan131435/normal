@@ -22,7 +22,7 @@ import 'package:path/path.dart';
 import '../../global.dart';
 
 class AutoBackupPage extends StatelessWidget {
-  const AutoBackupPage({Key key}) : super(key: key);
+  const AutoBackupPage({super.key});
 
   AlertDialog showTextDialog(
       BuildContext context, String title, String s, void Function(String s) press,
@@ -81,15 +81,15 @@ class AutoBackupPage extends StatelessWidget {
                           title: Text('从不'),
                           value: ESOTheme.autoBackupNone,
                           groupValue: profile.autoBackRate,
-                          onChanged: (int value) =>
-                              setState(() => profile.autoBackRate = value),
+                          onChanged: (int? value) =>
+                              setState(() => profile.autoBackRate = value!),
                         ),
                         RadioListTile<int>(
                           title: Text('每日'),
                           value: ESOTheme.autoBackupDay,
                           groupValue: profile.autoBackRate,
-                          onChanged: (int value) =>
-                              setState(() => profile.autoBackRate = value),
+                          onChanged: (int? value) =>
+                              setState(() => profile.autoBackRate = value!),
                         ),
                       ],
                     ),
@@ -377,7 +377,7 @@ class AutoBackupPage extends StatelessWidget {
       try {
         File(dir)
           ..create(recursive: true)
-          ..writeAsBytes(bytes);
+          ..writeAsBytes(bytes!);
         Utils.toast("$dir 文件写入成功");
       } catch (e) {
         Utils.toast("文件写入失败 $e");

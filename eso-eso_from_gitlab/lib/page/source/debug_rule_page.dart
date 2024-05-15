@@ -11,14 +11,14 @@ import '../../fonticons_icons.dart';
 
 class DebugRulePage extends StatelessWidget {
   final Rule rule;
-  const DebugRulePage({this.rule, Key key}) : super(key: key);
+  const DebugRulePage({required this.rule, super.key}) ;
 
   @override
   Widget build(BuildContext context) {
-    final textColor = Theme.of(context).textTheme.bodyText1.color;
+    final textColor = Theme.of(context).textTheme.bodyText1!.color;
     final focus = FocusNode();
     return ChangeNotifierProvider<DebugRuleProvider>(
-      create: (_) => DebugRuleProvider(rule, textColor),
+      create: (_) => DebugRuleProvider(rule, textColor!),
       builder: (context, child) => Container(
         decoration: globalDecoration,
         child: Scaffold(

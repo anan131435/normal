@@ -5,94 +5,94 @@ import 'package:flutter/material.dart';
 
 import 'linyuan_page.dart';
 
-class LeshiPage extends StatelessWidget {
-  LeshiPage({Key key}) : super(key: key);
-
-  List<ArticleTitle> getArticleTitle(String html) {
-    return AnalyzerHtml().parse(html).getElements("article").map((el) {
-      final a = el.querySelector("a.daily-quote");
-      final number = a.attributes["href"].split("/").last;
-      return ArticleTitle(
-          number, a.text.trim(), el.querySelector(".text-right").text.trim());
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final titles = getArticleTitle(innerHtml);
-
-    return Container(
-      decoration: globalDecoration,
-      child: Scaffold(
-        appBar: AppBar(title: Text("乐事专用(仍在施工ing)")),
-        body: ListView(
-          padding: EdgeInsets.all(10),
-          children: <Widget>[
-            Card(
-              child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    '',
-                    style: TextStyle(fontSize: 24),
-                  )),
-            ),
-            Divider(),
-            Divider(),
-            Divider(),
-            Divider(),
-            Divider(),
-            Divider(),
-            Container(
-              alignment: Alignment.topLeft,
-              margin: EdgeInsets.only(left: 16),
-              child: Text(
-                '题头（废文）',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            if (titles.isEmpty)
-              Card(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text("获取中"),
-                ),
-              )
-            else
-              for (final title in titles)
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12))),
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        InkWell(
-                            onTap: () {
-                              Utils.startPageWait(
-                                  context,
-                                  LaunchUrlWithWebview(
-                                    url: "https://sosadfun.link/quote/${title.number}",
-                                    title: "#${title.number}号题头",
-                                    icon: "https://sosadfun.link/favicon.ico",
-                                  ));
-                            },
-                            child: Row(children: [Text("#${title.number}"), Spacer()])),
-                        Divider(),
-                        Text(
-                          "${title.content}",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        Row(children: [Spacer(), Text("${title.author}")]),
-                      ],
-                    ),
-                  ),
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class LeshiPage extends StatelessWidget {
+//   LeshiPage({Key key}) : super(key: key);
+//
+//   List<ArticleTitle> getArticleTitle(String html) {
+//     return AnalyzerHtml().parse(html).getElements("article").map((el) {
+//       final a = el.querySelector("a.daily-quote");
+//       final number = a.attributes["href"].split("/").last;
+//       return ArticleTitle(
+//           number, a.text.trim(), el.querySelector(".text-right").text.trim());
+//     }).toList();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final titles = getArticleTitle(innerHtml);
+//
+//     return Container(
+//       decoration: globalDecoration,
+//       child: Scaffold(
+//         appBar: AppBar(title: Text("乐事专用(仍在施工ing)")),
+//         body: ListView(
+//           padding: EdgeInsets.all(10),
+//           children: <Widget>[
+//             Card(
+//               child: Container(
+//                   padding: EdgeInsets.all(10),
+//                   child: Text(
+//                     '',
+//                     style: TextStyle(fontSize: 24),
+//                   )),
+//             ),
+//             Divider(),
+//             Divider(),
+//             Divider(),
+//             Divider(),
+//             Divider(),
+//             Divider(),
+//             Container(
+//               alignment: Alignment.topLeft,
+//               margin: EdgeInsets.only(left: 16),
+//               child: Text(
+//                 '题头（废文）',
+//                 style: TextStyle(fontSize: 24),
+//               ),
+//             ),
+//             if (titles.isEmpty)
+//               Card(
+//                 child: Container(
+//                   padding: EdgeInsets.all(10),
+//                   child: Text("获取中"),
+//                 ),
+//               )
+//             else
+//               for (final title in titles)
+//                 Card(
+//                   shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.all(Radius.circular(12))),
+//                   child: Container(
+//                     padding: EdgeInsets.all(10),
+//                     child: Column(
+//                       children: [
+//                         InkWell(
+//                             onTap: () {
+//                               Utils.startPageWait(
+//                                   context,
+//                                   LaunchUrlWithWebview(
+//                                     url: "https://sosadfun.link/quote/${title.number}",
+//                                     title: "#${title.number}号题头",
+//                                     icon: "https://sosadfun.link/favicon.ico",
+//                                   ));
+//                             },
+//                             child: Row(children: [Text("#${title.number}"), Spacer()])),
+//                         Divider(),
+//                         Text(
+//                           "${title.content}",
+//                           style: TextStyle(fontSize: 20),
+//                         ),
+//                         Row(children: [Spacer(), Text("${title.author}")]),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class ArticleTitle {
   final String content;

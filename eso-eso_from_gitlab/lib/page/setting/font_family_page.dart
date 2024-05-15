@@ -14,8 +14,8 @@ import '../../eso_theme.dart';
 
 class FontFamilyPage extends StatelessWidget {
   const FontFamilyPage({
-    Key key,
-  }) : super(key: key);
+     super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class FontFamilyPage extends StatelessWidget {
             }
             return ListView(
               children: [
-                _buildFontListTile("默认", null, profile),
+                _buildFontListTile("默认", "", profile),
                 _buildFontListTile("Roboto", 'Roboto', profile),
                 for (final ttf in fontFamilyProvider.ttfList)
                   _buildFontListTile(ttf, ttf, profile),
@@ -95,11 +95,11 @@ class FontFamilyPage extends StatelessWidget {
 }
 
 class _FontFamilyProvider with ChangeNotifier {
-  CacheUtil _cacheUtil;
-  String _dir;
+  late CacheUtil _cacheUtil;
+  String _dir = "";
   String get dir => _dir;
 
-  List<String> _ttfList;
+  List<String> _ttfList = [];
   List<String> get ttfList => _ttfList;
 
   _FontFamilyProvider() {

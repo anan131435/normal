@@ -23,10 +23,10 @@ class PhotoItem {
 
   const PhotoItem(this.url, this.headers);
 
-  static PhotoItem parse(String urlWithHeaders) {
+  static PhotoItem? parse(String urlWithHeaders) {
     if (urlWithHeaders == null) return null;
     final index = urlWithHeaders.indexOf("@headers");
-    if (index == -1) return PhotoItem(urlWithHeaders, null);
+    if (index == -1) return PhotoItem(urlWithHeaders, {});
     final headers = (jsonDecode(urlWithHeaders.substring(index + "@headers".length)) as Map)
         .map((k, v) => MapEntry('$k', '$v'));
     return PhotoItem(urlWithHeaders.substring(0, index), headers);
@@ -45,26 +45,25 @@ class PhotoViewPage extends StatefulWidget {
   final bool enableRotation;
 
   /// hero
-  final String heroTag;
+  String? heroTag = "";
 
   /// 长按事件
-  final ValueChanged<int> onLongPress;
+  final ValueChanged<int>? onLongPress;
 
-  const PhotoViewPage(
-      {Key key,
-      @required this.items,
+   PhotoViewPage(
+      {super.key,
+      required this.items,
       this.index = 0,
       this.enableRotation = false,
       this.heroTag,
-      this.onLongPress})
-      : super(key: key);
+      this.onLongPress});
 
   @override
   State<StatefulWidget> createState() => _PhotoViewPageState();
 }
 
 class _PhotoViewPageState extends State<PhotoViewPage> {
-  PageController controller;
+  late PageController controller;
   int currentIndex = 0;
 
   @override

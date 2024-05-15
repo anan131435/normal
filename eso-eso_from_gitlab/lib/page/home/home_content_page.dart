@@ -16,7 +16,7 @@ import '../../utils/auto_insert_data.dart';
 import 'model/reward_listener.dart';
 
 class HomeContentPage extends StatefulWidget {
-  HomeContentPage({Key key}) : super(key: key);
+  HomeContentPage({super.key});
 
   @override
   State<HomeContentPage> createState() => _HomeContentPageState();
@@ -24,9 +24,9 @@ class HomeContentPage extends StatefulWidget {
 
 class _HomeContentPageState extends State<HomeContentPage>
     with SingleTickerProviderStateMixin {
-  HomeViewModel viewModel = null;
-  TabController controller = null;
-  DataManager dataManager = null;
+  late HomeViewModel viewModel;
+  late TabController controller;
+  late DataManager dataManager ;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _HomeContentPageState extends State<HomeContentPage>
   }
 
   void loadData() async{
-   await dataManager.addUrlDecode();
+    dataManager.addUrlDecode();
   }
 
 

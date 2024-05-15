@@ -12,14 +12,14 @@ class Menu<T> extends StatelessWidget {
   final Color color;
   final String tooltip;
   final FutureOr Function(T? value) onSelect;
-  final Widget child;
+  final Widget? child;
 
   const Menu({
      super.key,
     this.icon = OMIcons.moreVert,
     required this.color,
     this.tooltip = "更多",
-    required this.child,
+    this.child,
     required this.items,
     this.onSelect = voidValueFunction,
   }) ;

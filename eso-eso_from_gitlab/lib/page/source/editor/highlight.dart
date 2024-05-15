@@ -52,13 +52,13 @@ List<TextSpan> _convert(String code) {
 }
 
 class CodeInputController extends TextEditingController {
-  CodeInputController({String text}) : super(text: text);
+  CodeInputController({required String text}) : super(text: text);
 
   TextSpan oldSpan = TextSpan();
-  Future<void> spanCall;
+  Future<void>? spanCall;
 
   @override
-  TextSpan buildTextSpan({ BuildContext context, TextStyle style, @required bool withComposing}) {
+  TextSpan buildTextSpan({required BuildContext context, TextStyle? style, required bool withComposing}) {
     String oldText = oldSpan.toPlainText();
     String newText = value.text;
     if (oldText == newText) return oldSpan;
@@ -74,7 +74,7 @@ class CodeInputController extends TextEditingController {
     int splitAt = value.selection.start;
     if (splitAt < 0) splitAt = newText.length ~/ 2;
     int start = 0;
-    InlineSpan leftSpan;
+    InlineSpan? leftSpan;
     oldSpan.children?.indexWhere((element) {
       String elementText = element.toPlainText();
       if (start + elementText.length > splitAt ||
@@ -88,7 +88,7 @@ class CodeInputController extends TextEditingController {
     });
     List<InlineSpan> endSpans = [];
     int end = 0;
-    InlineSpan rightSpan;
+    InlineSpan? rightSpan;
     oldSpan.children?.sublist(beforeSpans.length)?.lastIndexWhere((element) {
       String elementText = element.toPlainText();
       if (splitAt + end + elementText.length >= newText.length ||
@@ -104,7 +104,7 @@ class CodeInputController extends TextEditingController {
     return TextSpan(style: style, children: [
       ...beforeSpans,
       TextSpan(
-          style: leftSpan != null && leftSpan == rightSpan ? leftSpan.style : style,
+          style: leftSpan != null && leftSpan == rightSpan ? leftSpan!.style : style,
           text: newText.substring(start, max(start, newText.length - end))),
       ...endSpans.reversed
     ]);

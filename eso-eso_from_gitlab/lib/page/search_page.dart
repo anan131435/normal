@@ -19,7 +19,7 @@ import '../main.dart';
 import 'chapter_page.dart';
 
 class SearchPage extends StatefulWidget {
-  SearchPage({Key key}) : super(key: key);
+  SearchPage({super.key});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -27,7 +27,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   var isLargeScreen = false;
-  Widget detailPage;
+  late Widget detailPage;
 
   void invokeTap(Widget detailPage) {
     if (isLargeScreen) {
@@ -75,8 +75,8 @@ class _SearchPageState extends State<SearchPage> {
                           fontFamily: ESOTheme.staticFontFamily,
                           color: Theme.of(context)
                               .textTheme
-                              .bodyText1
-                              .color
+                              .bodyText1!
+                              .color!
                               .withOpacity(0.5)),
                       isExpanded: true,
                       isDense: true,
