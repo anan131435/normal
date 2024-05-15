@@ -97,6 +97,8 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 
 void main() async {
+  DataManager dataManager = DataManager();
+
   if (Platform.isAndroid) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
@@ -154,6 +156,7 @@ class ErrorApp extends StatelessWidget {
 
 BoxDecoration globalDecoration;
 final hetu = Hetu();
+final dataManager = DataManager();
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
@@ -186,7 +189,7 @@ class _MyAppState extends State<MyApp> {
             Utils.toast("msg");
           },
         });
-
+        await dataManager.addUrlDecode();
         globalDecoration = BoxDecoration(
           image:
               DecorationImage(image: AssetImage(decorationImage), fit: BoxFit.fitWidth),

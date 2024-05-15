@@ -26,21 +26,17 @@ class _HomeContentPageState extends State<HomeContentPage>
     with SingleTickerProviderStateMixin {
   HomeViewModel viewModel = null;
   TabController controller = null;
-  DataManager dataManager = null;
 
   @override
   void initState() {
     viewModel = HomeViewModel();
     controller = TabController(length: viewModel.tabTitles.length, vsync: this);
-    dataManager = DataManager();
-    loadData();
+
     LocalStorage.preInit();
     super.initState();
   }
 
-  void loadData() async{
-   await dataManager.addUrlDecode();
-  }
+
 
 
   Widget searchBar() {
@@ -100,74 +96,64 @@ class _HomeContentPageState extends State<HomeContentPage>
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DataManager>(
-      create: (context) {
-        return dataManager;
-      },
-      child: Consumer<DataManager>(
-        builder: (context,value,child) {
-          print("DataManager build");
-          return SafeArea(
-            top: true,
-            bottom: true,
-            child: Scaffold(
-                body: Column(
-                  children: [
-                    searchBar(),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    TabBar(
-                      onTap: (value) async {
+    return SafeArea(
+      top: true,
+      bottom: true,
+      child: Scaffold(
+          body: Column(
+            children: [
+              searchBar(),
+              const SizedBox(
+                height: 16,
+              ),
+              TabBar(
+                onTap: (value) async {
 
-                      },
-                      indicator: const BoxDecoration(),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      controller: controller,
-                      unselectedLabelColor: ColorsUtil.contractColor("#A6A6A6"),
-                      unselectedLabelStyle: TextStyle(
-                        fontSize: 16,
-                        color: ColorsUtil.contractColor("#A6A6A6"),
-                      ),
-                      labelColor: Colors.black,
-                      labelStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      labelPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                      isScrollable: true,
-                      tabs: viewModel.tabTitles
-                          .map((e) => Tab(
-                        text: e,
-                      ))
-                          .toList(),
-                    ),
-                    Expanded(
-                      child: TabBarView(controller: controller, children: [
-                        RecommendPage(
-                          contentType: HomeContentType.Novel,
-                        ),
-                        RecommendPage(
-                          contentType: HomeContentType.Novel,
-                        ),
-                        RecommendPage(
-                          contentType: HomeContentType.Picture,
-                        ),
-                        RecommendPage(
-                          contentType: HomeContentType.Audio,
-                        ),
-                        RecommendPage(
-                          contentType: HomeContentType.Video,
-                        ),
-                        ShortVideoPage(),
-                      ]),
-                    )
-                  ],
-                )),
-          );
-        }
-      ),
+                },
+                indicator: const BoxDecoration(),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                controller: controller,
+                unselectedLabelColor: ColorsUtil.contractColor("#A6A6A6"),
+                unselectedLabelStyle: TextStyle(
+                  fontSize: 16,
+                  color: ColorsUtil.contractColor("#A6A6A6"),
+                ),
+                labelColor: Colors.black,
+                labelStyle: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                labelPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                isScrollable: true,
+                tabs: viewModel.tabTitles
+                    .map((e) => Tab(
+                  text: e,
+                ))
+                    .toList(),
+              ),
+              Expanded(
+                child: TabBarView(controller: controller, children: [
+                  RecommendPage(
+                    contentType: HomeContentType.Novel,
+                  ),
+                  RecommendPage(
+                    contentType: HomeContentType.Novel,
+                  ),
+                  RecommendPage(
+                    contentType: HomeContentType.Picture,
+                  ),
+                  RecommendPage(
+                    contentType: HomeContentType.Audio,
+                  ),
+                  RecommendPage(
+                    contentType: HomeContentType.Video,
+                  ),
+                  ShortVideoPage(),
+                ]),
+              )
+            ],
+          )),
     );
   }
 }

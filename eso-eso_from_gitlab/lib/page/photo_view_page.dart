@@ -70,6 +70,7 @@ class _PhotoViewPageState extends State<PhotoViewPage> {
   @override
   void initState() {
     super.initState();
+    print("漫画initState");
     currentIndex =
         widget.index >= 0 && widget.index < widget.items.length ? widget.index : 0;
     controller = PageController(initialPage: currentIndex);

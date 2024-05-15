@@ -11,7 +11,6 @@ class HotRecommendItem extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double itemWidth = (screenWidth - 74 ) / 2;
-    print("itemWidth $itemWidth");
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),

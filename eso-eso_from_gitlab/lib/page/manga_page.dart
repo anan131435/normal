@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,11 +12,15 @@ import 'package:eso/ui/ui_system_info.dart';
 import 'package:eso/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../database/search_item.dart';
 import '../database/search_item_manager.dart';
+import '../utils/local_storage_utils.dart';
 import 'content_page_manager.dart';
+import 'home/model/reward_listener.dart';
 import 'langding_page.dart';
 import 'photo_view_page.dart';
 
@@ -36,6 +41,130 @@ class _MangaPageState extends State<MangaPage> {
   Widget page;
   Widget pageMangaContent;
   MangaPageProvider __provider;
+  HjRewardAd rewardAd;
+  int _count = 0;
+  String todayStr;
+  @override
+  void initState() {
+    if (Platform.isIOS) {
+      _requestRewardAd();
+    } else {
+      _requestAndroidRewardAd();
+    }
+    todayStr = _fetchCurrentDate();
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      _count++;
+      print(_count);
+      int showCount = LocalStorage.getInstance().get(todayStr);
+      if (showCount != null && showCount >= 3) {
+        print("xiuxiu超过了3次，停着计时");
+        timer.cancel();
+      } else {
+        if (_count == 60 || _count == 120) {
+          if (Platform.isIOS) {
+            _requestRewardAd();
+          } else {
+            _requestAndroidRewardAd();
+          }
+        }
+        if (_count >= 120) {
+          timer.cancel();
+        }
+      }
+
+    });
+
+    super.initState();
+  }
+
+  String _fetchCurrentDate() {
+    DateTime now = DateTime.now();
+    String dateStr = DateFormat.yMd().format(now);
+    return dateStr;
+  }
+
+  void _requestRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
+
+      rewardAd = HjRewardAd(
+          request: request,
+          listener: EsoRewardListener(
+              loadCallBack: (ad) async {
+                int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
+                if (showCount == null ) {
+                  print("xiuxiu第一次展示广告");
+                  ad.showAd();
+                } else {
+                  if (showCount <= 3) {
+                    ad.showAd();
+                  }
+                }
+
+              },
+              closeCallBack: () {
+                print("_rewardAdCloseCallback");
+              },
+              rewardCallBack: () {
+                print("_rewardAdRewardCallback");
+              }));
+      rewardAd.loadAdData();
+    } else {
+      _showRewardAd();
+    }
+  }
+
+  void _showRewardAd() async {
+    bool isReady = await rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      rewardAd.showAd();
+    } else {
+      rewardAd.loadAdData();
+    }
+  }
+
+  void _requestAndroidRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
+      rewardAd = HjRewardAd(
+          request: request,
+          listener: EsoRewardListener(
+            loadCallBack: (ad) async {
+              int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
+              if (showCount == null ) {
+                print("xiuxiu第一次展示广告");
+                ad.showAd();
+              } else {
+                if (showCount <= 3) {
+                  ad.showAd();
+                }
+              }
+
+            },
+            rewardCallBack: () {
+              print("_rewardAd rewardCallBack");
+            },
+            closeCallBack: () {
+              print("_rewardAd closeCallBack");
+            },
+          ));
+      rewardAd.loadAdData();
+    } else {
+      _showAndroidRewardAd();
+    }
+  }
+
+  void _showAndroidRewardAd() async {
+    bool isReady = await rewardAd.isReady();
+    print("_rewardAd isReady $isReady");
+    if (isReady) {
+      rewardAd.showAd();
+    } else {
+      rewardAd.loadAdData();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -250,28 +250,30 @@ class _ChapterPageState extends State<ChapterPage> {
                                   },
                                 ),
                                 const SizedBox(width: 16.0,),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(
-                                      searchItem.name,
-                                      style: TextStyle(
-                                        color: Theme.of(context).textTheme.bodyText1.color,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: ESOTheme.staticFontFamily,
-                                        fontSize: 18,
-                                        shadows: [Shadow(blurRadius: 2, color: Colors.grey)],
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(
+                                        searchItem.name,
+                                        style: TextStyle(
+                                          color: Theme.of(context).textTheme.bodyText1.color,
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: ESOTheme.staticFontFamily,
+                                          fontSize: 18,
+                                          shadows: [Shadow(blurRadius: 2, color: Colors.grey)],
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      searchItem.author,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: ESOTheme.staticFontFamily,
-                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      Text(
+                                        searchItem.author,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontFamily: ESOTheme.staticFontFamily,
+                                          color: Theme.of(context).textTheme.bodyText1.color,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
@@ -285,7 +287,7 @@ class _ChapterPageState extends State<ChapterPage> {
                           color: Colors.red,
                           width: double.infinity,
                           height: 60,
-                          child: Center(child: Text("广告位",style: TextStyle(color: Colors.black),)),
+                          child: Center(child: Text("广告位啊啊啊啊",style: TextStyle(color: Colors.black),)),
                         ),
 
                         SizedBox(height: 4),
@@ -433,7 +435,7 @@ class _ChapterPageState extends State<ChapterPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: Colors.blue,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -448,9 +450,7 @@ class _ChapterPageState extends State<ChapterPage> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            color: chapterIndex == searchItem.durChapterIndex
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).textTheme.bodyText1.color,
+            color: Colors.blue
           ),
         ),
         subtitle: chapter.time == null || chapter.time.isEmpty
@@ -487,14 +487,6 @@ class _ChapterPageState extends State<ChapterPage> {
             child: Container(height: 200, child: LandingPage()),
           );
         }
-        // if (!widget.fromHistory &&
-        //     searchItem.chapters != null &&
-        //     searchItem.chapters.length > 0 &&
-        //     searchItem.chapters.first.name == "正文") {
-        //   Future.delayed(Duration(milliseconds: 100)).then((value) =>
-        //       Navigator.of(context)
-        //           .pushReplacement(ContentPageRoute().route(searchItem)));
-        // }
 
         void Function(int index) onTap = (int index) {
           provider.changeChapter(index);

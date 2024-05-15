@@ -30,7 +30,7 @@ class ContentPageRoute {
         return ChangeNotifierProvider<ContentProvider>(
           create: (context) => ContentProvider(searchItem),
           builder: (context, child) {
-            print("ContentPageRoute build");
+            print("小说 漫画会进来 ContentPageRoute build");
             final provider = Provider.of<ContentProvider>(context);
             if (provider.showInfo) {
               return Material(
@@ -42,6 +42,7 @@ class ContentPageRoute {
             switch (searchItem.ruleContentType) {
               case API.NOVEL:
                 return NovelPage(searchItem: searchItem);
+                //图片
               case API.MANGA:
                 return MangaPage(searchItem: searchItem);
               case API.NOVELMORE:
