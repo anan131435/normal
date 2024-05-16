@@ -34,6 +34,7 @@ class LocalStorage {
     } else if (data is double) {
       _preferences.setDouble(key, data);
     } else if (data is int) {
+      print("存储数据$data, preference is ${_preferences}");
       _preferences.setInt(key, data);
     } else if (data is bool) {
       _preferences.setBool(key, data);
@@ -44,6 +45,7 @@ class LocalStorage {
 
   T get<T>(String key) {
     var value = _preferences.get(key);
+    print("查找数据$value, preference is ${_preferences}");
     if (value !=null ) {
       return value as T;
     }

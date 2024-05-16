@@ -45,35 +45,65 @@ class NovelPage extends StatefulWidget {
   State<NovelPage> createState() => _NovelPageState();
 }
 
-class _NovelPageState extends State<NovelPage> {
+class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   SearchItem searchItem;
   TextCompositionConfig _config;
   HjRewardAd rewardAd;
   int _count = 0;
   String todayStr;
   EsoRewardListener _rewardListener;
+  Timer _timer;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed: {
+        break;
+      }
+      case AppLifecycleState.paused:{
+        cancelTimer();
+        break;
+      }
+      case AppLifecycleState.inactive:{
+        cancelTimer();
+        break;
+      }
+      case AppLifecycleState.detached:{
+        cancelTimer();
+        break;
+      }
+    }
+
+
+    super.didChangeAppLifecycleState(state);
+  }
+
+  void cancelTimer() {
+    _timer.cancel();
+  }
+
+  void _onListenAdCallback() {
+    eventBus.on<bool>().listen((event) {
+      //拿到奖励算一次
+      DateTime now = DateTime.now();
+      String dateStr = DateFormat.yMd().format(now);
+      print("xiuxiu${dateStr}拿到奖励了");
+      int showCount = LocalStorage.getInstance().get(dateStr);
+      print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+      if (showCount == null ) {
+        showCount = 1;
+      } else {
+        showCount += 1;
+      }
+      print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+      LocalStorage.getInstance().setData(dateStr, showCount);
+    });
+  }
   @override
   void initState() {
-  eventBus.on<bool>().listen((event) {
-    print("eventBus 收到了激励");
-    //拿到奖励算一次
-    DateTime now = DateTime.now();
-    String dateStr = DateFormat.yMd().format(now);
-    print("xiuxiu${dateStr}拿到奖励了");
-    int showCount = LocalStorage.getInstance().get(dateStr);
-    print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-    Fluttertoast.showToast(msg: "激励回调了");
-    if (showCount == null ) {
-      showCount = 1;
-    } else {
-      showCount += 1;
-    }
-    print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-    LocalStorage.getInstance().setData(dateStr, showCount);
-  });
-
+    _onListenAdCallback();
     _rewardListener = EsoRewardListener(loadCallBack: (ad) {
-      ad.showAd();
+      // ad.showAd();
       print("广告加载回调OK");
     },rewardCallBack: () {
       print("广告激励回调OK");
@@ -81,11 +111,6 @@ class _NovelPageState extends State<NovelPage> {
       print("广告关闭回调OK");
     });
 
-    if (Platform.isIOS) {
-      _requestRewardAd();
-    } else {
-      _requestAndroidRewardAd();
-    }
     todayStr = _fetchCurrentDate();
     super.initState();
     _config = TextConfigManager.config;
@@ -93,7 +118,7 @@ class _NovelPageState extends State<NovelPage> {
     searchItem = widget.searchItem;
 
 
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _count++;
       print(_count);
       int showCount = LocalStorage.getInstance().get(todayStr);
@@ -101,7 +126,7 @@ class _NovelPageState extends State<NovelPage> {
         print("xiuxiu超过了3次，停着计时");
         timer.cancel();
       } else {
-        if (_count == 30 || _count == 100) {
+        if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
           if (Platform.isIOS) {
             _requestRewardAd();
           } else {
@@ -122,13 +147,13 @@ class _NovelPageState extends State<NovelPage> {
 
   @override
   void deactivate() {
+    _timer.cancel();
     super.deactivate();
   }
 
   void _requestRewardAd() async {
     if (rewardAd == null) {
       HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
-
       rewardAd = HjRewardAd(
           request: request,
           listener: _rewardListener);
@@ -153,26 +178,7 @@ class _NovelPageState extends State<NovelPage> {
       HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
       rewardAd = HjRewardAd(
           request: request,
-          listener: EsoRewardListener(
-            loadCallBack: (ad) async {
-              int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
-              if (showCount == null ) {
-                print("xiuxiu第一次展示广告");
-                ad.showAd();
-              } else {
-                if (showCount <= 3) {
-                  ad.showAd();
-                }
-              }
-
-            },
-            rewardCallBack: () {
-              print("_rewardAd rewardCallBack");
-            },
-            closeCallBack: () {
-              print("_rewardAd closeCallBack");
-            },
-          ));
+          listener: _rewardListener);
       rewardAd.loadAdData();
     } else {
       _showAndroidRewardAd();
@@ -181,7 +187,6 @@ class _NovelPageState extends State<NovelPage> {
 
   void _showAndroidRewardAd() async {
     bool isReady = await rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
     if (isReady) {
       rewardAd.showAd();
     } else {
