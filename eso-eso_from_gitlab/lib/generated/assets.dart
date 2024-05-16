@@ -165,6 +165,7 @@ class Assets {
   static const String qingMain = 'lib/qing/main.dart';
   static const String qingParser = 'lib/qing/parser.dart';
   static const String qingRequest = 'lib/qing/request.dart';
+  static const String recommandRecommandHomePage = 'lib/page/recommand/recommand_home_page.dart';
   static const String recommandRecommandPage = 'lib/page/recommand/recommand_page.dart';
   static const String settingAboutPage = 'lib/page/setting/about_page.dart';
   static const String settingAutoBackupPage = 'lib/page/setting/auto_backup_page.dart';

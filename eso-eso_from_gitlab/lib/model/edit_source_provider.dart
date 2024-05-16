@@ -79,6 +79,7 @@ class EditSourceProvider with ChangeNotifier {
     }
     _isLoading = false;
     _setRuleContentType(_ruleContentType);
+    print("数据库查询数据${_ruleContentType}了");
     notifyListeners();
   }
 

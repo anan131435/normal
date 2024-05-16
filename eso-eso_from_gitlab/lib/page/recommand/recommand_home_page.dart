@@ -17,30 +17,36 @@ import 'package:provider/provider.dart';
 import '../chapter_page.dart';
 import 'entity/product_item.dart';
 
-class RecommendPage extends StatefulWidget {
+class RecommendHomePage extends StatefulWidget {
   final HomeContentType contentType;
-  const RecommendPage({Key key, this.contentType}) : super(key: key);
+  const RecommendHomePage({Key key, this.contentType}) : super(key: key);
 
   @override
-  State<RecommendPage> createState() => _RecommendPageState();
+  State<RecommendHomePage> createState() => _RecommendHomePageState();
 }
 
-class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveClientMixin{
-
+class _RecommendHomePageState extends State<RecommendHomePage>
+    with AutomaticKeepAliveClientMixin {
   List<ProductItem> itemList;
   EditSourceProvider _provider;
-  int fetchRuletype(HomeContentType type) {
-    switch (type) {
-      case HomeContentType.Novel:
-        return 1;
-      case HomeContentType.Picture:
-        return 0;
-      case HomeContentType.Audio:
-        return 3;
-      case HomeContentType.Video:
-        return 2;
-    }
-  }
+  EditSourceProvider _videoProvider;
+  EditSourceProvider _pictureProvider;
+  List<ListDataItem> _novelList = [];
+  List<ListDataItem> _videoList = [];
+  List<ListDataItem> _pictureList = [];
+  int contentType;
+  // int fetchRuletype(HomeContentType type) {
+  //   switch (type) {
+  //     case HomeContentType.Novel:
+  //       return 1;
+  //     case HomeContentType.Picture:
+  //       return 0;
+  //     case HomeContentType.Audio:
+  //       return 3;
+  //     case HomeContentType.Video:
+  //       return 2;
+  //   }
+  // }
 
   @override
   // TODO: implement wantKeepAlive
@@ -49,14 +55,27 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
   @override
   void initState() {
     createProvider();
-    print("recommand initState");
+    createPictureProvider();
+    createVideoProvider();
     super.initState();
   }
 
   void createProvider() async {
     _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = fetchRuletype(widget.contentType);
+    _provider.ruleContentType = 1;
     await _provider.refreshData();
+  }
+
+  void createVideoProvider() async {
+    _videoProvider = EditSourceProvider(type: 2);
+    _videoProvider.ruleContentType = 2;
+    await _videoProvider.refreshData();
+  }
+
+  void createPictureProvider() async {
+    _pictureProvider = EditSourceProvider(type: 2);
+    _pictureProvider.ruleContentType = 2;
+    await _pictureProvider.refreshData();
   }
 
   List<Widget> _yourFavorite({ListDataItem dataItem}) {
@@ -80,6 +99,20 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
       // for (var item in controller.items) {
       //   print("itemListCount ${item.items.length}");
       // }
+      //小说
+      if (contentType == 1) {
+        print("小说数据回来了${controller.items.length}");
+        _novelList = controller.items;
+        //图片
+      } else if (contentType == 0) {
+        print("图片数据回来了${controller.items.length}");
+        _pictureList = controller.items;
+        //视频
+      } else if (contentType == 2) {
+        print("视频数据回来了");
+        _videoList = controller.items;
+      }
+
       ListDataItem item = controller.items[0];
       DiscoverMap map = controller.discoverMap[0];
       return ListView.builder(
@@ -87,7 +120,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
           if (index == 0) {
             return Container(
               margin: const EdgeInsets.all(16),
-              height:  (394 / 928) * screenH,
+              height: (394 / 928) * screenH,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -184,20 +217,29 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
         ChangeNotifierProvider<EditSourceProvider>(
           create: (context) => _provider,
         ),
+        ChangeNotifierProvider<EditSourceProvider>(
+          create: (context) => _pictureProvider,
+        ),
+        ChangeNotifierProvider<EditSourceProvider>(
+          create: (context) => _videoProvider,
+        ),
       ],
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
-        print("Consumer<EditSourceProvider>");
         if (value.rules.isEmpty) {
-          print("value.rules.isEmpty");
+          print("数据源空");
           return Container();
         } else {
           //数据源
+          print("数据源不为空");
           Rule rule;
-          if (widget.contentType == HomeContentType.Picture) {
-            rule = value.rules.last;
-          } else {
-            rule = value.rules[5];
-          }
+          rule = value.rules[5];
+          print("返回的数据类型是${value.ruleContentType}");
+          contentType = value.ruleContentType;
+          // if (widget.contentType == HomeContentType.Picture) {
+          //   rule = value.rules.last;
+          // } else {
+          //   rule = value.rules[5];
+          // }
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),

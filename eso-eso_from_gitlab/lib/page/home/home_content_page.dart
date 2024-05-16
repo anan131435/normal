@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:eso/page/enum/content_type.dart';
 import 'package:eso/page/home/view_model/home_view_model.dart';
+import 'package:eso/page/recommand/recommand_home_page.dart';
 import 'package:eso/page/recommand/recommand_page.dart';
 import 'package:eso/page/search_page.dart';
 import 'package:eso/page/short_video/short_video_page.dart';
@@ -134,7 +135,7 @@ class _HomeContentPageState extends State<HomeContentPage>
               ),
               Expanded(
                 child: TabBarView(controller: controller, children: [
-                  RecommendPage(
+                  RecommendHomePage(
                     contentType: HomeContentType.Novel,
                   ),
                   RecommendPage(
