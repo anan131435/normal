@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'hj_error.dart';
-
+import 'package:event_bus/event_bus.dart';
 mixin HjAdEvent {
   void onAdSucceed(Map<String, dynamic> arguments) {}
   void onAdExposure(Map<String, dynamic> arguments) {}
@@ -12,7 +12,7 @@ mixin HjAdEvent {
   void onAdAutoRefreshFail(HjError error, Map<String, dynamic> arguments) {}
   void onAdAutoRefreshed(Map<String, dynamic> arguments) {}
 }
-
+EventBus eventBus = EventBus();
 mixin HjAdEventHandler {
    HjAdEvent delegate = null;
 
@@ -49,6 +49,7 @@ mixin HjAdEventHandler {
           delegate.onVideoComplete();
           break;
         case 'onAdReward':
+          eventBus.fire(true);
     delegate.onAdReward(arguments);
           break;
         case 'onAdAutoRefreshed':

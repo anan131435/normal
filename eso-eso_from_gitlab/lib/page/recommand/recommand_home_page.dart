@@ -55,8 +55,8 @@ class _RecommendHomePageState extends State<RecommendHomePage>
   @override
   void initState() {
     createProvider();
-    createPictureProvider();
-    createVideoProvider();
+    // createPictureProvider();
+    // createVideoProvider();
     super.initState();
   }
 
@@ -217,12 +217,12 @@ class _RecommendHomePageState extends State<RecommendHomePage>
         ChangeNotifierProvider<EditSourceProvider>(
           create: (context) => _provider,
         ),
-        ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _pictureProvider,
-        ),
-        ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _videoProvider,
-        ),
+        // ChangeNotifierProvider<EditSourceProvider>(
+        //   create: (context) => _pictureProvider,
+        // ),
+        // ChangeNotifierProvider<EditSourceProvider>(
+        //   create: (context) => _videoProvider,
+        // ),
       ],
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
         if (value.rules.isEmpty) {

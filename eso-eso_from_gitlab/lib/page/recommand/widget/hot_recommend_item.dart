@@ -56,10 +56,17 @@ class HotRecommendItem extends StatelessWidget {
                       ),
                       maxLines: 1,
                     ),
-                    Text(
-                      searchItem.author,
-                      style: TextStyle(
-                          fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(
+                            searchItem.author,
+                            style: TextStyle(
+                                fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

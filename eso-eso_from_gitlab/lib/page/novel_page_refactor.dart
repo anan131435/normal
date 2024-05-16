@@ -18,6 +18,7 @@ import 'package:eso/utils/flutter_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:intl/intl.dart';
@@ -50,8 +51,36 @@ class _NovelPageState extends State<NovelPage> {
   HjRewardAd rewardAd;
   int _count = 0;
   String todayStr;
+  EsoRewardListener _rewardListener;
   @override
   void initState() {
+  eventBus.on<bool>().listen((event) {
+    print("eventBus 收到了激励");
+    //拿到奖励算一次
+    DateTime now = DateTime.now();
+    String dateStr = DateFormat.yMd().format(now);
+    print("xiuxiu${dateStr}拿到奖励了");
+    int showCount = LocalStorage.getInstance().get(dateStr);
+    print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+    Fluttertoast.showToast(msg: "激励回调了");
+    if (showCount == null ) {
+      showCount = 1;
+    } else {
+      showCount += 1;
+    }
+    print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+    LocalStorage.getInstance().setData(dateStr, showCount);
+  });
+
+    _rewardListener = EsoRewardListener(loadCallBack: (ad) {
+      ad.showAd();
+      print("广告加载回调OK");
+    },rewardCallBack: () {
+      print("广告激励回调OK");
+    },closeCallBack: (){
+      print("广告关闭回调OK");
+    });
+
     if (Platform.isIOS) {
       _requestRewardAd();
     } else {
@@ -63,6 +92,7 @@ class _NovelPageState extends State<NovelPage> {
     initBrightness();
     searchItem = widget.searchItem;
 
+
     Timer.periodic(const Duration(seconds: 1), (timer) {
       _count++;
       print(_count);
@@ -71,16 +101,14 @@ class _NovelPageState extends State<NovelPage> {
         print("xiuxiu超过了3次，停着计时");
         timer.cancel();
       } else {
-        if (_count == 60 || _count == 120) {
+        if (_count == 30 || _count == 100) {
           if (Platform.isIOS) {
             _requestRewardAd();
           } else {
             _requestAndroidRewardAd();
           }
         }
-        if (_count >= 120) {
-          timer.cancel();
-        }
+
       }
 
     });
@@ -103,25 +131,7 @@ class _NovelPageState extends State<NovelPage> {
 
       rewardAd = HjRewardAd(
           request: request,
-          listener: EsoRewardListener(
-              loadCallBack: (ad) async {
-                int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
-                if (showCount == null ) {
-                  print("xiuxiu第一次展示广告");
-                  ad.showAd();
-                } else {
-                  if (showCount <= 3) {
-                    ad.showAd();
-                  }
-                }
-
-              },
-              closeCallBack: () {
-                print("_rewardAdCloseCallback");
-              },
-              rewardCallBack: () {
-                print("_rewardAdRewardCallback");
-              }));
+          listener: _rewardListener);
       rewardAd.loadAdData();
     } else {
       _showRewardAd();

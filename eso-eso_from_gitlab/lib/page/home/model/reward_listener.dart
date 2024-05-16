@@ -9,7 +9,9 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
   Function(HjRewardAd rewardAd) loadCallBack;
   Function rewardCallBack;
   Function closeCallBack;
-  EsoRewardListener({this.loadCallBack,this.rewardCallBack, this.closeCallBack});
+  EsoRewardListener({this.loadCallBack,this.rewardCallBack, this.closeCallBack}) :super() ;
+
+
   @override
   void onAdClicked() {
     print("xiuxiu点击广告了");
@@ -64,6 +66,5 @@ class EsoRewardListener extends HjRewardListener<HjRewardAd> {
   void onVideoComplete() {
     print('_rewardAdonVideoCompleteEsoRewardListener');
   }
-
 
 }

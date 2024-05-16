@@ -2,10 +2,33 @@ import 'package:huijing_ads_plugin/src/ads/reward/hj_reward.dart';
 import 'package:huijing_ads_plugin/src/hj_error.dart';
 import 'package:huijing_ads_plugin/src/hj_ad_event_handler.dart';
 import 'package:huijing_ads_plugin/src/hj_listener.dart';
-
-abstract class HjRewardListener<T> extends HjListener<T> {
+ abstract class HjRewardListener<T> extends HjListener<T> {
   void onAdReward(String transId);
+  //
   void onVideoComplete();
+
+   @override
+  void onAdClicked() {
+    print("广告被点击了HjRewardListener");
+  }
+  @override
+  void onAdClose() {
+    // TODO: implement onAdClose
+  }
+  @override
+  void onAdExposure() {
+    // TODO: implement onAdExposure
+  }
+  @override
+  void onAdSucceed(T ad) {
+    print("广告加载了HjRewardListener");
+    // TODO: implement onAdSucceed
+  }
+  @override
+  void onAdFailed(HjError error) {
+    // TODO: implement onAdFailed
+  }
+
 }
 
 class IHjRewardListener with HjAdEvent {

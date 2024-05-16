@@ -88,6 +88,7 @@ dependencies:
   video_player: ^2.4.1
   flutter_screenutil: ^5.0.0
   fluttertoast: ^8.2.5
+  event_bus: ^2.0.0
   huijing_ads_plugin:
     path: modules/huijing_ads_plugin/
 
