@@ -89,8 +89,10 @@ dependencies:
   flutter_screenutil: ^5.0.0
   fluttertoast: ^8.2.5
   event_bus: ^2.0.0
+  umeng_common_sdk: ^1.2.3
   huijing_ads_plugin:
     path: modules/huijing_ads_plugin/
+
 
 
 dev_dependencies:

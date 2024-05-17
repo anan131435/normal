@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:uni_links/uni_links.dart';
 // import 'package:video_player_win/video_player_win.dart';
 import 'package:window_manager/window_manager.dart';
@@ -125,7 +126,8 @@ void main() async {
 
   await Hive.initFlutter("eso");
   await openThemeModeBox();
-
+  UmengCommonSdk.initCommon("66473c34940d5a4c49590a75", "66473ca2940d5a4c49590a7a", "Umeng");
+  UmengCommonSdk.setPageCollectionModeAuto();
   runApp(const MyApp());
 
 }

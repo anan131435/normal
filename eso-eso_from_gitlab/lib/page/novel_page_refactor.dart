@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_composition/text_composition.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:win32/win32.dart';
 
@@ -51,7 +52,6 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   TextCompositionConfig _config;
   HjRewardAd rewardAd;
   int _count = 0;
-  String todayStr;
   EsoRewardListener _rewardListener;
   Timer _timer;
   var box = Hive.box(Global.rewardAdShowCountKey);
@@ -87,9 +87,9 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
 
   void _onListenAdCallback() {
     eventBus.on<bool>().listen((event) async{
-      //拿到奖励算一次
-      DateTime now = DateTime.now();
-      String dateStr = DateFormat.yMd().format(now);
+
+      String dateStr = _fetchCurrentDate();
+      UmengCommonSdk.onEvent("getReward", {"date":dateStr});
       print("xiuxiu${dateStr}拿到奖励了");
       int showCount = box.get(dateStr);
       print("xiuxiu${dateStr}拿到了${showCount}次奖励");
@@ -103,7 +103,6 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
       if (showCount >= 3) {
         cancelTimer();
       }
-      // LocalStorage.getInstance().setData(dateStr, showCount);
     });
   }
   @override
@@ -116,25 +115,31 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     },closeCallBack: (){
       print("广告关闭回调OK");
     });
-
-    todayStr = _fetchCurrentDate();
-    super.initState();
     _config = TextConfigManager.config;
     initBrightness();
     searchItem = widget.searchItem;
+    _fireTimer();
+    super.initState();
 
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      _count++;
-      print(_count);
-      if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
-        if (Platform.isIOS) {
-          _requestRewardAd();
-        } else {
-          _requestAndroidRewardAd();
+
+  }
+
+  void _fireTimer() {
+    int showCount = box.get(_fetchCurrentDate());
+    if (showCount == null || showCount < 3 ) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        _count++;
+        print(_count);
+        if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
+          if (Platform.isIOS) {
+            _requestRewardAd();
+          } else {
+            _requestAndroidRewardAd();
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   String _fetchCurrentDate() {
@@ -145,7 +150,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
 
   @override
   void deactivate() {
-    _timer.cancel();
+    cancelTimer();
     super.deactivate();
   }
 
@@ -163,7 +168,6 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
 
   void _showRewardAd() async {
     bool isReady = await rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
     if (isReady) {
       rewardAd.showAd();
     } else {
@@ -198,6 +202,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     DeviceDisplayBrightness.resetBrightness();
     TextConfigManager.config = _config;
     HistoryItemManager.insertOrUpdateHistoryItem(searchItem);
+    cancelTimer();
     super.dispose();
   }
 
