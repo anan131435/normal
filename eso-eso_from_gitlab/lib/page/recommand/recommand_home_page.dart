@@ -12,8 +12,11 @@ import 'package:eso/page/recommand/widget/hot_recommend_item.dart';
 import 'package:eso/page/recommand/widget/product_item_widget.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../global.dart';
 import '../chapter_page.dart';
 import 'entity/product_item.dart';
 
@@ -35,28 +38,20 @@ class _RecommendHomePageState extends State<RecommendHomePage>
   List<ListDataItem> _videoList = [];
   List<ListDataItem> _pictureList = [];
   int contentType;
-  // int fetchRuletype(HomeContentType type) {
-  //   switch (type) {
-  //     case HomeContentType.Novel:
-  //       return 1;
-  //     case HomeContentType.Picture:
-  //       return 0;
-  //     case HomeContentType.Audio:
-  //       return 3;
-  //     case HomeContentType.Video:
-  //       return 2;
-  //   }
-  // }
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
 
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
+  void _openBox() async{
+    await Hive.openBox(Global.rewardAdShowCountKey);
+  }
   @override
   void initState() {
     createProvider();
-    // createPictureProvider();
-    // createVideoProvider();
+    _openBox();
     super.initState();
   }
 

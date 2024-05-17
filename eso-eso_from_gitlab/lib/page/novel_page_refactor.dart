@@ -25,6 +25,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_composition/text_composition.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,7 +54,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   String todayStr;
   EsoRewardListener _rewardListener;
   Timer _timer;
-
+  var box = Hive.box(Global.rewardAdShowCountKey);
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -79,16 +80,18 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   }
 
   void cancelTimer() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer.cancel();
+    }
   }
 
   void _onListenAdCallback() {
-    eventBus.on<bool>().listen((event) {
+    eventBus.on<bool>().listen((event) async{
       //拿到奖励算一次
       DateTime now = DateTime.now();
       String dateStr = DateFormat.yMd().format(now);
       print("xiuxiu${dateStr}拿到奖励了");
-      int showCount = LocalStorage.getInstance().get(dateStr);
+      int showCount = box.get(dateStr);
       print("xiuxiu${dateStr}拿到了${showCount}次奖励");
       if (showCount == null ) {
         showCount = 1;
@@ -96,14 +99,17 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
         showCount += 1;
       }
       print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-      LocalStorage.getInstance().setData(dateStr, showCount);
+     box.put(dateStr, showCount);
+      if (showCount >= 3) {
+        cancelTimer();
+      }
+      // LocalStorage.getInstance().setData(dateStr, showCount);
     });
   }
   @override
   void initState() {
     _onListenAdCallback();
     _rewardListener = EsoRewardListener(loadCallBack: (ad) {
-      // ad.showAd();
       print("广告加载回调OK");
     },rewardCallBack: () {
       print("广告激励回调OK");
@@ -118,24 +124,16 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     searchItem = widget.searchItem;
 
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       _count++;
       print(_count);
-      int showCount = LocalStorage.getInstance().get(todayStr);
-      if (showCount != null && showCount >= 3) {
-        print("xiuxiu超过了3次，停着计时");
-        timer.cancel();
-      } else {
-        if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
-          if (Platform.isIOS) {
-            _requestRewardAd();
-          } else {
-            _requestAndroidRewardAd();
-          }
+      if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
+        if (Platform.isIOS) {
+          _requestRewardAd();
+        } else {
+          _requestAndroidRewardAd();
         }
-
       }
-
     });
   }
 

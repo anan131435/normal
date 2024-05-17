@@ -47,6 +47,7 @@ class Global with ChangeNotifier {
   static const historyItemKey = "historyItem";
   static const textConfigKey = "textConfig";
   static const favoriteListTagKey = "favoriteListTag";
+  static const rewardAdShowCountKey = "rewardAdShowCount";
   // static SharedPreferences _prefs;
   // static SharedPreferences get prefs => _prefs;
   static bool _isDesktop;
