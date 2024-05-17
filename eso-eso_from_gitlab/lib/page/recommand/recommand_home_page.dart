@@ -10,6 +10,7 @@ import 'package:eso/model/edit_source_provider.dart';
 import 'package:eso/page/enum/content_type.dart';
 import 'package:eso/page/recommand/widget/hot_recommend_item.dart';
 import 'package:eso/page/recommand/widget/product_item_widget.dart';
+import 'package:eso/page/recommand/widget/recommand_cartoon_widget.dart';
 import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -162,34 +163,7 @@ class _RecommendHomePageState extends State<RecommendHomePage>
               ),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 157 / 230,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10),
-                itemBuilder: (context, index) {
-                  SearchItem searchItem = item.items[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ChapterPage(searchItem: searchItem)),
-                      );
-                    },
-                    child: HotRecommendItem(
-                      searchItem: searchItem,
-                    ),
-                  );
-                },
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: item.items.length,
-              ),
-            );
+            return RecommendCartoonWidget();
           }
         },
         itemCount: 2,

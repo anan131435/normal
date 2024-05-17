@@ -217,6 +217,7 @@ class Assets {
   static const String widgetHotRecommendItem = 'lib/page/recommand/widget/hot_recommend_item.dart';
   static const String widgetNetworkimage = 'lib/page/short_video/widget/networkimage.dart';
   static const String widgetProductItemWidget = 'lib/page/recommand/widget/product_item_widget.dart';
+  static const String widgetRecommandCartoonWidget = 'lib/page/recommand/widget/recommand_cartoon_widget.dart';
   static const String widgetsAnimationRotateView = 'lib/ui/widgets/animation_rotate_view.dart';
   static const String widgetsDraggableScrollbarSliver = 'lib/ui/widgets/draggable_scrollbar_sliver.dart';
   static const String widgetsEmptyListMsgView = 'lib/ui/widgets/empty_list_msg_view.dart';
