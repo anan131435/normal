@@ -133,6 +133,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     initBrightness();
     searchItem = widget.searchItem;
     _fireTimer();
+    _requestRewardAd();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }

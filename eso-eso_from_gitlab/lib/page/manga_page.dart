@@ -12,12 +12,15 @@ import 'package:eso/ui/ui_system_info.dart';
 import 'package:eso/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 import '../database/search_item.dart';
 import '../database/search_item_manager.dart';
+import '../global.dart';
 import '../utils/local_storage_utils.dart';
 import 'content_page_manager.dart';
 import 'home/model/reward_listener.dart';
@@ -37,78 +40,108 @@ class MangaPage extends StatefulWidget {
   _MangaPageState createState() => _MangaPageState();
 }
 
-class _MangaPageState extends State<MangaPage> {
+class _MangaPageState extends State<MangaPage> with WidgetsBindingObserver{
   Widget page;
   Widget pageMangaContent;
   MangaPageProvider __provider;
+
   HjRewardAd rewardAd;
   int _count = 0;
-  String todayStr;
+  EsoRewardListener _rewardListener;
+  Timer _timer;
+  var box = Hive.box(Global.rewardAdShowCountKey);
   @override
-  void initState() {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed: {
+        print("AppLifecycleState.resumed");
+        _fireTimer();
+        break;
+      }
+      case AppLifecycleState.paused:{
+        print("AppLifecycleState.paused");
+        cancelTimer();
+        break;
+      }
+      case AppLifecycleState.inactive:{
+        print("AppLifecycleState.inactive");
+        cancelTimer();
+        break;
+      }
+      case AppLifecycleState.detached:{
+        print("AppLifecycleState.detached");
+        cancelTimer();
+        break;
+      }
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  void _fireTimer() {
+    int showCount = box.get(_fetchCurrentDate());
+    if (showCount == null || showCount < 3 ) {
+      cancelTimer();
+      _timer = Timer.periodic(const Duration(seconds: 1200), (timer) async {
+        _count ++;
+        print(_count);
+        _startRequestAd();
+      });
+    } else {
+      cancelTimer();
+      print("达到3次了");
+    }
+  }
+
+  void cancelTimer() {
+    if (_timer != null) {
+      print("timer销毁");
+      _timer.cancel();
+    }
+  }
+  //监听广告SDK回调
+  void _onListenAdCallback() {
+    eventBus.on<String>().listen((event) async{
+      String dateStr = _fetchCurrentDate();
+      int showCount = box.get(dateStr);
+      print("xiuxiu回调了$event");
+      if (event == "onAdReward") {
+        UmengCommonSdk.onEvent("getReward", {"date":dateStr,"platForm":Platform.isIOS ? "iOS" : "Android"});
+        print("xiuxiu${dateStr}存储了${showCount}次奖励");
+        if (showCount == null ) {
+          showCount = 1;
+        } else {
+          showCount += 1;
+        }
+        print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+        box.put(dateStr, showCount);
+        if (showCount >= 3) {
+          cancelTimer();
+        }
+      } else if (event == "onAdClose") {
+
+        print("xiuxiu${dateStr}关闭广告了");
+        if (showCount == null || showCount < 3) {
+          _startRequestAd();
+        }
+      }
+
+    });
+  }
+
+  void _startRequestAd() {
     if (Platform.isIOS) {
       _requestRewardAd();
     } else {
       _requestAndroidRewardAd();
     }
-    todayStr = _fetchCurrentDate();
-
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      _count++;
-      print(_count);
-      int showCount = LocalStorage.getInstance().get(todayStr);
-      if (showCount != null && showCount >= 3) {
-        print("xiuxiu超过了3次，停着计时");
-        timer.cancel();
-      } else {
-        if (_count == 60 || _count == 120) {
-          if (Platform.isIOS) {
-            _requestRewardAd();
-          } else {
-            _requestAndroidRewardAd();
-          }
-        }
-        if (_count >= 120) {
-          timer.cancel();
-        }
-      }
-
-    });
-
-    super.initState();
-  }
-
-  String _fetchCurrentDate() {
-    DateTime now = DateTime.now();
-    String dateStr = DateFormat.yMd().format(now);
-    return dateStr;
   }
 
   void _requestRewardAd() async {
     if (rewardAd == null) {
       HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
-
       rewardAd = HjRewardAd(
           request: request,
-          listener: EsoRewardListener(
-              loadCallBack: (ad) async {
-                int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
-                if (showCount == null ) {
-                  print("xiuxiu第一次展示广告");
-                  ad.showAd();
-                } else {
-                  if (showCount <= 3) {
-                    ad.showAd();
-                  }
-                }
-
-              },
-              closeCallBack: () {
-                print("_rewardAdCloseCallback");
-              },
-              rewardCallBack: () {
-                print("_rewardAdRewardCallback");
-              }));
+          listener: _rewardListener);
       rewardAd.loadAdData();
     } else {
       _showRewardAd();
@@ -117,7 +150,7 @@ class _MangaPageState extends State<MangaPage> {
 
   void _showRewardAd() async {
     bool isReady = await rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
+    print("xiuxiu isReady $isReady");
     if (isReady) {
       rewardAd.showAd();
     } else {
@@ -130,41 +163,35 @@ class _MangaPageState extends State<MangaPage> {
       HjAdRequest request = HjAdRequest(placementId: "8727293799263656");
       rewardAd = HjRewardAd(
           request: request,
-          listener: EsoRewardListener(
-            loadCallBack: (ad) async {
-              int showCount = LocalStorage.getInstance().get(_fetchCurrentDate());
-              if (showCount == null ) {
-                print("xiuxiu第一次展示广告");
-                ad.showAd();
-              } else {
-                if (showCount <= 3) {
-                  ad.showAd();
-                }
-              }
-
-            },
-            rewardCallBack: () {
-              print("_rewardAd rewardCallBack");
-            },
-            closeCallBack: () {
-              print("_rewardAd closeCallBack");
-            },
-          ));
+          listener: _rewardListener);
       rewardAd.loadAdData();
     } else {
-      _showAndroidRewardAd();
+      _showRewardAd();
     }
   }
 
-  void _showAndroidRewardAd() async {
-    bool isReady = await rewardAd.isReady();
-    print("_rewardAd isReady $isReady");
-    if (isReady) {
-      rewardAd.showAd();
-    } else {
-      rewardAd.loadAdData();
-    }
+  @override
+  void initState() {
+    _onListenAdCallback();
+    _rewardListener = EsoRewardListener(loadCallBack: (ad) {
+      print("广告加载回调OK");
+    },rewardCallBack: () {
+      print("广告激励回调OK");
+    },closeCallBack: (){
+      print("广告关闭回调OK");
+    });
+    _fireTimer();
+    _startRequestAd();
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  String _fetchCurrentDate() {
+    DateTime now = DateTime.now();
+    String dateStr = DateFormat.yMd().format(now);
+    return dateStr;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +210,8 @@ class _MangaPageState extends State<MangaPage> {
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     __provider?.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    cancelTimer();
     super.dispose();
   }
 

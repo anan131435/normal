@@ -34,6 +34,7 @@ mixin HjAdEventHandler {
           delegate.onAdSucceed(arguments);
           break;
         case 'onAdExposure':
+          print("xiuxiu监听了广告exposure");
           delegate.onAdExposure(arguments);
           break;
         case 'onAdClicked':
