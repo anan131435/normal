@@ -187,7 +187,7 @@ class _VideoPageState extends State<VideoPage> with WidgetsBindingObserver{
       print("广告关闭回调OK");
     });
     _fireTimer();
-    _requestRewardAd();
+    _startRequestAd();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
