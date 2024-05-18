@@ -37,9 +37,12 @@ mixin HjAdEventHandler {
           delegate.onAdExposure(arguments);
           break;
         case 'onAdClicked':
+          print("xiuxiu监听点击了广告");
           delegate.onAdClicked();
           break;
         case 'onAdClose':
+          print("xiuxiu监听关闭了广告");
+          eventBus.fire("onAdClose");
           delegate.onAdClose();
           break;
         case 'onAdFailed':
@@ -49,7 +52,7 @@ mixin HjAdEventHandler {
           delegate.onVideoComplete();
           break;
         case 'onAdReward':
-          eventBus.fire(true);
+          eventBus.fire("onAdReward");
     delegate.onAdReward(arguments);
           break;
         case 'onAdAutoRefreshed':

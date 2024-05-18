@@ -55,10 +55,12 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   EsoRewardListener _rewardListener;
   Timer _timer;
   var box = Hive.box(Global.rewardAdShowCountKey);
+  int _currentCount = 0;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed: {
+        _fireTimer();
         break;
       }
       case AppLifecycleState.paused:{
@@ -84,25 +86,35 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
       _timer.cancel();
     }
   }
-
+  //监听广告SDK回调
   void _onListenAdCallback() {
-    eventBus.on<bool>().listen((event) async{
-
+    eventBus.on<String>().listen((event) async{
       String dateStr = _fetchCurrentDate();
-      UmengCommonSdk.onEvent("getReward", {"date":dateStr});
-      print("xiuxiu${dateStr}拿到奖励了");
       int showCount = box.get(dateStr);
-      print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-      if (showCount == null ) {
-        showCount = 1;
-      } else {
-        showCount += 1;
+      print("xiuxiu回调了$event");
+      if (event == "onAdReward") {
+        UmengCommonSdk.onEvent("getReward", {"date":dateStr,"platForm":Platform.isIOS ? "iOS" : "Android"});
+        print("xiuxiu${dateStr}存储了${showCount}次奖励");
+        if (showCount == null ) {
+          showCount = 1;
+        } else {
+          showCount += 1;
+        }
+        _currentCount = showCount;
+        print("xiuxiu${dateStr}拿到了${showCount}次奖励");
+        box.put(dateStr, _currentCount);
+        if (_currentCount >= 3) {
+          cancelTimer();
+        }
+      } else if (event == "onAdClose") {
+        print("xiuxiu${dateStr}关闭广告了");
+        // if (showCount == null || showCount == _currentCount) {
+        //   _startRequestAd();
+        // } else {
+        //   box.put(dateStr, _currentCount);
+        // }
       }
-      print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-     box.put(dateStr, showCount);
-      if (showCount >= 3) {
-        cancelTimer();
-      }
+
     });
   }
   @override
@@ -120,24 +132,17 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     searchItem = widget.searchItem;
     _fireTimer();
     super.initState();
-
-
-
   }
 
   void _fireTimer() {
+    _startRequestAd();
     int showCount = box.get(_fetchCurrentDate());
     if (showCount == null || showCount < 3 ) {
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-        _count++;
-        print(_count);
-        if (_count == 3 || _count == 10 || _count == 80 || _count == 130) {
-          if (Platform.isIOS) {
-            _requestRewardAd();
-          } else {
-            _requestAndroidRewardAd();
-          }
-        }
+      cancelTimer();
+      _timer = Timer.periodic(const Duration(seconds: 1200), (timer) async {
+          _count ++;
+          print(_count);
+          _startRequestAd();
       });
     }
   }
@@ -154,6 +159,14 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     super.deactivate();
   }
 
+  void _startRequestAd() {
+    if (Platform.isIOS) {
+      _requestRewardAd();
+    } else {
+      _requestAndroidRewardAd();
+    }
+  }
+
   void _requestRewardAd() async {
     if (rewardAd == null) {
       HjAdRequest request = HjAdRequest(placementId: "3283392768998526");
@@ -168,6 +181,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
 
   void _showRewardAd() async {
     bool isReady = await rewardAd.isReady();
+    print("xiuxiu isReady $isReady");
     if (isReady) {
       rewardAd.showAd();
     } else {
@@ -183,18 +197,10 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
           listener: _rewardListener);
       rewardAd.loadAdData();
     } else {
-      _showAndroidRewardAd();
+      _showRewardAd();
     }
   }
 
-  void _showAndroidRewardAd() async {
-    bool isReady = await rewardAd.isReady();
-    if (isReady) {
-      rewardAd.showAd();
-    } else {
-      rewardAd.loadAdData();
-    }
-  }
 
   @override
   void dispose() {
