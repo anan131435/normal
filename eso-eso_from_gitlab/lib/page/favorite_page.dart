@@ -78,8 +78,8 @@ class FavoritePage2 extends StatelessWidget {
     if (Global.needShowAbout) {
       Global.needShowAbout = false;
       if (profile.version != profile.lastestVersion) {
-        Future.delayed(
-            Duration(milliseconds: 10), () => AboutPage2.showAbout(context, true));
+        // Future.delayed(
+        //     Duration(milliseconds: 10), () => AboutPage2.showAbout(context, true));
       }
       AutoBackupPage.backup(true);
       AutoBackupPage.shareRule(true);

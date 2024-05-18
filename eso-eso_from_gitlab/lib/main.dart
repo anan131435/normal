@@ -122,8 +122,6 @@ void main() async {
   if (Platform.isIOS) {
     await HjAd.init("37686");
   }
-
-
   await Hive.initFlutter("eso");
   await openThemeModeBox();
   UmengCommonSdk.initCommon("66473c34940d5a4c49590a75", "66473ca2940d5a4c49590a7a", "Umeng");

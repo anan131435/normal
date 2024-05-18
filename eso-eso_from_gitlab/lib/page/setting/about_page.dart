@@ -232,129 +232,129 @@ class AboutPage2 extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 4),
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        '联系&帮助',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    Divider(),
-                    ListTile(
-                      title: Text('亦搜①群'),
-                      subtitle: Text('1106156709'),
-                      onTap: () => joinGroup(),
-                    ),
-                    ListTile(
-                      title: Text('亦搜②群'),
-                      subtitle: Text('1148443231'),
-                      onTap: () => joinGroup('1148443231'),
-                    ),
-                    ListTile(
-                      title: Text(qing.joinPindao),
-                      subtitle: Image.memory(
-                        base64Decode(qing.esoPindao.base64.split(',')[1]),
-                        fit: BoxFit.contain,
-                        height: 150,
-                        width: 150,
-                        alignment: Alignment.topLeft,
-                      ),
-                      onTap: () => launch(qing.esoPindao.url),
-                    ),
-                    ListTile(
-                      title: Text('规则获取'),
-                      subtitle: Text('https://github.com/mabDc/eso_source/'),
-                      onTap: () => launch('https://github.com/mabDc/eso_source/'),
-                    ),
-                    ListTile(
-                      title: Text('规则说明'),
-                      subtitle: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                            'https://github.com/mabDc/eso_source/blob/master/README.md'),
-                      ),
-                      onTap: () => launch(
-                          'https://github.com/mabDc/eso_source/blob/master/README.md'),
-                    ),
-                  ],
-                ),
-              ),
+              // Card(
+              //   child: Column(
+              //     children: <Widget>[
+              //       ListTile(
+              //         title: Text(
+              //           '联系&帮助',
+              //           style: TextStyle(color: Theme.of(context).primaryColor),
+              //         ),
+              //       ),
+              //       Divider(),
+              //       ListTile(
+              //         title: Text('亦搜①群'),
+              //         subtitle: Text('1106156709'),
+              //         onTap: () => joinGroup(),
+              //       ),
+              //       ListTile(
+              //         title: Text('亦搜②群'),
+              //         subtitle: Text('1148443231'),
+              //         onTap: () => joinGroup('1148443231'),
+              //       ),
+              //       ListTile(
+              //         title: Text(qing.joinPindao),
+              //         subtitle: Image.memory(
+              //           base64Decode(qing.esoPindao.base64.split(',')[1]),
+              //           fit: BoxFit.contain,
+              //           height: 150,
+              //           width: 150,
+              //           alignment: Alignment.topLeft,
+              //         ),
+              //         onTap: () => launch(qing.esoPindao.url),
+              //       ),
+              //       ListTile(
+              //         title: Text('规则获取'),
+              //         subtitle: Text('https://github.com/mabDc/eso_source/'),
+              //         onTap: () => launch('https://github.com/mabDc/eso_source/'),
+              //       ),
+              //       ListTile(
+              //         title: Text('规则说明'),
+              //         subtitle: FittedBox(
+              //           fit: BoxFit.scaleDown,
+              //           alignment: Alignment.centerLeft,
+              //           child: Text(
+              //               'https://github.com/mabDc/eso_source/blob/master/README.md'),
+              //         ),
+              //         onTap: () => launch(
+              //             'https://github.com/mabDc/eso_source/blob/master/README.md'),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(height: 4),
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        '主要开发者',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    Divider(),
-                    ListTile(
-                      title: Text('mabdc'),
-                      subtitle: Text('https://github.com/mabDc'),
-                      onTap: () => launch('https://github.com/mabDc'),
-                    ),
-                    ListTile(
-                      title: Text('DaguDuiyuan'),
-                      subtitle: Text('https://github.com/DaguDuiyuan'),
-                      onTap: () => launch('https://github.com/DaguDuiyuan'),
-                    ),
-                    ListTile(
-                      title: Text('yangyxd'),
-                      subtitle: Text('https://github.com/yangyxd'),
-                      onTap: () => launch('https://github.com/yangyxd'),
-                    ),
-                  ],
-                ),
-              ),
+              // Card(
+              //   child: Column(
+              //     children: <Widget>[
+              //       ListTile(
+              //         title: Text(
+              //           '主要开发者',
+              //           style: TextStyle(color: Theme.of(context).primaryColor),
+              //         ),
+              //       ),
+              //       Divider(),
+              //       ListTile(
+              //         title: Text('mabdc'),
+              //         subtitle: Text('https://github.com/mabDc'),
+              //         onTap: () => launch('https://github.com/mabDc'),
+              //       ),
+              //       ListTile(
+              //         title: Text('DaguDuiyuan'),
+              //         subtitle: Text('https://github.com/DaguDuiyuan'),
+              //         onTap: () => launch('https://github.com/DaguDuiyuan'),
+              //       ),
+              //       ListTile(
+              //         title: Text('yangyxd'),
+              //         subtitle: Text('https://github.com/yangyxd'),
+              //         onTap: () => launch('https://github.com/yangyxd'),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(height: 4),
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    ListTile(
-                      title: Text(
-                        '项目',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                    Divider(),
-                    MarkdownPageListTile(
-                      filename: 'README.md',
-                      title: Text('使用指北'),
-                      // icon: Icon(Icons.info_outline),
-                    ),
-                    MarkdownPageListTile(
-                      filename: 'CHANGELOG.md',
-                      title: Text('更新日志'),
-                      // icon: Icon(FIcons.list),
-                    ),
-                    MarkdownPageListTile(
-                      filename: 'LICENSE',
-                      title: Text('源代码许可'),
-                      // icon: Icon(Icons.description),
-                    ),
-                    ListTile(
-                      title: Text('开源地址'),
-                      subtitle: Text('https://github.com/mabDc/eso'),
-                      onTap: () => launch('https://github.com/mabDc/eso'),
-                    ),
-                    ListTile(
-                      title: Text('问题反馈'),
-                      subtitle: Text('https://github.com/mabDc/eso/issues'),
-                      onTap: () => launch('https://github.com/mabDc/eso/issues'),
-                    ),
-                    ListTile(
-                      title: Text('${Global.appName} - ${Global.appVersion}'),
-                      subtitle: Text('https://github.com/mabDc/eso/releases'),
-                      onTap: () => launch('https://github.com/mabDc/eso/releases'),
-                    ),
-                  ],
-                ),
-              ),
+              // Card(
+              //   child: Column(
+              //     children: <Widget>[
+              //       ListTile(
+              //         title: Text(
+              //           '项目',
+              //           style: TextStyle(color: Theme.of(context).primaryColor),
+              //         ),
+              //       ),
+              //       Divider(),
+              //       MarkdownPageListTile(
+              //         filename: 'README.md',
+              //         title: Text('使用指北'),
+              //         // icon: Icon(Icons.info_outline),
+              //       ),
+              //       MarkdownPageListTile(
+              //         filename: 'CHANGELOG.md',
+              //         title: Text('更新日志'),
+              //         // icon: Icon(FIcons.list),
+              //       ),
+              //       MarkdownPageListTile(
+              //         filename: 'LICENSE',
+              //         title: Text('源代码许可'),
+              //         // icon: Icon(Icons.description),
+              //       ),
+              //       ListTile(
+              //         title: Text('开源地址'),
+              //         subtitle: Text('https://github.com/mabDc/eso'),
+              //         onTap: () => launch('https://github.com/mabDc/eso'),
+              //       ),
+              //       ListTile(
+              //         title: Text('问题反馈'),
+              //         subtitle: Text('https://github.com/mabDc/eso/issues'),
+              //         onTap: () => launch('https://github.com/mabDc/eso/issues'),
+              //       ),
+              //       ListTile(
+              //         title: Text('${Global.appName} - ${Global.appVersion}'),
+              //         subtitle: Text('https://github.com/mabDc/eso/releases'),
+              //         onTap: () => launch('https://github.com/mabDc/eso/releases'),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Card(
                 child: Material(
                   color: Theme.of(context).primaryColor,
