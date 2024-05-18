@@ -13,11 +13,13 @@ class IHjSplashListener with HjAdEvent {
 
   @override
   void onAdSucceed(Map<String, dynamic> arguments) {
+    print("xiuxiu开屏广告加载OK");
     listener.onAdSucceed(splashAd);
   }
 
   @override
   void onAdFailed(HjError error) {
+    print("xiuxiu开屏广告加载失败");
     listener.onAdFailed(error);
   }
 

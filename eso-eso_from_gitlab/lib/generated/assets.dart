@@ -94,6 +94,7 @@ class Assets {
   static const String hiveThemeBox = 'lib/hive/theme_box.dart';
   static const String hiveThemeModeBox = 'lib/hive/theme_mode_box.dart';
   static const String homeHomeContentPage = 'lib/page/home/home_content_page.dart';
+  static const String launchAdLaunchAdPage = 'lib/page/launch_ad/launch_ad_page.dart';
   static const String libEsoTheme = 'lib/eso_theme.dart';
   static const String libFonticonsIcons = 'lib/fonticons_icons.dart';
   static const String libGlobal = 'lib/global.dart';
@@ -133,6 +134,7 @@ class Assets {
   static const String modelRewardListener = 'lib/page/home/model/reward_listener.dart';
   static const String modelRssPageProvider = 'lib/model/rss_page_provider.dart';
   static const String modelSearchPageDelegate = 'lib/model/search_page_delegate.dart';
+  static const String modelSplashAdListener = 'lib/page/home/model/splash_ad_listener.dart';
   static const String modelSystemInfoProvider = 'lib/model/system_info_provider.dart';
   static const String pageAddLocalItemPage = 'lib/page/add_local_item_page.dart';
   static const String pageAudioPage = 'lib/page/audio_page.dart';

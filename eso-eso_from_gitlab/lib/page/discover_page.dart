@@ -48,6 +48,7 @@ class DiscoverFuture extends StatelessWidget {
       return DiscoverWaterfallPage(rule: rule);
     }
     if (rule.discoverUrl.startsWith("测试新发现")) {
+
       return DiscoverNewPage(rule: rule);
     }
     return FutureBuilder<List<DiscoverMap>>(
@@ -359,10 +360,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
       },
     );
   }
-
+  //发现页的头部tab
   Widget _buildFilterView(BuildContext context, EditSourceProvider provider) {
     return Container(
-      color: Colors.red,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(

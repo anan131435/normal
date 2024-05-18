@@ -200,9 +200,11 @@ class _MyAppState extends State<MyApp> {
                 DecorationImage(image: AssetImage(decorationImage), fit: BoxFit.fitWidth),
           );
         });
-        initFlag = InitFlag.ok;
-        setState(() {});
 
+        Future.delayed(const Duration(seconds: 4)).then((value) {
+          initFlag = InitFlag.ok;
+          setState(() {});
+        });
       } catch (e, st) {
         _error = e;
         _stackTrace = st;
