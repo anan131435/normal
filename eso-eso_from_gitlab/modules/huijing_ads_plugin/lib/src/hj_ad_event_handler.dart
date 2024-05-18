@@ -31,6 +31,7 @@ mixin HjAdEventHandler {
       }
       switch (call.method) {
         case 'onAdSucceed':
+          print("xiuxiu监听了广告加载成功");
           delegate.onAdSucceed(arguments);
           break;
         case 'onAdExposure':
@@ -47,6 +48,7 @@ mixin HjAdEventHandler {
           delegate.onAdClose();
           break;
         case 'onAdFailed':
+          print("xiuxiu监听了广告加载失败${error.toString()}");
           delegate.onAdFailed(error);
           break;
         case 'onVideoComplete':

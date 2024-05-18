@@ -72,6 +72,19 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
     }).toList();
   }
 
+  ListDataItem findDataSourceItem({DiscoverPageController controller,int index}) {
+    if (index >= controller.items.length) {
+      print("进入了边界条件");
+      return controller.items[0];
+    }
+    ListDataItem item = controller.items[index];
+    if (item.items.isEmpty) {
+      findDataSourceItem(controller: controller,index: index + 1);
+    } else {
+      return item;
+    }
+  }
+
   Widget findListView({BuildContext context}) {
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
@@ -81,6 +94,16 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
       //   print("itemListCount ${item.items.length}");
       // }
       ListDataItem item = controller.items[0];
+      if (_provider.ruleContentType == 2) {
+        print("进到了视频");
+        //视频
+        if (item.items.isEmpty) {
+          print("视频为空");
+         item = findDataSourceItem(controller: controller,index: 1);
+        }
+
+      }
+
       DiscoverMap map = controller.discoverMap[0];
       return ListView.builder(
         itemBuilder: (context, index) {
@@ -126,7 +149,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                           vertical: 8,
                           horizontal: 10,
                         ),
-                        children: item.items.isEmpty
+                        children: (item == null || item.items.isEmpty)
                             ? [Container()]
                             : _yourFavorite(dataItem: item)),
                   )
@@ -159,7 +182,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                 },
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: item.items.length,
+                itemCount: (item == null) ?  0 : item.items.length,
               ),
             );
           }
@@ -195,6 +218,8 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
           Rule rule;
           if (widget.contentType == HomeContentType.Picture) {
             rule = value.rules.last;
+          } else if (widget.contentType == HomeContentType.Video){
+            rule = value.rules.first;
           } else {
             rule = value.rules[5];
           }

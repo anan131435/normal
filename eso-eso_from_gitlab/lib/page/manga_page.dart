@@ -81,7 +81,7 @@ class _MangaPageState extends State<MangaPage> with WidgetsBindingObserver{
     int showCount = box.get(_fetchCurrentDate());
     if (showCount == null || showCount < 3 ) {
       cancelTimer();
-      _timer = Timer.periodic(const Duration(seconds: 1200), (timer) async {
+      _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
         _count ++;
         print(_count);
         _startRequestAd();

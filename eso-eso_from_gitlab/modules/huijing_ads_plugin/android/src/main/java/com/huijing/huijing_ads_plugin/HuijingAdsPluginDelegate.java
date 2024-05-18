@@ -44,7 +44,7 @@ public class HuijingAdsPluginDelegate implements MethodChannel.MethodCallHandler
             HJAdsSdk ads = HJAdsSdk.sharedAds();
             ads.setAdult(true);//是否成年（可选参数，默认是成年用户）
             ads.setPersonalizedAdvertisingOn(true);//是否开启个性化推荐接口（可选参数，建议开启）
-            ads.setDebugEnable(false);//true开启、false关闭（默认开启）
+            ads.setDebugEnable(true);//true开启、false关闭（默认开启）
             ads.startWithAppId((Application) this.activity.getApplicationContext(), appId);
             HJLog.d("###############rewardId: " + rewardId);
             HJLog.d("###############interstitialId: " + interstitialId);
