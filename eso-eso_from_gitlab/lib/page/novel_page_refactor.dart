@@ -55,23 +55,26 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   EsoRewardListener _rewardListener;
   Timer _timer;
   var box = Hive.box(Global.rewardAdShowCountKey);
-  int _currentCount = 0;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed: {
+        print("AppLifecycleState.resumed");
         _fireTimer();
         break;
       }
       case AppLifecycleState.paused:{
+        print("AppLifecycleState.paused");
         cancelTimer();
         break;
       }
       case AppLifecycleState.inactive:{
+        print("AppLifecycleState.inactive");
         cancelTimer();
         break;
       }
       case AppLifecycleState.detached:{
+        print("AppLifecycleState.detached");
         cancelTimer();
         break;
       }
@@ -83,6 +86,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
 
   void cancelTimer() {
     if (_timer != null) {
+      print("timer销毁");
       _timer.cancel();
     }
   }
@@ -100,19 +104,17 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
         } else {
           showCount += 1;
         }
-        _currentCount = showCount;
         print("xiuxiu${dateStr}拿到了${showCount}次奖励");
-        box.put(dateStr, _currentCount);
-        if (_currentCount >= 3) {
+        box.put(dateStr, showCount);
+        if (showCount >= 3) {
           cancelTimer();
         }
       } else if (event == "onAdClose") {
+
         print("xiuxiu${dateStr}关闭广告了");
-        // if (showCount == null || showCount == _currentCount) {
-        //   _startRequestAd();
-        // } else {
-        //   box.put(dateStr, _currentCount);
-        // }
+        if (showCount == null || showCount < 3) {
+          _startRequestAd();
+        }
       }
 
     });
@@ -132,18 +134,21 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     searchItem = widget.searchItem;
     _fireTimer();
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   void _fireTimer() {
-    _startRequestAd();
     int showCount = box.get(_fetchCurrentDate());
     if (showCount == null || showCount < 3 ) {
       cancelTimer();
       _timer = Timer.periodic(const Duration(seconds: 1200), (timer) async {
           _count ++;
           print(_count);
-          _startRequestAd();
+            _startRequestAd();
       });
+    } else {
+      cancelTimer();
+      print("达到3次了");
     }
   }
 
@@ -208,6 +213,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
     DeviceDisplayBrightness.resetBrightness();
     TextConfigManager.config = _config;
     HistoryItemManager.insertOrUpdateHistoryItem(searchItem);
+    WidgetsBinding.instance.removeObserver(this);
     cancelTimer();
     super.dispose();
   }
