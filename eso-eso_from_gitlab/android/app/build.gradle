@@ -48,9 +48,10 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
-
+//
+    // com.sskj.flutter_adsetdemo
     defaultConfig {
-        applicationId "com.cb.tiaoma.jh"
+        applicationId "com.sskj.flutter_adsetdemo"
         minSdkVersion 22
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

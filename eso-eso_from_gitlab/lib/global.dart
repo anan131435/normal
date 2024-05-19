@@ -31,7 +31,7 @@ class Global with ChangeNotifier {
   static String appName = '亦搜';
   static String appVersion = '1.20.4';
   static String appBuildNumber = '12004';
-  static String appPackageName = "com.cb.tiaoma.jh";
+  static String appPackageName = "com.sskj.flutter_adsetdemo";
   static bool needShowAbout = true;
 
   static const waitingPath = "lib/assets/waiting.png";
