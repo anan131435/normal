@@ -18,6 +18,7 @@ import 'package:eso/utils/flutter_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_plugin_ad/flutter_plugin_ad.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
@@ -55,6 +56,7 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   EsoRewardListener _rewardListener;
   Timer _timer;
   var box = Hive.box(Global.rewardAdShowCountKey);
+  String posIdRewardVideo = "09A177D681D6FB81241C3DCE963DCB46";
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -121,21 +123,16 @@ class _NovelPageState extends State<NovelPage> with WidgetsBindingObserver{
   }
   @override
   void initState() {
-    _onListenAdCallback();
-    _rewardListener = EsoRewardListener(loadCallBack: (ad) {
-      print("广告加载回调OK");
-    },rewardCallBack: () {
-      print("广告激励回调OK");
-    },closeCallBack: (){
-      print("广告关闭回调OK");
-    });
+
     _config = TextConfigManager.config;
     initBrightness();
     searchItem = widget.searchItem;
-    _fireTimer();
-    _startRequestAd();
+
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    Future.delayed(const Duration(seconds: 5)).then((value) {
+      FlutterPluginAd.showRewardVideoAd(posIdRewardVideo, "123");
+    });
   }
 
   void _fireTimer() {

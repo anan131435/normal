@@ -11,6 +11,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:eso/page/first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_plugin_ad/flutter_plugin_ad.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
@@ -93,9 +94,9 @@ Future<void> onLink(String linkPath) async {
 }
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+String appId = "E6097975B89E83D6";
 
-
-
+String _result;
 
 void main() async {
   DataManager dataManager = DataManager();
@@ -115,13 +116,8 @@ void main() async {
     linkStream.listen(onLink);
 
   }
-
-  if (Platform.isAndroid) {
-    await HjAd.init("27091");
-  }
-  if (Platform.isIOS) {
-    await HjAd.init("37686");
-  }
+  bool initOk = await FlutterPluginAd.initAd(appId,isDebug: true);
+  print("广告初始化OK？$initOk");
   await Hive.initFlutter("eso");
   await openThemeModeBox();
   UmengCommonSdk.initCommon("66473c34940d5a4c49590a75", "66473ca2940d5a4c49590a7a", "Umeng");
@@ -169,6 +165,20 @@ class _MyAppState extends State<MyApp> {
   StackTrace _stackTrace;
   dynamic _error;
   InitFlag initFlag = InitFlag.wait;
+  /// 初始化广告 SDK
+  // Future<void> init() async {
+  //   try {
+  //     bool result = await FlutterPluginAd.initAd(appId, isDebug: true);
+  //     _result = "广告SDK 初始化${result ? '成功' : '失败'}";
+  //   } on PlatformException catch (e) {
+  //     _result =
+  //     "广告SDK 初始化失败 code:${e.code} msg:${e.message} details:${e.details}";
+  //   }
+  //   print(_result);
+  //   // setState(() {});
+  // }
+
+
 
   @override
   void initState() {
@@ -200,7 +210,12 @@ class _MyAppState extends State<MyApp> {
                 DecorationImage(image: AssetImage(decorationImage), fit: BoxFit.fitWidth),
           );
         });
-
+        if (Platform.isAndroid) {
+          FlutterPluginAd.checkAndReqPermission();
+        }
+        FlutterPluginAd.onEventListener((event) {
+          print("广告监听回调adsetType${event.adType} msg:${event.msg}");
+        });
         Future.delayed(const Duration(seconds: 4)).then((value) {
           initFlag = InitFlag.ok;
           setState(() {});

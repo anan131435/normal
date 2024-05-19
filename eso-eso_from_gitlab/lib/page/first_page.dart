@@ -26,13 +26,13 @@ class _FirstPageState extends State<FirstPage> {
   ValueNotifier<Size> sizeNotifier = ValueNotifier(Size.zero);
   @override
   void initState() {
-    _onListenAdCallback();
-    _rewardListener = SplashListener(loadSuccess: () {
-      print("SplashListener loadSuccess");
-      _startRequestAd();
-    });
-    _startRequestAd();
-    Future.delayed(const Duration(seconds: 2)).then((value) => _startRequestAd());
+    // _onListenAdCallback();
+    // _rewardListener = SplashListener(loadSuccess: () {
+    //   print("SplashListener loadSuccess");
+    //   _startRequestAd();
+    // });
+    // _startRequestAd();
+    // Future.delayed(const Duration(seconds: 2)).then((value) => _startRequestAd());
     super.initState();
   }
 

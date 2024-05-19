@@ -92,7 +92,8 @@ dependencies:
   umeng_common_sdk: ^1.2.3
   huijing_ads_plugin:
     path: modules/huijing_ads_plugin/
-
+  flutter_plugin_ad:
+    path: modules/flutter_plugin_ad
 
 
 dev_dependencies:

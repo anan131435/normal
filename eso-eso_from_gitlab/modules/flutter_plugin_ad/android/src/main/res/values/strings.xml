@@ -1,0 +1,8 @@
+<resources>
+    <string name="title_home">首页</string>
+    <string name="title_dashboard">综合</string>
+    <string name="title_notifications">粉丝团</string>
+    <string name="title_my">我的</string>
+    <string name="recommend">推荐</string>
+    <string name="short_video">短视频</string>
+</resources>
