@@ -28,7 +28,7 @@ import '../fonticons_icons.dart';
 import '../global.dart';
 import 'chapter_page.dart';
 import 'langding_page.dart';
-
+// 分类页面 全部 玄幻 都市 言情
 class DiscoverSearchPage extends StatefulWidget {
   final String originTag;
   final String origin;

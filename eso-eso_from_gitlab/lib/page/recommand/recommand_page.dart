@@ -201,7 +201,6 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
 
   @override
   Widget build(BuildContext context) {
-    print("${widget.contentType} recommand build");
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<EditSourceProvider>(

@@ -15,6 +15,7 @@ class _ShortVideoPageState extends State<ShortVideoPage> {
   final PageController _pageController = PageController();
   VideoPlayerController _controller;
   List<String> list = [
+    "https://v10.dious.cc/20240516/ZlpYkhYY/2000kb/hls/index.m3u8",
     "https://static.ybhospital.net/test-video-10.MP4",
     "https://static.ybhospital.net/test-video-6.mp4",
     "https://static.ybhospital.net/test-video-9.MP4",

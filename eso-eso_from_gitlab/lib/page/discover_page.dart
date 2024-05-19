@@ -37,7 +37,7 @@ import 'hidden/linyuan_page.dart';
 import 'hidden/schulte_grid.dart';
 import 'share_page.dart';
 import 'source/edit_rule_page.dart';
-
+// 内容源的下一页
 class DiscoverFuture extends StatelessWidget {
   final Rule rule;
   const DiscoverFuture({Key key, this.rule}) : super(key: key);
