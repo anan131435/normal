@@ -167,9 +167,9 @@ class _VideoPageState extends State<VideoPage> with WidgetsBindingObserver{
       } else if (event == "onAdClose") {
 
         print("xiuxiu${dateStr}关闭广告了");
-        if (showCount == null || showCount < 3) {
-          _startRequestAd();
-        }
+        // if (showCount == null || showCount < 3) {
+        //   _startRequestAd();
+        // }
       }
 
     });
