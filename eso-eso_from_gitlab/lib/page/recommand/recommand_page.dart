@@ -187,8 +187,8 @@ class _RecommendPageState extends State<RecommendPage>
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 155 / 93,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
+                mainAxisSpacing: 5,
+                crossAxisSpacing: 5,
               ),
               padding: EdgeInsets.symmetric(
                 vertical: 8,

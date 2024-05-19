@@ -30,6 +30,8 @@ class _FirstPageState extends State<FirstPage> {
     _rewardListener = SplashListener(loadSuccess: () {
       print("SplashListener loadSuccess");
       _startRequestAd();
+    },loadFailed: () {
+      print("SplashListener loadFailed");
     });
     _startRequestAd();
     Future.delayed(const Duration(seconds: 2)).then((value) => _startRequestAd());

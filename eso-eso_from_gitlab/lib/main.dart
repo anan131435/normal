@@ -201,7 +201,7 @@ class _MyAppState extends State<MyApp> {
           );
         });
 
-        Future.delayed(const Duration(seconds: 4)).then((value) {
+        Future.delayed(const Duration(seconds: 2)).then((value) {
           initFlag = InitFlag.ok;
           setState(() {});
         });
