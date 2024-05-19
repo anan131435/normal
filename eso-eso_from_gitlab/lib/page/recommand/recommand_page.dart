@@ -14,7 +14,11 @@ import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../ui/round_indicator.dart';
+import '../../ui/widgets/keep_alive_widget.dart';
+import '../../ui/widgets/size_bar.dart';
 import '../chapter_page.dart';
+import '../langding_page.dart';
 import 'entity/product_item.dart';
 
 class RecommendPage extends StatefulWidget {
@@ -25,10 +29,13 @@ class RecommendPage extends StatefulWidget {
   State<RecommendPage> createState() => _RecommendPageState();
 }
 
-class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveClientMixin{
-
+class _RecommendPageState extends State<RecommendPage>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   List<ProductItem> itemList;
   EditSourceProvider _provider;
+  Rule rule;
+  List<DiscoverMap> discoverMap;
+  TabController _tabController;
   int fetchRuletype(HomeContentType type) {
     switch (type) {
       case HomeContentType.Novel:
@@ -59,58 +66,173 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
     await _provider.refreshData();
   }
 
-  List<Widget> _yourFavorite({ListDataItem dataItem}) {
-    return dataItem.items.sublist(0, 6).map((searchItem) {
-      return GestureDetector(
-          onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => ChapterPage(searchItem: searchItem)),
-              ),
-          child: ProductItemWidget(
-            item: searchItem,
-          ));
-    }).toList();
-  }
-
-  ListDataItem findDataSourceItem({DiscoverPageController controller,int index}) {
+  ListDataItem findDataSourceItem(
+      {DiscoverPageController controller, int index}) {
     if (index >= controller.items.length) {
       print("进入了边界条件");
       return controller.items[0];
     }
     ListDataItem item = controller.items[index];
     if (item.items.isEmpty) {
-      findDataSourceItem(controller: controller,index: index + 1);
+      findDataSourceItem(controller: controller, index: index + 1);
     } else {
       return item;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<EditSourceProvider>(
+          create: (context) => _provider,
+        ),
+      ],
+      child: Consumer<EditSourceProvider>(builder: (context, value, child) {
+        print("Consumer<EditSourceProvider>");
+        if (value.rules.isEmpty) {
+          print("value.rules.isEmpty");
+          return Container();
+        } else {
+          //数据源
+          if (widget.contentType == HomeContentType.Picture) {
+            rule = value.rules.last;
+          } else if (widget.contentType == HomeContentType.Video) {
+            rule = value.rules.first;
+          } else {
+            rule = value.rules[5];
+          }
+          return FutureBuilder<List<DiscoverMap>>(
+            initialData: null,
+            future: APIFromRUle(rule).discoverMap(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("error: ${snapshot.error}");
+              }
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Color(primaryColor),
+                  ),
+                );
+              }
+              return ChangeNotifierProvider<DiscoverPageController>(
+                  create: (context) {
+                discoverMap = snapshot.data;
+                return DiscoverPageController(
+                    originTag: rule.id,
+                    discoverMap: snapshot.data,
+                    origin: rule.name,
+                    searchUrl: rule.searchUrl);
+              }, child: LayoutBuilder(
+                builder: (context, p1) {
+                  return findListView(context: context);
+                },
+              ));
+            },
+          );
+        }
+      }),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBarBottom(
+      BuildContext context, DiscoverPageController pageController) {
+    if (pageController == null || pageController.showSearchField) return null;
+    if (discoverMap == null || discoverMap.isEmpty || discoverMap.length <= 1)
+      return null;
+    if (_tabController == null) {
+      _tabController = TabController(length: discoverMap.length, vsync: this);
+      _tabController.addListener(() {
+        _select(pageController, _tabController.index);
+      });
+    }
+    return SizedBar(
+      child: TabBar(
+        controller: _tabController,
+        isScrollable: true,
+        tabs: discoverMap.map((e) => Tab(text: e.name ?? '')).toList(),
+        indicatorSize: TabBarIndicatorSize.label,
+        indicator: RoundTabIndicator(
+            insets: EdgeInsets.only(left: 5, right: 5),
+            borderSide:
+                BorderSide(width: 3.0, color: Theme.of(context).primaryColor)),
+        labelColor: Theme.of(context).primaryColor,
+        unselectedLabelColor: Theme.of(context).textTheme.bodyText1.color,
+        onTap: (index) {
+          _select(pageController, index);
+        },
+      ),
+    );
+  }
+
+  _select(DiscoverPageController pageController, int index,
+      [DiscoverPair pair]) {
+    pageController.selectDiscoverPair(discoverMap[index].name, pair);
+  }
+
+  Widget _buildListView(
+      BuildContext context, DiscoverPageController pageController, ListDataItem item,
+      [DiscoverMap map, int index]) {
+    if (item.isLoading) {
+      return Column(
+        children: [Expanded(child: LandingPage())],
+      );
+    }
+    return  Column(
+      children: [
+        Expanded(
+          child: GridView(
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 155 / 93,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 10,
+              ),
+              children: (item == null || item.items.isEmpty)
+                  ? [Container()]
+                  : _yourFavorite(dataItem: item)),
+        )
+      ],
+    );
   }
 
   Widget findListView({BuildContext context}) {
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
-      // print("findListView has data ${controller.items.length}");
-      // for (var item in controller.items) {
-      //   print("itemListCount ${item.items.length}");
-      // }
       ListDataItem item = controller.items[0];
       if (_provider.ruleContentType == 2) {
         print("进到了视频");
         //视频
         if (item.items.isEmpty) {
           print("视频为空");
-         item = findDataSourceItem(controller: controller,index: 1);
+          item = findDataSourceItem(controller: controller, index: 1);
         }
-
       }
 
-      DiscoverMap map = controller.discoverMap[0];
+      List<Widget> children = [];
+      if (controller.discoverMap.isNotEmpty) {
+        for (var i = 0; i < discoverMap.length; i++) {
+          children.add(KeepAliveWidget(
+            wantKeepAlive: true,
+            child: _buildListView(
+                context, controller, controller.items[i], discoverMap[i], i),
+          ));
+        }
+      }
+
       return ListView.builder(
         itemBuilder: (context, index) {
           if (index == 0) {
             return Container(
               margin: const EdgeInsets.all(16),
-              height:  (394 / 928) * screenH,
+              height: (454 / 928) * screenH,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -136,22 +258,13 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                       ],
                     ),
                   ),
+                  //appBar
+                  _buildAppBarBottom(context, controller),
                   Expanded(
-                    child: GridView(
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 155 / 93,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 10,
-                        ),
-                        children: (item == null || item.items.isEmpty)
-                            ? [Container()]
-                            : _yourFavorite(dataItem: item)),
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: children,
+                    ),
                   )
                 ],
               ),
@@ -182,7 +295,8 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
                 },
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: (item == null) ?  0 : item.items.length,
+                reverse: true,
+                itemCount: (item == null) ? 0 : item.items.length,
               ),
             );
           }
@@ -199,60 +313,17 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _provider,
-        ),
-      ],
-      child: Consumer<EditSourceProvider>(builder: (context, value, child) {
-        print("Consumer<EditSourceProvider>");
-        if (value.rules.isEmpty) {
-          print("value.rules.isEmpty");
-          return Container();
-        } else {
-          //数据源
-          Rule rule;
-          if (widget.contentType == HomeContentType.Picture) {
-            rule = value.rules.last;
-          } else if (widget.contentType == HomeContentType.Video){
-            rule = value.rules.first;
-          } else {
-            rule = value.rules[5];
-          }
-          return FutureBuilder<List<DiscoverMap>>(
-            initialData: null,
-            future: APIFromRUle(rule).discoverMap(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("error: ${snapshot.error}");
-              }
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Color(primaryColor),
-                  ),
-                );
-              }
-              return ChangeNotifierProvider<DiscoverPageController>(
-                  create: (context) {
-                return DiscoverPageController(
-                    originTag: rule.id,
-                    discoverMap: snapshot.data,
-                    origin: rule.name,
-                    searchUrl: rule.searchUrl);
-              }, child: LayoutBuilder(
-                builder: (context, p1) {
-                  return findListView(context: context);
-                },
-              ));
-            },
-          );
-        }
-      }),
-    );
+  List<Widget> _yourFavorite({ListDataItem dataItem}) {
+    return dataItem.items.sublist(0, 6).map((searchItem) {
+      return GestureDetector(
+          onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => ChapterPage(searchItem: searchItem)),
+              ),
+          child: ProductItemWidget(
+            item: searchItem,
+          ));
+    }).toList();
   }
 }
 /*
