@@ -78,7 +78,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget> {
     return ChangeNotifierProvider(
       create: (context) => _provider,
       builder: (context, child) {
-        print("动漫rebuild ${_provider.rules}");
         if (_provider.rules.isEmpty) {
           return Container();
         } else {
