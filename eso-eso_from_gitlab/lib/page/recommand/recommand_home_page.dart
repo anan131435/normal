@@ -35,9 +35,7 @@ class _RecommendHomePageState extends State<RecommendHomePage>
   EditSourceProvider _provider;
   EditSourceProvider _videoProvider;
   EditSourceProvider _pictureProvider;
-  List<ListDataItem> _novelList = [];
-  List<ListDataItem> _videoList = [];
-  List<ListDataItem> _pictureList = [];
+
   int contentType;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -96,19 +94,6 @@ class _RecommendHomePageState extends State<RecommendHomePage>
       //   print("itemListCount ${item.items.length}");
       // }
       //小说
-      if (contentType == 1) {
-        print("小说数据回来了${controller.items.length}");
-        _novelList = controller.items;
-        //图片
-      } else if (contentType == 0) {
-        print("图片数据回来了${controller.items.length}");
-        _pictureList = controller.items;
-        //视频
-      } else if (contentType == 2) {
-        print("视频数据回来了");
-        _videoList = controller.items;
-      }
-
       ListDataItem item = controller.items[0];
       DiscoverMap map = controller.discoverMap[0];
       return ListView.builder(

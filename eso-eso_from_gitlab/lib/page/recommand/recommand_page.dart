@@ -95,13 +95,7 @@ class _RecommendPageState extends State<RecommendPage>
           return Container();
         } else {
           //数据源
-          if (widget.contentType == HomeContentType.Picture) {
-            rule = value.rules.last;
-          } else if (widget.contentType == HomeContentType.Video) {
-            rule = value.rules.first;
-          } else {
-            rule = value.rules[5];
-          }
+          rule = value.rules.first;
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
