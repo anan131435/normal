@@ -215,7 +215,6 @@ class _RecommendHomePageState extends State<RecommendHomePage>
 
   @override
   Widget build(BuildContext context) {
-    print("${widget.contentType} recommand build");
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<EditSourceProvider>(

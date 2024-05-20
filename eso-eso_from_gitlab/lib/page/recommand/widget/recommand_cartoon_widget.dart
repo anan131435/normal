@@ -5,17 +5,14 @@ import 'package:provider/provider.dart';
 import '../../../api/api.dart';
 import '../../../api/api_from_rule.dart';
 import '../../../database/rule.dart';
-import '../../../database/search_item.dart';
 import '../../../hive/theme_box.dart';
 import '../../../model/discover_page_controller.dart';
 import '../../../model/edit_source_provider.dart';
 import '../../../ui/round_indicator.dart';
 import '../../../ui/widgets/keep_alive_widget.dart';
 import '../../../ui/widgets/size_bar.dart';
-import '../../../utils/org_color_utils.dart';
 import '../../chapter_page.dart';
 import '../../langding_page.dart';
-import 'hot_recommend_item.dart';
 
 class RecommendCartoonWidget extends StatefulWidget {
   const RecommendCartoonWidget({Key key}) : super(key: key);
@@ -129,7 +126,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
     } else {
       ListDataItem item = controller.items[0];
       print("动漫实例${item.length}");
-
       List<Widget> children = [];
       if (controller.discoverMap.isNotEmpty) {
         for (var i = 0; i < discoverMap.length; i++) {
@@ -158,12 +154,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
                   Text(
                     "猜你喜欢",
                     style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    "换一换",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: ColorsUtil.contractColor("#86909C")),
                   ),
                 ],
               ),
