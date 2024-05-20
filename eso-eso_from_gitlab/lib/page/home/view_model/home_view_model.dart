@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class HomeViewModel extends ChangeNotifier {
   final List<String> tabTitles = [
     "推荐",
-    "阅读",
-    "图片",
+    "小说",
+    "漫画",
     "音频",
-    "视频",
+    "追剧",
     "短视频",
   ];
 }

@@ -1,3 +1,4 @@
+import 'package:eso/page/recommand/widget/empty_item_widget.dart';
 import 'package:eso/page/recommand/widget/product_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../api/api.dart';
 import '../../../api/api_from_rule.dart';
 import '../../../database/rule.dart';
+import '../../../database/search_item.dart';
 import '../../../hive/theme_box.dart';
 import '../../../model/discover_page_controller.dart';
 import '../../../model/edit_source_provider.dart';
@@ -12,10 +14,12 @@ import '../../../ui/round_indicator.dart';
 import '../../../ui/widgets/keep_alive_widget.dart';
 import '../../../ui/widgets/size_bar.dart';
 import '../../chapter_page.dart';
+import '../../enum/content_type.dart';
 import '../../langding_page.dart';
 
 class RecommendCartoonWidget extends StatefulWidget {
-  const RecommendCartoonWidget({Key key}) : super(key: key);
+  final HomeContentType contentType;
+  const RecommendCartoonWidget({Key key, this.contentType}) : super(key: key);
 
   @override
   State<RecommendCartoonWidget> createState() => _RecommendCartoonWidgetState();
@@ -26,9 +30,23 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
   EditSourceProvider _provider;
   List<DiscoverMap> discoverMap;
   TabController _tabController;
+
+  int fetchRuletype(HomeContentType type) {
+    switch (type) {
+      case HomeContentType.Novel:
+        return 1;
+      case HomeContentType.Picture:
+        return 0;
+      case HomeContentType.Audio:
+        return 3;
+      case HomeContentType.Video:
+        return 2;
+    }
+  }
+
   void createProvider() async {
     _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = 0;
+    _provider.ruleContentType = fetchRuletype(widget.contentType);
     await _provider.refreshData();
   }
 
@@ -36,6 +54,18 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
   void initState() {
     createProvider();
     super.initState();
+  }
+
+
+  List<Widget> _emptyFavorite() {
+    return [
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+    ];
   }
 
   List<Widget> _yourFavorite({ListDataItem dataItem}) {
@@ -110,7 +140,7 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
                 horizontal: 10,
               ),
               children: (item == null || item.items.isEmpty)
-                  ? [Container()]
+                  ? _emptyFavorite()
                   : _yourFavorite(dataItem: item)),
         )
       ],
@@ -124,8 +154,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
     if (controller.items == null || controller.items.isEmpty) {
       return Container();
     } else {
-      ListDataItem item = controller.items[0];
-      print("动漫实例${item.length}");
       List<Widget> children = [];
       if (controller.discoverMap.isNotEmpty) {
         for (var i = 0; i < discoverMap.length; i++) {
@@ -136,7 +164,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
           ));
         }
       }
-
       return Container(
         margin: const EdgeInsets.all(16),
         height: (454 / 928) * screenH,
@@ -180,7 +207,13 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
           return Container();
         } else {
           Rule rule;
-          rule = _provider.rules.last;
+          if (widget.contentType == HomeContentType.Audio ||
+              widget.contentType == HomeContentType.Video) {
+            rule = _provider.rules[2];
+          } else {
+            rule = _provider.rules.last;
+          }
+
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),

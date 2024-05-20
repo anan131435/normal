@@ -1,74 +1,80 @@
-import 'dart:io';
-
-import 'package:eso/api/api.dart';
-import 'package:eso/api/api_from_rule.dart';
-import 'package:eso/database/rule.dart';
-import 'package:eso/database/search_item.dart';
-import 'package:eso/hive/theme_box.dart';
-import 'package:eso/model/discover_page_controller.dart';
-import 'package:eso/model/edit_source_provider.dart';
-import 'package:eso/page/enum/content_type.dart';
-import 'package:eso/page/recommand/widget/hot_recommend_item.dart';
+import 'package:eso/page/recommand/widget/empty_item_widget.dart';
 import 'package:eso/page/recommand/widget/product_item_widget.dart';
-import 'package:eso/page/recommand/widget/recommand_cartoon_widget.dart';
-import 'package:eso/page/recommand/widget/recommend_video_widget.dart';
-import 'package:eso/utils/org_color_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../global.dart';
-import '../../ui/round_indicator.dart';
-import '../../ui/widgets/keep_alive_widget.dart';
-import '../../ui/widgets/size_bar.dart';
-import '../chapter_page.dart';
-import '../langding_page.dart';
-import 'entity/product_item.dart';
+import '../../../api/api.dart';
+import '../../../api/api_from_rule.dart';
+import '../../../database/rule.dart';
+import '../../../database/search_item.dart';
+import '../../../hive/theme_box.dart';
+import '../../../model/discover_page_controller.dart';
+import '../../../model/edit_source_provider.dart';
+import '../../../ui/round_indicator.dart';
+import '../../../ui/widgets/keep_alive_widget.dart';
+import '../../../ui/widgets/size_bar.dart';
+import '../../chapter_page.dart';
+import '../../enum/content_type.dart';
+import '../../langding_page.dart';
 
-class RecommendHomePage extends StatefulWidget {
+class RecommendVideoWidget extends StatefulWidget {
   final HomeContentType contentType;
-  const RecommendHomePage({Key key, this.contentType}) : super(key: key);
+  const RecommendVideoWidget({Key key, this.contentType}) : super(key: key);
 
   @override
-  State<RecommendHomePage> createState() => _RecommendHomePageState();
+  State<RecommendVideoWidget> createState() => _RecommendVideoWidgetState();
 }
 
-class _RecommendHomePageState extends State<RecommendHomePage>
-    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  List<ProductItem> itemList;
+class _RecommendVideoWidgetState extends State<RecommendVideoWidget>
+    with SingleTickerProviderStateMixin {
   EditSourceProvider _provider;
   List<DiscoverMap> discoverMap;
   TabController _tabController;
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  int fetchRuletype(HomeContentType type) {
+    switch (type) {
+      case HomeContentType.Novel:
+        return 1;
+      case HomeContentType.Picture:
+        return 0;
+      case HomeContentType.Audio:
+        return 3;
+      case HomeContentType.Video:
+        return 2;
+    }
+  }
 
-  void _openBox() async {
-    await Hive.openBox(Global.rewardAdShowCountKey);
+  void createProvider() async {
+    _provider = EditSourceProvider(type: 2);
+    _provider.ruleContentType = fetchRuletype(widget.contentType);
+    await _provider.refreshData();
   }
 
   @override
   void initState() {
     createProvider();
-    _openBox();
     super.initState();
   }
 
-  void createProvider() async {
-    _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = 1;
-    await _provider.refreshData();
+
+  List<Widget> _emptyFavorite() {
+    return [
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+    ];
   }
 
   List<Widget> _yourFavorite({ListDataItem dataItem}) {
     return dataItem.items.sublist(0, 6).map((searchItem) {
       return GestureDetector(
           onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => ChapterPage(searchItem: searchItem)),
-              ),
+            MaterialPageRoute(
+                builder: (context) => ChapterPage(searchItem: searchItem)),
+          ),
           child: ProductItemWidget(
             item: searchItem,
           ));
@@ -95,7 +101,7 @@ class _RecommendHomePageState extends State<RecommendHomePage>
         indicator: RoundTabIndicator(
             insets: EdgeInsets.only(left: 5, right: 5),
             borderSide:
-                BorderSide(width: 3.0, color: Theme.of(context).primaryColor)),
+            BorderSide(width: 3.0, color: Theme.of(context).primaryColor)),
         labelColor: Theme.of(context).primaryColor,
         unselectedLabelColor: Theme.of(context).textTheme.bodyText1.color,
         onTap: (index) {
@@ -134,7 +140,7 @@ class _RecommendHomePageState extends State<RecommendHomePage>
                 horizontal: 10,
               ),
               children: (item == null || item.items.isEmpty)
-                  ? [Container()]
+                  ? _emptyFavorite()
                   : _yourFavorite(dataItem: item)),
         )
       ],
@@ -144,8 +150,10 @@ class _RecommendHomePageState extends State<RecommendHomePage>
   Widget findListView({BuildContext context}) {
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
-    if (controller.items != null && controller.items.isNotEmpty) {
-      //小说
+    print("动漫listView ${controller.items}");
+    if (controller.items == null || controller.items.isEmpty) {
+      return Container();
+    } else {
       List<Widget> children = [];
       if (controller.discoverMap.isNotEmpty) {
         for (var i = 0; i < discoverMap.length; i++) {
@@ -156,44 +164,35 @@ class _RecommendHomePageState extends State<RecommendHomePage>
           ));
         }
       }
-      // return ListView(
-      //   children: [
-      //     RecommendCartoonWidget(
-      //       contentType: HomeContentType.Novel,
-      //     ),
-      //     RecommendCartoonWidget(
-      //       contentType: HomeContentType.Picture,
-      //     ),
-      //     RecommendVideoWidget(
-      //       contentType: HomeContentType.Video,
-      //     ),
-      //     RecommendVideoWidget(
-      //       contentType: HomeContentType.Audio,
-      //     )
-      //   ],
-      // );
-
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return RecommendCartoonWidget(contentType: HomeContentType.Novel,);
-          } else if (index == 1){
-            return RecommendCartoonWidget(contentType: HomeContentType.Picture,);
-          } else if (index == 2){
-            return RecommendVideoWidget(contentType: HomeContentType.Video,);
-          } else if (index == 3){
-            return RecommendVideoWidget(contentType: HomeContentType.Audio,);
-          } else {
-            return Container();
-          }
-        },
-        itemCount: 4,
-      );
-    } else {
-      print("findListView no data");
-      return Center(
-        child: CircularProgressIndicator(
-          color: Colors.pink,
+      return Container(
+        margin: const EdgeInsets.all(16),
+        height: (454 / 928) * screenH,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "猜你喜欢",
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+            _buildAppBarBottom(context, controller),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: children,
+              ),
+            )
+          ],
         ),
       );
     }
@@ -201,21 +200,20 @@ class _RecommendHomePageState extends State<RecommendHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _provider,
-        ),
-      ],
-      child: Consumer<EditSourceProvider>(builder: (context, value, child) {
-        if (value.rules.isEmpty) {
-          print("数据源空");
+    return ChangeNotifierProvider(
+      create: (context) => _provider,
+      builder: (context, child) {
+        if (_provider.rules.isEmpty) {
           return Container();
         } else {
-          //数据源
-          print("数据源不为空");
           Rule rule;
-          rule = value.rules[5];
+          if (widget.contentType == HomeContentType.Audio ||
+              widget.contentType == HomeContentType.Video) {
+            rule = _provider.rules[2];
+          } else {
+            rule = _provider.rules.last;
+          }
+
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
@@ -232,13 +230,13 @@ class _RecommendHomePageState extends State<RecommendHomePage>
               }
               return ChangeNotifierProvider<DiscoverPageController>(
                   create: (context) {
-                discoverMap = snapshot.data;
-                return DiscoverPageController(
-                    originTag: rule.id,
-                    discoverMap: snapshot.data,
-                    origin: rule.name,
-                    searchUrl: rule.searchUrl);
-              }, child: LayoutBuilder(
+                    discoverMap = snapshot.data;
+                    return DiscoverPageController(
+                        originTag: rule.id,
+                        discoverMap: snapshot.data,
+                        origin: rule.name,
+                        searchUrl: rule.searchUrl);
+                  }, child: LayoutBuilder(
                 builder: (context, p1) {
                   return findListView(context: context);
                 },
@@ -246,7 +244,7 @@ class _RecommendHomePageState extends State<RecommendHomePage>
             },
           );
         }
-      }),
+      },
     );
   }
 }
