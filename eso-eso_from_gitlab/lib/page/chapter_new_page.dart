@@ -31,12 +31,14 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
   List<ChapterRoad> parseChapers(List<ChapterItem> chapters) {
     currentRoad = 0;
     final roads = <ChapterRoad>[];
-    if (chapters.isEmpty || !chapters.first.name.startsWith('@线路')) return roads;
+    if (chapters.isEmpty || !chapters.first.name.startsWith('@线路'))
+      return roads;
     var roadName = chapters.first.name.substring(3);
     var startIndex = 1;
     for (var i = 1, len = chapters.length; i < len; i++) {
       if (chapters[i].name.startsWith('@线路')) {
-        if (searchItem.durChapterIndex >= startIndex && searchItem.durChapterIndex < i) {
+        if (searchItem.durChapterIndex >= startIndex &&
+            searchItem.durChapterIndex < i) {
           currentRoad = roads.length;
         }
         // 上一个线路
@@ -50,61 +52,77 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
     return roads;
   }
 
- Widget _buildChapter(BuildContext context) {
+  Widget _buildChapter(BuildContext context) {
     return Consumer<ChapterPageProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
           return SliverToBoxAdapter(
-            child: Container(height: 200, child: LandingPage()),
+            child: Container(height: 300, child: LandingPage()),
           );
         }
         final roads = parseChapers(searchItem.chapters);
-        return ListView.builder(itemBuilder: (context, index) {
-
-          if (index == 0) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0,bottom: 8.0),
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("目录",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
+                  Text(""),
+                  Text("目录",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   GestureDetector(
                     onTap: () {
                       setState(() {
                         _reverse = !_reverse;
-                        if (_reverse) {
-                          _sortName = "倒序";
-                        }
+                        _sortName = _reverse ? "倒序" : "正序";
                       });
                     },
-                      child: Text(_sortName,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),),
+                    child: Text(_sortName,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500)),
+                  ),
                 ],
               ),
-            );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                provider.changeChapter(index - 1);
-                Navigator.of(context)
-                    .push(ContentPageRoute().route(searchItem))
-                    .whenComplete(provider.adjustScroll);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16,top: 8.0,bottom: 8.0,right: 16.0),
-                child: Text(searchItem.chapters[index - 1].name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+            ),
+            const SizedBox(height: 16.0,),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      provider.changeChapter(index);
+                      Navigator.of(context)
+                          .push(ContentPageRoute().route(searchItem))
+                          .whenComplete(provider.adjustScroll);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, top: 8.0, bottom: 8.0, right: 16.0),
+                      child: Text(
+                        searchItem.chapters[index].name,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  );
+                },
+                reverse: _reverse,
+                itemCount: searchItem.chapters.length,
               ),
-            );
-          }
-        },
-          reverse: _reverse,
-          itemCount: searchItem.chapters.length + 1,
+            ),
+          ],
         );
       },
     );
- }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    print(size.height);
     return ChangeNotifierProvider<ChapterPageProvider>(
       create: (context) {
         return ChapterPageProvider(searchItem: searchItem, size: size);
@@ -112,7 +130,7 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
       builder: (context, child) {
         return Container(
           width: double.infinity,
-          height: 318,
+          height: size.height - 34,
           margin: const EdgeInsets.only(top: 12.0),
           child: _buildChapter(context),
         );
