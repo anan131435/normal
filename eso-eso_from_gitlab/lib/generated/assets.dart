@@ -139,6 +139,7 @@ class Assets {
   static const String pageAddLocalItemPage = 'lib/page/add_local_item_page.dart';
   static const String pageAudioPage = 'lib/page/audio_page.dart';
   static const String pageAudioPageRefactor = 'lib/page/audio_page_refactor.dart';
+  static const String pageChapterNewPage = 'lib/page/chapter_new_page.dart';
   static const String pageChapterPage = 'lib/page/chapter_page.dart';
   static const String pageChapterPageRefactor = 'lib/page/chapter_page_refactor.dart';
   static const String pageContentPageManager = 'lib/page/content_page_manager.dart';
