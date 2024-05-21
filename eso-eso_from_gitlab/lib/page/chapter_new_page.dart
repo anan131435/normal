@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../database/chapter_item.dart';
 import '../model/chapter_page_provider.dart';
 import 'chapter_page.dart';
+import 'content_page_manager.dart';
 
 class ChapterNewPage extends StatefulWidget {
   final SearchItem searchItem;
@@ -19,6 +20,8 @@ class ChapterNewPage extends StatefulWidget {
 class _ChapterNewPageState extends State<ChapterNewPage> {
   SearchItem searchItem;
   var currentRoad = 0;
+  bool _reverse = false;
+  String _sortName = "正序";
   @override
   void initState() {
     searchItem = widget.searchItem;
@@ -57,9 +60,44 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
         }
         final roads = parseChapers(searchItem.chapters);
         return ListView.builder(itemBuilder: (context, index) {
-          return Text(searchItem.chapters[index].name);
+
+          if (index == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0,bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("目录",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _reverse = !_reverse;
+                        if (_reverse) {
+                          _sortName = "倒序";
+                        }
+                      });
+                    },
+                      child: Text(_sortName,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),),
+                ],
+              ),
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                provider.changeChapter(index - 1);
+                Navigator.of(context)
+                    .push(ContentPageRoute().route(searchItem))
+                    .whenComplete(provider.adjustScroll);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16,top: 8.0,bottom: 8.0,right: 16.0),
+                child: Text(searchItem.chapters[index - 1].name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+              ),
+            );
+          }
         },
-          itemCount: searchItem.chapters.length,
+          reverse: _reverse,
+          itemCount: searchItem.chapters.length + 1,
         );
       },
     );
@@ -76,7 +114,6 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
           width: double.infinity,
           height: 318,
           margin: const EdgeInsets.only(top: 12.0),
-          decoration: globalDecoration,
           child: _buildChapter(context),
         );
       },
