@@ -111,32 +111,7 @@ class _ChapterPageState extends State<ChapterPage> {
                   slivers: <Widget>[
                     _comicDetail(context),
                     // _buildChapter(context),
-                    SliverToBoxAdapter(
-                      child: TextButton(
-                          onPressed: () {
-                            RouterHelper.showBottomSheet(
-                              ChapterNewPage(
-                                searchItem: searchItem,
-                              ),
-                              context: context,
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "全部章节",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
-                    )
+                    _setupActionBtn(context),
                   ],
                 ),
                 controller: _controller,
@@ -525,6 +500,50 @@ class _ChapterPageState extends State<ChapterPage> {
                 initWidth: 50,
               ),
       ),
+    );
+  }
+
+  Widget _setupActionBtn(BuildContext context) {
+    return Consumer<ChapterPageProvider>(
+      builder: (context, value, child) {
+        return SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      value.onSelect(MenuChapter.change, context);
+                    },
+                    child: Text(
+                      "换源",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      RouterHelper.showBottomSheet(
+                        ChapterNewPage(
+                          searchItem: searchItem,
+                        ),
+                        context: context,
+                      );
+                    },
+                    child: Text(
+                      "全部章节",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
