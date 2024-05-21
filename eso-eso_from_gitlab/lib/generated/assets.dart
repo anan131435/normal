@@ -213,6 +213,7 @@ class Assets {
   static const String utilsLocalStorageUtils = 'lib/utils/local_storage_utils.dart';
   static const String utilsMemoryCache = 'lib/utils/memory_cache.dart';
   static const String utilsOrgColorUtils = 'lib/utils/org_color_utils.dart';
+  static const String utilsRouterHelper = 'lib/utils/router_helper.dart';
   static const String utilsRuleComparess = 'lib/utils/rule_comparess.dart';
   static const String utilsTextInputFormatter = 'lib/utils/text_input_formatter.dart';
   static const String viewModelHomeViewModel = 'lib/page/home/view_model/home_view_model.dart';
@@ -223,6 +224,8 @@ class Assets {
   static const String widgetRecommandCartoonWidget = 'lib/page/recommand/widget/recommand_cartoon_widget.dart';
   static const String widgetRecommendVideoWidget = 'lib/page/recommand/widget/recommend_video_widget.dart';
   static const String widgetsAnimationRotateView = 'lib/ui/widgets/animation_rotate_view.dart';
+  static const String widgetsCompanyItem = 'lib/ui/widgets/company_item.dart';
+  static const String widgetsCompanyList = 'lib/ui/widgets/company_list.dart';
   static const String widgetsDraggableScrollbarSliver = 'lib/ui/widgets/draggable_scrollbar_sliver.dart';
   static const String widgetsEmptyListMsgView = 'lib/ui/widgets/empty_list_msg_view.dart';
   static const String widgetsIconText = 'lib/ui/widgets/icon_text.dart';
