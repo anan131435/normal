@@ -107,7 +107,24 @@ class _ChapterPageState extends State<ChapterPage> {
                   controller: _controller,
                   slivers: <Widget>[
                     _comicDetail(context),
-                    _buildChapter(context),
+                    // _buildChapter(context),
+                    SliverToBoxAdapter(
+                      child: TextButton(onPressed: () {
+
+                      }, child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("全部章节",style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                          ],
+                        ),
+                      )),
+                    )
+
                   ],
                 ),
                 controller: _controller,
@@ -283,12 +300,12 @@ class _ChapterPageState extends State<ChapterPage> {
                           ),
                         ),
                         SizedBox(height: 12),
-                        Container(
-                          color: Colors.red,
-                          width: double.infinity,
-                          height: 60,
-                          child: Center(child: Text("广告位啊啊啊啊",style: TextStyle(color: Colors.black),)),
-                        ),
+                        // Container(
+                        //   color: Colors.red,
+                        //   width: double.infinity,
+                        //   height: 60,
+                        //   child: Center(child: Text("广告位啊啊啊啊",style: TextStyle(color: Colors.black),)),
+                        // ),
 
                         SizedBox(height: 4),
 

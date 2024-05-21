@@ -24,6 +24,7 @@ class DataManager extends ChangeNotifier{
       var box = Hive.box(Global.jsonVersionKey);
       if (entity.version == box.get(Global.jsonVersionKey)) {
         //版本号一致不更新数据库内容
+        print("版本号一致不更新数据库内容");
       } else {
         box.put(Global.jsonVersionKey, entity.version);
         final uri = Uri.tryParse(entity.url);
