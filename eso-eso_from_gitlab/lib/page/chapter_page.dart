@@ -112,6 +112,7 @@ class _ChapterPageState extends State<ChapterPage> {
                     _comicDetail(context),
                     // _buildChapter(context),
                     _setupActionBtn(context),
+                    _setupBannerAd(context),
                   ],
                 ),
                 controller: _controller,
@@ -140,6 +141,24 @@ class _ChapterPageState extends State<ChapterPage> {
             buildPage(context),
           ],
         )),
+      ),
+    );
+  }
+  
+  Widget _setupBannerAd(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 160,
+          width: double.infinity,
+          child: Text("Banner 广告位"),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).bottomAppBarColor
+          ),
+        ),
       ),
     );
   }
