@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:eso/page/home/entity/data_base_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 
 import '../database/rule.dart';
@@ -20,27 +21,25 @@ class DataManager extends ChangeNotifier{
       print("接口返回 ${response.body}");
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
-      print(entity.url);
-      final uri = Uri.tryParse(entity.url);
-      // "https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest"
-      // final uri = Uri.tryParse("https://cdn.jsdelivr.net/gh/nanchengling/eso-repo@1.0.1/manifest");
-      if (uri == null) {
-        print("地址格式错误");
+      var box = Hive.box(Global.jsonVersionKey);
+      if (entity.version == box.get(Global.jsonVersionKey)) {
+        //版本号一致不更新数据库内容
       } else {
-        print("开始请求");
-        // final res = await http.get(uri);
-        final res = await http.get(uri, headers: {
-          'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
-        });
-        print("请求结束");
-        if (res.statusCode == 200) {
-          print("请求成功");
+        box.put(Global.jsonVersionKey, entity.version);
+        final uri = Uri.tryParse(entity.url);
+        if (uri == null) {
+          print("地址格式错误");
         } else {
-          print("请求报错");
+          print("开始请求");
+          final res = await http.get(uri, headers: {
+            'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
+          });
+          print("请求结束");
+          insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
         }
-        insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
       }
+
     }
   }
 

@@ -156,39 +156,39 @@ class _RecommendHomePageState extends State<RecommendHomePage>
           ));
         }
       }
-      // return ListView(
-      //   children: [
-      //     RecommendCartoonWidget(
-      //       contentType: HomeContentType.Novel,
-      //     ),
-      //     RecommendCartoonWidget(
-      //       contentType: HomeContentType.Picture,
-      //     ),
-      //     RecommendVideoWidget(
-      //       contentType: HomeContentType.Video,
-      //     ),
-      //     RecommendVideoWidget(
-      //       contentType: HomeContentType.Audio,
-      //     )
-      //   ],
-      // );
-
-      return ListView.builder(
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return RecommendCartoonWidget(contentType: HomeContentType.Novel,);
-          } else if (index == 1){
-            return RecommendCartoonWidget(contentType: HomeContentType.Picture,);
-          } else if (index == 2){
-            return RecommendVideoWidget(contentType: HomeContentType.Video,);
-          } else if (index == 3){
-            return RecommendVideoWidget(contentType: HomeContentType.Audio,);
-          } else {
-            return Container();
-          }
-        },
-        itemCount: 4,
+      return ListView(
+        children: [
+          RecommendCartoonWidget(
+            contentType: HomeContentType.Novel,
+          ),
+          RecommendCartoonWidget(
+            contentType: HomeContentType.Picture,
+          ),
+          RecommendVideoWidget(
+            contentType: HomeContentType.Video,
+          ),
+          RecommendVideoWidget(
+            contentType: HomeContentType.Audio,
+          )
+        ],
       );
+
+      // return ListView.builder(
+      //   itemBuilder: (context, index) {
+      //     if (index == 0) {
+      //       return RecommendCartoonWidget(contentType: HomeContentType.Novel,);
+      //     } else if (index == 1){
+      //       return RecommendCartoonWidget(contentType: HomeContentType.Picture,);
+      //     } else if (index == 2){
+      //       return RecommendVideoWidget(contentType: HomeContentType.Video,);
+      //     } else if (index == 3){
+      //       return RecommendVideoWidget(contentType: HomeContentType.Audio,);
+      //     } else {
+      //       return Container();
+      //     }
+      //   },
+      //   itemCount: 4,
+      // );
     } else {
       print("findListView no data");
       return Center(
