@@ -89,6 +89,14 @@ class _ChapterPageState extends State<ChapterPage> {
     super.initState();
   }
 
+  void jumpToSpecChapter(BuildContext context, int index) {
+    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
+    provider.changeChapter(index);
+    Navigator.of(context)
+        .push(ContentPageRoute().route(searchItem))
+        .whenComplete(provider.adjustScroll);
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -101,63 +109,168 @@ class _ChapterPageState extends State<ChapterPage> {
       builder: (context, child) => Container(
         decoration: globalDecoration,
         child: Scaffold(
+            appBar: _buildAlphaAppbar(context),
             body: Stack(
-          children: [
-            NotificationListener(
-              child: DraggableScrollbar.semicircle(
-                child: CustomScrollView(
-                  physics: ClampingScrollPhysics(),
-                  controller: _controller,
-                  slivers: <Widget>[
-                    _comicDetail(context),
-                    // _buildChapter(context),
-                    _setupActionBtn(context),
-                    _setupBannerAd(context),
-                  ],
+              children: [
+                Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  top: 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          searchItem.name,
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        Text(
+                          searchItem.author,
+                          style: TextStyle(fontSize: 12.0),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              searchItem.origin,
+                              style: TextStyle(fontSize: 12.0),
+                            ),
+                            Icon(Icons.refresh_outlined),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-                controller: _controller,
-                padding: const EdgeInsets.only(top: 100, bottom: 8),
-              ),
-              onNotification: ((ScrollUpdateNotification n) {
-                if (n.depth == 0 && n.metrics.pixels <= 200.0) {
-                  opacity = min(n.metrics.pixels, 100.0) / 100.0;
-                  if (opacity < 0) opacity = 0;
-                  if (opacity > 1) opacity = 1;
-                  if (state != null) state(() => null);
-                }
-                return true;
-              }),
-            ),
-            StatefulBuilder(
-              builder: (context, _state) {
-                state = _state;
-                return Container(
-                  child: _buildAlphaAppbar(context),
-                  //color: Theme.of(context).primaryColor.withOpacity(opacity),
-                  height: topHeight,
-                );
-              },
-            ),
-            buildPage(context),
-          ],
-        )),
+                Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  top: 102.0,
+                  height: MediaQuery.of(context).size.height - 102 - 64,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(
+                              20,
+                            ),
+                            topRight: Radius.circular(20.0)),
+                        color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "简介",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(height: 8.0,),
+                          Column(
+                            children: [Text(searchItem.description)],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    RouterHelper.showBottomSheet(
+                                      ChapterNewPage(
+                                        searchItem: searchItem,
+                                      ),
+                                      context: context,
+                                    );
+                                  },
+                                  child: Text(
+                                    "全部章节",
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                              Row(
+                                children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        if (searchItem.chapters.isNotEmpty) {
+                                          jumpToSpecChapter(context,
+                                              searchItem.chapters.length - 1);
+                                        }
+                                      },
+                                      child: Text(
+                                        "更至 ${searchItem.chapters == null ? "无" : searchItem.chapters.last.name}",
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .color),
+                                      )),
+                                  Icon(Icons.keyboard_arrow_right),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Image.network(
+                            searchItem.cover,
+                            width: double.infinity,
+                            height: 329,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(height: 16.0,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Text( searchItem.chapters == null ? "加载中" :  "共${searchItem.chapters.length}章"),
+                                  Text(searchItem.chapters == null ? "加载中" : searchItem.chapters.last.name),
+                                ],
+                              ),
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: Colors.yellow,
+                                ),
+                                child: TextButton(
+                                    onPressed: () {
+                                      jumpToSpecChapter(
+                                          context, searchItem.durChapterIndex);
+                                    },
+                                    child: Text(
+                                      "阅至（${searchItem.durChapterIndex}）${searchItem.durChapter}",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .color),
+                                    )),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // buildPage(context),
+              ],
+            )),
       ),
     );
   }
-  
+
   Widget _setupBannerAd(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 8.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
         child: Container(
           alignment: Alignment.center,
           height: 160,
           width: double.infinity,
           child: Text("Banner 广告位"),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).bottomAppBarColor
-          ),
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).bottomAppBarColor),
         ),
       ),
     );
@@ -193,8 +306,9 @@ class _ChapterPageState extends State<ChapterPage> {
       elevation: 0.0,
       backgroundColor:
           Theme.of(context).appBarTheme.backgroundColor.withOpacity(opacity),
+      centerTitle: true,
       title: Text(
-        searchItem.origin,
+        searchItem.name,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

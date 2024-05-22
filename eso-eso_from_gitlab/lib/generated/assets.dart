@@ -141,7 +141,6 @@ class Assets {
   static const String pageAudioPageRefactor = 'lib/page/audio_page_refactor.dart';
   static const String pageChapterNewPage = 'lib/page/chapter_new_page.dart';
   static const String pageChapterPage = 'lib/page/chapter_page.dart';
-  static const String pageChapterPageRefactor = 'lib/page/chapter_page_refactor.dart';
   static const String pageContentPageManager = 'lib/page/content_page_manager.dart';
   static const String pageDiscoverNewPage = 'lib/page/discover_new_page.dart';
   static const String pageDiscoverPage = 'lib/page/discover_page.dart';

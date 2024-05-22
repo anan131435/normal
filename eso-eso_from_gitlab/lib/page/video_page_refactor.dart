@@ -71,8 +71,6 @@ class _VideoPageState extends State<VideoPage> with WidgetsBindingObserver{
         break;
       }
     }
-
-
     super.didChangeAppLifecycleState(state);
   }
 
@@ -671,6 +669,7 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     _screenAxis = Axis.horizontal;
     _disposed = false;
     _aspectRatio = VideoAspectRatio.uninit;
+    //去掉默认横屏
     setHorizontal();
     parseContent(null);
   }

@@ -164,10 +164,10 @@ class _RecommendHomePageState extends State<RecommendHomePage>
           RecommendCartoonWidget(
             contentType: HomeContentType.Picture,
           ),
-          RecommendVideoWidget(
+          RecommendCartoonWidget(
             contentType: HomeContentType.Video,
           ),
-          RecommendVideoWidget(
+          RecommendCartoonWidget(
             contentType: HomeContentType.Audio,
           )
         ],
