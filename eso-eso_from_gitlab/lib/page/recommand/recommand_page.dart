@@ -132,11 +132,11 @@ class _RecommendPageState extends State<RecommendPage>
     );
   }
 
-  PreferredSizeWidget _buildAppBarBottom(
+  Widget _buildAppBarBottom(
       BuildContext context, DiscoverPageController pageController) {
-    if (pageController == null || pageController.showSearchField) return null;
+    if (pageController == null || pageController.showSearchField) return Container();
     if (discoverMap == null || discoverMap.isEmpty || discoverMap.length <= 1)
-      return null;
+      return Container();
     if (_tabController == null) {
       _tabController = TabController(length: discoverMap.length, vsync: this);
       _tabController.addListener(() {
