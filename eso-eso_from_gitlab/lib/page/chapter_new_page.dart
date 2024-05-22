@@ -22,9 +22,11 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
   var currentRoad = 0;
   bool _reverse = false;
   String _sortName = "正序";
+  List<ChapterItem> dataSource = [];
   @override
   void initState() {
     searchItem = widget.searchItem;
+    dataSource = searchItem.chapters;
     super.initState();
   }
 
@@ -75,9 +77,11 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   GestureDetector(
                     onTap: () {
+                      print("sort");
                       setState(() {
                         _reverse = !_reverse;
                         _sortName = _reverse ? "倒序" : "正序";
+                        dataSource = List.from(dataSource.reversed) ;
                       });
                     },
                     child: Text(_sortName,
@@ -102,15 +106,14 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
                       padding: const EdgeInsets.only(
                           left: 16, top: 8.0, bottom: 8.0, right: 16.0),
                       child: Text(
-                        searchItem.chapters[index].name,
+                        dataSource[index].name,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                   );
                 },
-                reverse: _reverse,
-                itemCount: searchItem.chapters.length,
+                itemCount: dataSource.length,
               ),
             ),
           ],
