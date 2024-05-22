@@ -666,11 +666,12 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     //   searchItem.chapters = SearchItemManager.getChapter(searchItem.id);
     // }
     _titleText = "${searchItem.name} - ${searchItem.durChapter}";
-    _screenAxis = Axis.horizontal;
+    _screenAxis = Axis.vertical;
     _disposed = false;
     _aspectRatio = VideoAspectRatio.uninit;
     //去掉默认横屏
-    setHorizontal();
+    // setHorizontal();
+    setVertical();
     parseContent(null);
   }
 
