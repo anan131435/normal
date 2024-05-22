@@ -119,11 +119,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
   Widget _buildListView(BuildContext context,
       DiscoverPageController pageController, ListDataItem item,
       [DiscoverMap map, int index]) {
-    if (item.isLoading) {
-      return Column(
-        children: [Expanded(child: LandingPage())],
-      );
-    }
     return Column(
       children: [
         Expanded(

@@ -8,6 +8,7 @@ import 'package:eso/hive/theme_box.dart';
 import 'package:eso/model/discover_page_controller.dart';
 import 'package:eso/model/edit_source_provider.dart';
 import 'package:eso/page/enum/content_type.dart';
+import 'package:eso/page/recommand/widget/empty_item_widget.dart';
 import 'package:eso/page/recommand/widget/hot_recommend_item.dart';
 import 'package:eso/page/recommand/widget/product_item_widget.dart';
 import 'package:eso/utils/org_color_utils.dart';
@@ -165,15 +166,25 @@ class _RecommendPageState extends State<RecommendPage>
       [DiscoverPair pair]) {
     pageController.selectDiscoverPair(discoverMap[index].name, pair);
   }
+  List<Widget> _emptyFavorite() {
+    return [
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+      EmptyItemWidget(),
+    ];
+  }
 
   Widget _buildListView(
       BuildContext context, DiscoverPageController pageController, ListDataItem item,
       [DiscoverMap map, int index]) {
-    if (item.isLoading) {
-      return Column(
-        children: [Expanded(child: LandingPage())],
-      );
-    }
+    // if (item.isLoading) {
+    //   return Column(
+    //     children: [Expanded(child: LandingPage())],
+    //   );
+    // }
     return  Column(
       children: [
         Expanded(
@@ -190,7 +201,7 @@ class _RecommendPageState extends State<RecommendPage>
                 horizontal: 10,
               ),
               children: (item == null || item.items.isEmpty)
-                  ? [Container()]
+                  ? _emptyFavorite()
                   : _yourFavorite(dataItem: item)),
         )
       ],
