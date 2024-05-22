@@ -90,11 +90,74 @@ class _ChapterPageState extends State<ChapterPage> {
   }
 
   void jumpToSpecChapter(BuildContext context, int index) {
-    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
+    print("jumpToSpecChapter $index");
+    ChapterPageProvider provider = Provider.of<ChapterPageProvider>(context,listen: false);
     provider.changeChapter(index);
     Navigator.of(context)
         .push(ContentPageRoute().route(searchItem))
         .whenComplete(provider.adjustScroll);
+  }
+
+  Widget bottomRow(BuildContext context) {
+    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 36.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(searchItem.chapters == null
+                  ? "加载中"
+                  : "共${searchItem.chapters.length}章"),
+              Text(searchItem.chapters == null
+                  ? "加载中"
+                  : searchItem.chapters.last.name),
+            ],
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.yellow,
+            ),
+            child: TextButton(
+                onPressed: () {
+                  jumpToSpecChapter(
+                      context, searchItem.durChapterIndex);
+                },
+                child: Text(
+                  searchItem.durChapter.length > 7 ? "阅至 ${searchItem.durChapter.substring(0,6)}" : "阅至 ${searchItem.durChapter}",
+                  style: TextStyle(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .color),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget changeRule(BuildContext context) {
+    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
+    return GestureDetector(
+      onTap: () {
+      provider.onSelect(MenuChapter.change, context);
+      },
+      child: Row(
+        children: [
+          Text(
+            searchItem.origin,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          Icon(Icons.refresh_outlined,color: Colors.black,),
+        ],
+      ),
+    );
   }
 
   @override
@@ -107,154 +170,151 @@ class _ChapterPageState extends State<ChapterPage> {
       create: (context) =>
           ChapterPageProvider(searchItem: searchItem, size: size),
       builder: (context, child) => Container(
-        decoration: globalDecoration,
-        child: Scaffold(
-            appBar: _buildAlphaAppbar(context),
-            body: Stack(
-              children: [
-                Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  top: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          searchItem.name,
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        Text(
-                          searchItem.author,
-                          style: TextStyle(fontSize: 12.0),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              searchItem.origin,
-                              style: TextStyle(fontSize: 12.0),
-                            ),
-                            Icon(Icons.refresh_outlined),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0.0,
-                  right: 0.0,
-                  top: 102.0,
-                  height: MediaQuery.of(context).size.height - 102 - 64,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(
-                              20,
-                            ),
-                            topRight: Radius.circular(20.0)),
-                        color: Colors.white),
+        // decoration: globalDecoration,
+        color: Theme.of(context).canvasColor,
+        child: SafeArea(
+          bottom: false,
+          top: false,
+          child: Scaffold(
+              appBar: _buildAlphaAppbar(context),
+              body: Stack(
+                children: [
+                  Positioned(
+                    left: 0.0,
+                    right: 0.0,
+                    top: 0.0,
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "简介",
-                            style: TextStyle(fontSize: 16),
+                            searchItem.name,
+                            style: TextStyle(fontSize: 24.0),
                           ),
                           SizedBox(height: 8.0,),
-                          Column(
-                            children: [Text(searchItem.description)],
+                          Text(
+                            searchItem.author,
+                            style: TextStyle(fontSize: 16.0),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                  onPressed: () {
-                                    RouterHelper.showBottomSheet(
-                                      ChapterNewPage(
-                                        searchItem: searchItem,
-                                      ),
-                                      context: context,
-                                    );
-                                  },
-                                  child: Text(
-                                    "全部章节",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )),
-                              Row(
-                                children: [
-                                  TextButton(
-                                      onPressed: () {
-                                        if (searchItem.chapters.isNotEmpty) {
-                                          jumpToSpecChapter(context,
-                                              searchItem.chapters.length - 1);
-                                        }
-                                      },
-                                      child: Text(
-                                        "更至 ${searchItem.chapters == null ? "无" : searchItem.chapters.last.name}",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .color),
-                                      )),
-                                  Icon(Icons.keyboard_arrow_right),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Image.network(
-                            searchItem.cover,
-                            width: double.infinity,
-                            height: 329,
-                            fit: BoxFit.cover,
-                          ),
-                          const SizedBox(height: 16.0,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  Text( searchItem.chapters == null ? "加载中" :  "共${searchItem.chapters.length}章"),
-                                  Text(searchItem.chapters == null ? "加载中" : searchItem.chapters.last.name),
-                                ],
-                              ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: Colors.yellow,
-                                ),
-                                child: TextButton(
-                                    onPressed: () {
-                                      jumpToSpecChapter(
-                                          context, searchItem.durChapterIndex);
-                                    },
-                                    child: Text(
-                                      "阅至（${searchItem.durChapterIndex}）${searchItem.durChapter}",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1
-                                              .color),
-                                    )),
-                              ),
-                            ],
-                          )
+                          SizedBox(height: 8.0,),
+                          changeRule(context),
                         ],
                       ),
                     ),
                   ),
-                ),
-                // buildPage(context),
-              ],
-            )),
+                  Positioned(
+                    left: 0.0,
+                    right: 0.0,
+                    top: 138.0,
+                    height: MediaQuery.of(context).size.height - 138 - 64,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                20,
+                              ),
+                              topRight: Radius.circular(20.0)),
+                          color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "简介",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 8.0,
+                            ),
+                            Column(
+                              children: [Text(searchItem.description)],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                    onPressed: () {
+                                      RouterHelper.showBottomSheet(
+                                        ChapterNewPage(
+                                          searchItem: searchItem,
+                                        ),
+                                        context: context,
+                                      );
+                                    },
+                                    child: Text(
+                                      "全部章节",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
+                                Row(
+                                  children: [
+                                    TextButton(
+                                        onPressed: () {
+                                          if (searchItem.chapters.isNotEmpty) {
+                                            jumpToSpecChapter(context,
+                                                searchItem.chapters.length - 1);
+                                          }
+                                        },
+                                        child: Text(
+                                          "更至 ${searchItem.chapters == null ? "无" : searchItem.chapters.last.name}",
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .color),
+                                        )),
+                                    Icon(Icons.keyboard_arrow_right),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16.0,
+                            ),
+                            Image.network(
+                              searchItem.cover,
+                              width: double.infinity,
+                              height: 329,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(
+                              height: 16.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: bottomRow(context),
+                  ),
+                  Positioned(
+                    top: 0,
+                      right: 19,
+                      child: Container(
+                        width: 126,
+                        height: 170,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Image.network(
+                          searchItem.cover,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                  ),
+                  // buildPage(context),
+                ],
+              )),
+        ),
       ),
     );
   }
