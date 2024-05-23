@@ -6,7 +6,16 @@ import 'package:hive_flutter/hive_flutter.dart';
 class HotRecommendItem extends StatelessWidget {
   final SearchItem searchItem;
   const HotRecommendItem({Key key,this.searchItem}) : super(key: key);
-
+  String fetchCorrectImageCover() {
+    if (searchItem.cover.contains(".jpg") && !searchItem.cover.endsWith(".jpg")) {
+      int index = searchItem.cover.indexOf(".jpg");
+      String cover = searchItem.cover.substring(0,index);
+      print("截取后的字符串是$cover");
+      return cover + ".jpg";
+    } else {
+      return searchItem.cover;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -27,7 +36,7 @@ class HotRecommendItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              searchItem.cover,
+             fetchCorrectImageCover(),
               fit: BoxFit.cover,
             ),
           ),
