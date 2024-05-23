@@ -91,6 +91,9 @@ class _ChapterPageState extends State<ChapterPage> {
 
   void jumpToSpecChapter(BuildContext context, int index) {
     print("jumpToSpecChapter $index");
+    if (index == 0 && (searchItem.chapters.first.url == null || searchItem.chapters.first.url.isEmpty)) {
+      index = index + 1;
+    }
     ChapterPageProvider provider = Provider.of<ChapterPageProvider>(context,listen: false);
     provider.changeChapter(index);
     Navigator.of(context)
@@ -129,7 +132,7 @@ class _ChapterPageState extends State<ChapterPage> {
                       context, searchItem.durChapterIndex);
                 },
                 child: Text(
-                  searchItem.durChapter.length > 7 ? "阅至 ${searchItem.durChapter.substring(0,6)}" : "阅至 ${searchItem.durChapter}",
+                  getChapterText() ,
                   style: TextStyle(
                       color: Theme.of(context)
                           .textTheme
@@ -140,6 +143,19 @@ class _ChapterPageState extends State<ChapterPage> {
         ],
       ),
     );
+  }
+
+  String getChapterText() {
+    if (searchItem.chapters == null) {
+      return "阅至";
+    }
+    if (searchItem.durChapter == searchItem.chapters.first.name && (searchItem.chapters.first.url == null || searchItem.chapters.first.url.isEmpty)) {
+      String name = searchItem.chapters[1].name;
+      return (name.length > 7) ? "阅至 ${name.substring(0,6)}" : "阅至 $name";
+    } else {
+      String name = searchItem.durChapter;
+      return (name.length > 7) ? "阅至 ${name.substring(0,6)}" : "阅至 $name";
+    }
   }
 
   Widget changeRule(BuildContext context) {
@@ -208,83 +224,85 @@ class _ChapterPageState extends State<ChapterPage> {
                     right: 0.0,
                     top: 138.0,
                     height: MediaQuery.of(context).size.height - 138 - 64,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(
-                                20,
-                              ),
-                              topRight: Radius.circular(20.0)),
-                          color: Colors.white),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "简介",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(
-                              height: 8.0,
-                            ),
-                            Column(
-                              children: [Text(searchItem.description)],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      RouterHelper.showBottomSheet(
-                                        ChapterNewPage(
-                                          searchItem: searchItem,
-                                        ),
-                                        context: context,
-                                      );
-                                    },
-                                    child: Text(
-                                      "全部章节",
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )),
-                                Row(
-                                  children: [
-                                    TextButton(
-                                        onPressed: () {
-                                          if (searchItem.chapters.isNotEmpty) {
-                                            jumpToSpecChapter(context,
-                                                searchItem.chapters.length - 1);
-                                          }
-                                        },
-                                        child: Text(
-                                          "更至 ${searchItem.chapters == null ? "无" : searchItem.chapters.last.name.length > 8 ? searchItem.chapters.last.name.substring(0,8) : searchItem.chapters.last.name}",
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .color),
-                                        )),
-                                    Icon(Icons.keyboard_arrow_right),
-                                  ],
+                    child: SingleChildScrollView(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  20,
                                 ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                            Image.network(
-                              searchItem.cover,
-                              width: double.infinity,
-                              height: 329,
-                              fit: BoxFit.cover,
-                            ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
-                          ],
+                                topRight: Radius.circular(20.0)),
+                            color: Colors.white),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "简介",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(
+                                height: 8.0,
+                              ),
+                              Column(
+                                children: [Text(searchItem.description)],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                      onPressed: () {
+                                        RouterHelper.showBottomSheet(
+                                          ChapterNewPage(
+                                            searchItem: searchItem,
+                                          ),
+                                          context: context,
+                                        );
+                                      },
+                                      child: Text(
+                                        "全部章节",
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            if (searchItem.chapters.isNotEmpty) {
+                                              jumpToSpecChapter(context,
+                                                  searchItem.chapters.length - 1);
+                                            }
+                                          },
+                                          child: Text(
+                                            "更至 ${searchItem.chapters == null ? "无" : searchItem.chapters.last.name.length > 8 ? searchItem.chapters.last.name.substring(0,8) : searchItem.chapters.last.name}",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .color),
+                                          )),
+                                      Icon(Icons.keyboard_arrow_right),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 16.0,
+                              ),
+                              Image.network(
+                                searchItem.cover,
+                                width: double.infinity,
+                                height: 329,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(
+                                height: 16.0,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

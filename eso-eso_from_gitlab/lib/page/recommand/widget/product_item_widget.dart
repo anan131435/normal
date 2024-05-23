@@ -7,7 +7,16 @@ import '../entity/product_item.dart';
 class ProductItemWidget extends StatelessWidget {
   SearchItem item;
   ProductItemWidget({Key key, this.item}) : super(key: key);
-
+  String fetchCorrectImageCover() {
+    if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
+      int index = item.cover.indexOf(".jpg");
+      String cover = item.cover.substring(0,index);
+      print("截取后的字符串是$cover");
+      return cover + ".jpg";
+    } else {
+      return item.cover;
+    }
+  }
   @override
   Widget build(BuildContext context) {
    double screenWidth = MediaQuery.of(context).size.width;
@@ -30,7 +39,7 @@ class ProductItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Image.network(
-              item.cover,
+              fetchCorrectImageCover(),
               fit: BoxFit.cover,
             ),
           ),
