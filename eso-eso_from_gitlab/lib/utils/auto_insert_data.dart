@@ -8,29 +8,46 @@ import 'package:http/http.dart' as http;
 
 import '../database/rule.dart';
 import '../global.dart';
+import '../menu/menu_edit_source.dart';
+import '../model/edit_source_provider.dart';
 import 'auto_decode_cli.dart';
-class DataManager extends ChangeNotifier{
 
-   void addUrlDecode() async {
-
+class DataManager extends ChangeNotifier {
+  void addUrlDecode() async {
     final requestUri = Uri.tryParse("https://eso.hanpeki.online/index.json");
     if (requestUri == null) {
       print("接口返回错误");
     } else {
       final response = await http.get(requestUri);
       print("接口返回 ${response.body}");
-      Map<String,dynamic> json = jsonDecode(response.body);
+      Map<String, dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
       var box = Hive.box(Global.contentVersionKey);
       if (entity.contentVersion == box.get(Global.contentVersionKey)) {
         //版本号一致不更新数据库内容
         print("不更新数据库内容");
       } else {
-        box.put(Global.contentVersionKey, entity.contentVersion);
-        final uri = Uri.tryParse(entity.url);
-        if (uri == null) {
-          print("地址格式错误");
+        if (box.get(Global.contentVersionKey) == null) {
+          box.put(Global.contentVersionKey, entity.contentVersion);
+          final uri = Uri.tryParse(entity.url);
+            print("开始请求");
+            final res = await http.get(uri, headers: {
+              'User-Agent':
+                  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
+            });
+            print("请求结束");
+            insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
         } else {
+          //删掉老的
+          final provider = EditSourceProvider(type: 2);
+          final rules = provider.rules
+              .where((element) => provider.checkSelectMap[element.id] == true)
+              .toList();
+          print("查询到老的数据源是${rules.length}");
+         await provider.handleSelect(rules, MenuEditSource.delete);
+          //插入新的
+          box.put(Global.contentVersionKey, entity.contentVersion);
+          final uri = Uri.tryParse(entity.url);
           print("开始请求");
           final res = await http.get(uri, headers: {
             'User-Agent':
@@ -40,11 +57,10 @@ class DataManager extends ChangeNotifier{
           insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
         }
       }
-
     }
   }
 
-   void insertOrUpdateRuleInMain(String s, [List l]) async {
+  void insertOrUpdateRuleInMain(String s, [List l]) async {
     try {
       dynamic json;
       if (l != null) {
@@ -56,7 +72,6 @@ class DataManager extends ChangeNotifier{
         final id = await Global.ruleDao.insertOrUpdateRule(Rule.fromJson(json));
         if (id != null) {
           print("成功 1 条规则");
-
         }
       } else if (json is List) {
         final okrules = json
@@ -74,5 +89,4 @@ class DataManager extends ChangeNotifier{
       print("格式不对$e");
     }
   }
-
 }
