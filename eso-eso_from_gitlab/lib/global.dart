@@ -49,6 +49,7 @@ class Global with ChangeNotifier {
   static const favoriteListTagKey = "favoriteListTag";
   static const rewardAdShowCountKey = "rewardAdShowCount";
   static const jsonVersionKey = "jsonVersion";
+  static const contentVersionKey = "contentVersion";
   // static SharedPreferences _prefs;
   // static SharedPreferences get prefs => _prefs;
   static bool _isDesktop;

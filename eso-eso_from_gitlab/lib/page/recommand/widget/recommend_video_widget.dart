@@ -206,13 +206,13 @@ class _RecommendVideoWidgetState extends State<RecommendVideoWidget>
         if (_provider.rules.isEmpty) {
           return Container();
         } else {
-          Rule rule;
-          if (widget.contentType == HomeContentType.Audio ||
-              widget.contentType == HomeContentType.Video) {
-            rule = _provider.rules[2];
-          } else {
-            rule = _provider.rules.last;
-          }
+          Rule rule = _provider.rules.first;
+          // if (widget.contentType == HomeContentType.Audio ||
+          //     widget.contentType == HomeContentType.Video) {
+          //   rule = _provider.rules[2];
+          // } else {
+          //   rule = _provider.rules.last;
+          // }
 
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,

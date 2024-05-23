@@ -93,9 +93,10 @@ class _RecommendPageState extends State<RecommendPage>
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
         print("Consumer<EditSourceProvider>");
         if (value.rules.isEmpty) {
-          print("value.rules.isEmpty");
+          print("数据源是空");
           return Container();
         } else {
+          print("数据源不是空");
           //数据源
           rule = value.rules.first;
           return FutureBuilder<List<DiscoverMap>>(
@@ -180,6 +181,14 @@ class _RecommendPageState extends State<RecommendPage>
   Widget _buildListView(
       BuildContext context, DiscoverPageController pageController, ListDataItem item,
       [DiscoverMap map, int index]) {
+
+    print("item 是否是空 ${item}");
+    if (item == null || item.items.isEmpty) {
+      print("item 是空或者items是空");
+    } else {
+      print("查询到的不是空");
+    }
+
     // if (item.isLoading) {
     //   return Column(
     //     children: [Expanded(child: LandingPage())],
@@ -213,15 +222,6 @@ class _RecommendPageState extends State<RecommendPage>
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
       ListDataItem item = controller.items[0];
-      if (_provider.ruleContentType == 2) {
-        print("进到了视频");
-        //视频
-        if (item.items.isEmpty) {
-          print("视频为空");
-          item = findDataSourceItem(controller: controller, index: 1);
-        }
-      }
-
       List<Widget> children = [];
       if (controller.discoverMap.isNotEmpty) {
         for (var i = 0; i < discoverMap.length; i++) {

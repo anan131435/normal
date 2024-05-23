@@ -123,6 +123,7 @@ void main() async {
   await Hive.initFlutter("eso");
   await openThemeModeBox();
   await Hive.openBox(Global.jsonVersionKey);
+  await Hive.openBox(Global.contentVersionKey);
   UmengCommonSdk.initCommon("66473c34940d5a4c49590a75", "66473ca2940d5a4c49590a7a", "Umeng");
   UmengCommonSdk.setPageCollectionModeAuto();
   runApp(const MyApp());

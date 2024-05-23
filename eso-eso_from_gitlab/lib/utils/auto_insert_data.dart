@@ -21,12 +21,12 @@ class DataManager extends ChangeNotifier{
       print("接口返回 ${response.body}");
       Map<String,dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
-      var box = Hive.box(Global.jsonVersionKey);
-      if (entity.version == box.get(Global.jsonVersionKey)) {
+      var box = Hive.box(Global.contentVersionKey);
+      if (entity.contentVersion == box.get(Global.contentVersionKey)) {
         //版本号一致不更新数据库内容
-        print("版本号一致不更新数据库内容");
+        print("不更新数据库内容");
       } else {
-        box.put(Global.jsonVersionKey, entity.version);
+        box.put(Global.contentVersionKey, entity.contentVersion);
         final uri = Uri.tryParse(entity.url);
         if (uri == null) {
           print("地址格式错误");
@@ -70,8 +70,6 @@ class DataManager extends ChangeNotifier{
           print("失败，未导入规则！");
         }
       }
-      print("要发送监听");
-      notifyListeners();
     } catch (e) {
       print("格式不对$e");
     }
