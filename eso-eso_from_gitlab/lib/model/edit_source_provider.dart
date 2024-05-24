@@ -74,12 +74,11 @@ class EditSourceProvider with ChangeNotifier {
         break;
       case 2:
         _rules = await Global.ruleDao.findAllDiscoverRules();
-        print("_rules is 2 length${_rules.length}");
+        print("数据库中的数据量${_rules.length}");
         break;
     }
     _isLoading = false;
     _setRuleContentType(_ruleContentType);
-    print("数据库查询数据${_ruleContentType}了");
     notifyListeners();
   }
 

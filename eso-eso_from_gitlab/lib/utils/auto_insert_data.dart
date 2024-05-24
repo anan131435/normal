@@ -5,6 +5,7 @@ import 'package:eso/page/home/entity/data_base_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import '../database/rule.dart';
 import '../global.dart';
@@ -22,6 +23,7 @@ class DataManager extends ChangeNotifier {
       print("接口返回 ${response.body}");
       Map<String, dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
+      // entity.contentVersion = "1.0.2";
       var box = Hive.box(Global.contentVersionKey);
       if (entity.contentVersion == box.get(Global.contentVersionKey)) {
         //版本号一致不更新数据库内容
@@ -40,21 +42,22 @@ class DataManager extends ChangeNotifier {
         } else {
           //删掉老的
           final provider = EditSourceProvider(type: 2);
-          final rules = provider.rules
-              .where((element) => provider.checkSelectMap[element.id] == true)
-              .toList();
-          print("查询到老的数据源是${rules.length}");
-         await provider.handleSelect(rules, MenuEditSource.delete);
-          //插入新的
-          box.put(Global.contentVersionKey, entity.contentVersion);
-          final uri = Uri.tryParse(entity.url);
-          print("开始请求");
-          final res = await http.get(uri, headers: {
-            'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
+          Future.delayed(const Duration(seconds: 1)).then((value) async {
+            final rules = provider.rules;
+            print("查询到老的数据源是${rules.length}");
+            await provider.handleSelect(rules, MenuEditSource.delete);
+            //插入新的
+            box.put(Global.contentVersionKey, entity.contentVersion);
+            final uri = Uri.tryParse(entity.url);
+            print("开始请求");
+            final res = await http.get(uri, headers: {
+              'User-Agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
+            });
+            print("请求结束");
+            insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
           });
-          print("请求结束");
-          insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
+
         }
       }
     }
