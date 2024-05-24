@@ -23,7 +23,6 @@ class DataManager extends ChangeNotifier {
       print("接口返回 ${response.body}");
       Map<String, dynamic> json = jsonDecode(response.body);
       DataBaseEntity entity = DataBaseEntity.fromJson(json);
-      // entity.contentVersion = "1.0.2";
       var box = Hive.box(Global.contentVersionKey);
       if (entity.contentVersion == box.get(Global.contentVersionKey)) {
         //版本号一致不更新数据库内容
