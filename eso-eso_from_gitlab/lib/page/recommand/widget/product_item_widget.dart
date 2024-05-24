@@ -11,7 +11,6 @@ class ProductItemWidget extends StatelessWidget {
     if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
       int index = item.cover.indexOf(".jpg");
       String cover = item.cover.substring(0,index);
-      print("截取后的字符串是$cover");
       return cover + ".jpg";
     } else {
       return item.cover;

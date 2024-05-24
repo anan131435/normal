@@ -10,7 +10,6 @@ class HotRecommendItem extends StatelessWidget {
     if (searchItem.cover.contains(".jpg") && !searchItem.cover.endsWith(".jpg")) {
       int index = searchItem.cover.indexOf(".jpg");
       String cover = searchItem.cover.substring(0,index);
-      print("截取后的字符串是$cover");
       return cover + ".jpg";
     } else {
       return searchItem.cover;

@@ -37,7 +37,6 @@ class RecommendHomePage extends StatefulWidget {
 class _RecommendHomePageState extends State<RecommendHomePage>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   List<ProductItem> itemList;
-  EditSourceProvider _provider;
   List<DiscoverMap> discoverMap;
   TabController _tabController;
 
@@ -51,15 +50,15 @@ class _RecommendHomePageState extends State<RecommendHomePage>
 
   @override
   void initState() {
-    createProvider();
+    // createProvider();
     _openBox();
     super.initState();
   }
 
-  void createProvider() async {
-    _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = 1;
-    await _provider.refreshData();
+  EditSourceProvider createProvider()  {
+    EditSourceProvider provider = EditSourceProvider(type: 2);
+    provider.ruleContentType = 1;
+    return provider;
   }
 
   List<Widget> _yourFavorite({ListDataItem dataItem}) {
@@ -142,61 +141,24 @@ class _RecommendHomePageState extends State<RecommendHomePage>
   }
 
   Widget findListView({BuildContext context}) {
-    double screenH = MediaQuery.of(context).size.height;
+    print("推荐页展示UI");
     final controller = Provider.of<DiscoverPageController>(context);
-    if (controller.items != null && controller.items.isNotEmpty) {
-      //小说
-      List<Widget> children = [];
-      if (controller.discoverMap.isNotEmpty) {
-        for (var i = 0; i < discoverMap.length; i++) {
-          children.add(KeepAliveWidget(
-            wantKeepAlive: true,
-            child: _buildListView(
-                context, controller, controller.items[i], discoverMap[i], i),
-          ));
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return RecommendCartoonWidget(contentType: HomeContentType.Novel,);
+        } else if (index == 1){
+          return RecommendCartoonWidget(contentType: HomeContentType.Picture,);
+        } else if (index == 2){
+          return RecommendCartoonWidget(contentType: HomeContentType.Video,);
+        } else if (index == 3){
+          return RecommendCartoonWidget(contentType: HomeContentType.Audio,);
+        } else {
+          return Container();
         }
-      }
-      return ListView(
-        children: [
-          RecommendCartoonWidget(
-            contentType: HomeContentType.Novel,
-          ),
-          RecommendCartoonWidget(
-            contentType: HomeContentType.Picture,
-          ),
-          RecommendCartoonWidget(
-            contentType: HomeContentType.Video,
-          ),
-          RecommendCartoonWidget(
-            contentType: HomeContentType.Audio,
-          )
-        ],
-      );
-
-      // return ListView.builder(
-      //   itemBuilder: (context, index) {
-      //     if (index == 0) {
-      //       return RecommendCartoonWidget(contentType: HomeContentType.Novel,);
-      //     } else if (index == 1){
-      //       return RecommendCartoonWidget(contentType: HomeContentType.Picture,);
-      //     } else if (index == 2){
-      //       return RecommendVideoWidget(contentType: HomeContentType.Video,);
-      //     } else if (index == 3){
-      //       return RecommendVideoWidget(contentType: HomeContentType.Audio,);
-      //     } else {
-      //       return Container();
-      //     }
-      //   },
-      //   itemCount: 4,
-      // );
-    } else {
-      print("findListView no data");
-      return Center(
-        child: CircularProgressIndicator(
-          color: Colors.pink,
-        ),
-      );
-    }
+      },
+      itemCount: 4,
+    );
   }
 
   @override
@@ -205,12 +167,11 @@ class _RecommendHomePageState extends State<RecommendHomePage>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _provider,
+          create: (context) => createProvider(),
         ),
       ],
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
         if (value.rules.isEmpty) {
-          print("数据源空");
           return Container();
         } else {
           //数据源

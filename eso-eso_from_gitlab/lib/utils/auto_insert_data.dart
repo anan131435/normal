@@ -82,7 +82,7 @@ class DataManager extends ChangeNotifier {
             .toList();
         final ids = await Global.ruleDao.insertOrUpdateRules(okrules);
         if (ids.length > 0) {
-          print("成功 ${okrules.length} 条规则");
+          print("成功导入 ${okrules.length} 条规则");
         } else {
           print("失败，未导入规则！");
         }
