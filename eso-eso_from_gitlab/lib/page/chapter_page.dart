@@ -176,6 +176,16 @@ class _ChapterPageState extends State<ChapterPage> {
     );
   }
 
+  String fetchCorrectImageCover(SearchItem item) {
+    if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
+      int index = item.cover.indexOf(".jpg");
+      String cover = item.cover.substring(0,index);
+      return cover + ".jpg";
+    } else {
+      return item.cover;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -291,7 +301,7 @@ class _ChapterPageState extends State<ChapterPage> {
                               height: 16.0,
                             ),
                             Image.network(
-                              searchItem.cover,
+                              fetchCorrectImageCover(searchItem),
                               width: double.infinity,
                               height: 200,
                               fit: BoxFit.cover,
@@ -321,7 +331,7 @@ class _ChapterPageState extends State<ChapterPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Image.network(
-                          searchItem.cover,
+                          fetchCorrectImageCover(searchItem),
                           fit: BoxFit.cover,
                         ),
                       ),

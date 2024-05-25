@@ -27,6 +27,7 @@ class _ChapterNewPageState extends State<ChapterNewPage> {
   void initState() {
     searchItem = widget.searchItem;
     dataSource = searchItem.chapters;
+    print("获取到的目录数量${searchItem.chapters}");
     super.initState();
   }
 
