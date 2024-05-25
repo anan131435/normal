@@ -76,6 +76,7 @@ class Assets {
   static const String editorHighlight = 'lib/page/source/editor/highlight.dart';
   static const String editorHighlightCodeEditor = 'lib/page/source/editor/highlight_code_editor.dart';
   static const String editorHighlightCodeEditorTheme = 'lib/page/source/editor/highlight_code_editor_theme.dart';
+  static const String entityBannerAd = 'lib/page/home/entity/banner_ad.dart';
   static const String entityDataBaseEntity = 'lib/page/home/entity/data_base_entity.dart';
   static const String entityProductItem = 'lib/page/recommand/entity/product_item.dart';
   static const String enumContentType = 'lib/page/enum/content_type.dart';
@@ -121,6 +122,7 @@ class Assets {
   static const String modelAudioService = 'lib/model/audio_service.dart';
   static const String modelAudioServiceCopy = 'lib/model/audio_service_copy.dart';
   static const String modelAudioServiceHandler = 'lib/model/audio_service_handler.dart';
+  static const String modelBannerAdListener = 'lib/page/home/model/banner_ad_listener.dart';
   static const String modelChapterPageProvider = 'lib/model/chapter_page_provider.dart';
   static const String modelDebugRuleProvider = 'lib/model/debug_rule_provider.dart';
   static const String modelDiscoverPageController = 'lib/model/discover_page_controller.dart';

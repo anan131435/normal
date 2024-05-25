@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 import 'package:eso/database/chapter_item.dart';
@@ -6,10 +7,13 @@ import 'package:eso/menu/menu.dart';
 import 'package:eso/menu/menu_chapter.dart';
 import 'package:eso/eso_theme.dart';
 import 'package:eso/page/chapter_new_page.dart';
+import 'package:eso/page/home/entity/banner_ad.dart';
+import 'package:eso/page/home/model/banner_ad_listener.dart';
 import 'package:eso/page/photo_view_page.dart';
 import 'package:eso/utils/router_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:huijing_ads_plugin/huijing_ads_plugin.dart';
 import 'package:text_composition/text_composition.dart';
 import 'package:eso/ui/ui_image_item.dart';
 import 'package:eso/utils.dart';
@@ -82,19 +86,74 @@ class _ChapterPageState extends State<ChapterPage> {
   double opacity = 0.0;
   StateSetter state;
   final SearchItem searchItem;
-  ScrollController _controller;
 
+  HjBannerAd rewardAd;
+  BannerAdWidget _bannerAdWidget;
+  EsoBannerListener _bannerListener;
+  bool _isReady = false;
   @override
   void initState() {
+    eventBus.on<BannerAd>().listen((event) {
+      _showRewardAd();
+    });
+    _startRequestAd();
     super.initState();
+  }
+
+  void _startRequestAd() {
+    if (Platform.isIOS) {
+      _requestRewardAd();
+    } else {
+      _requestAndroidRewardAd();
+    }
+  }
+
+  void _requestRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "4328928841972927");
+      rewardAd = HjBannerAd(request: request, listener: EsoBannerListener());
+      rewardAd.loadAd();
+    } else {
+      _showRewardAd();
+    }
+  }
+
+  void _showRewardAd() async {
+    _isReady = await rewardAd.isReady();
+    print("bannerAd isReady $_isReady");
+    if (_isReady) {
+      _bannerAdWidget = BannerAdWidget(
+        hjBannerAd: rewardAd,
+        height: 200,
+        width: 300,
+      );
+      setState(() {
+
+      });
+    } else {
+      rewardAd.loadAd();
+    }
+  }
+
+  void _requestAndroidRewardAd() async {
+    if (rewardAd == null) {
+      HjAdRequest request = HjAdRequest(placementId: "2828426563637874");
+      rewardAd = HjBannerAd(request: request, listener: EsoBannerListener());
+      rewardAd.loadAd();
+    } else {
+      _showRewardAd();
+    }
   }
 
   void jumpToSpecChapter(BuildContext context, int index) {
     print("jumpToSpecChapter $index");
-    if (index == 0 && (searchItem.chapters.first.url == null || searchItem.chapters.first.url.isEmpty)) {
+    if (index == 0 &&
+        (searchItem.chapters.first.url == null ||
+            searchItem.chapters.first.url.isEmpty)) {
       index = index + 1;
     }
-    ChapterPageProvider provider = Provider.of<ChapterPageProvider>(context,listen: false);
+    ChapterPageProvider provider =
+        Provider.of<ChapterPageProvider>(context, listen: false);
     provider.changeChapter(index);
     Navigator.of(context)
         .push(ContentPageRoute().route(searchItem))
@@ -104,7 +163,7 @@ class _ChapterPageState extends State<ChapterPage> {
   Widget bottomRow(BuildContext context) {
     ChapterPageProvider provider = context.watch<ChapterPageProvider>();
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0,right: 16.0,bottom: 36.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 36.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -116,28 +175,25 @@ class _ChapterPageState extends State<ChapterPage> {
                   : "共${searchItem.chapters.length}章"),
               Text((searchItem.chapters == null || searchItem.chapters.isEmpty)
                   ? "加载中"
-                  : searchItem.chapters.last.name.length > 12 ? searchItem.chapters.last.name.substring(0,11) : searchItem.chapters.last.name),
+                  : searchItem.chapters.last.name.length > 12
+                      ? searchItem.chapters.last.name.substring(0, 11)
+                      : searchItem.chapters.last.name),
             ],
           ),
           Container(
             height: 50,
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).appBarTheme.backgroundColor
-            ),
+                borderRadius: BorderRadius.circular(25),
+                color: Theme.of(context).appBarTheme.backgroundColor),
             child: TextButton(
                 onPressed: () {
-                  jumpToSpecChapter(
-                      context, searchItem.durChapterIndex);
+                  jumpToSpecChapter(context, searchItem.durChapterIndex);
                 },
                 child: Text(
-                  getChapterText() ,
+                  getChapterText(),
                   style: TextStyle(
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color),
+                      color: Theme.of(context).textTheme.bodyText1.color),
                 )),
           ),
         ],
@@ -149,12 +205,14 @@ class _ChapterPageState extends State<ChapterPage> {
     if (searchItem.chapters == null || searchItem.chapters.isEmpty) {
       return "阅至";
     }
-    if (searchItem.durChapter == searchItem.chapters.first.name && (searchItem.chapters.first.url == null || searchItem.chapters.first.url.isEmpty)) {
+    if (searchItem.durChapter == searchItem.chapters.first.name &&
+        (searchItem.chapters.first.url == null ||
+            searchItem.chapters.first.url.isEmpty)) {
       String name = searchItem.chapters[1].name;
-      return (name.length > 7) ? "阅至 ${name.substring(0,6)}" : "阅至 $name";
+      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
     } else {
       String name = searchItem.durChapter;
-      return (name.length > 7) ? "阅至 ${name.substring(0,6)}" : "阅至 $name";
+      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
     }
   }
 
@@ -162,7 +220,7 @@ class _ChapterPageState extends State<ChapterPage> {
     ChapterPageProvider provider = context.watch<ChapterPageProvider>();
     return GestureDetector(
       onTap: () {
-      provider.onSelect(MenuChapter.change, context);
+        provider.onSelect(MenuChapter.change, context);
       },
       child: Row(
         children: [
@@ -179,7 +237,7 @@ class _ChapterPageState extends State<ChapterPage> {
   String fetchCorrectImageCover(SearchItem item) {
     if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
       int index = item.cover.indexOf(".jpg");
-      String cover = item.cover.substring(0,index);
+      String cover = item.cover.substring(0, index);
       return cover + ".jpg";
     } else {
       return item.cover;
@@ -189,7 +247,6 @@ class _ChapterPageState extends State<ChapterPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    _controller = ScrollController();
     print("CapturePage build");
     return ChangeNotifierProvider<ChapterPageProvider>(
       create: (context) =>
@@ -217,12 +274,16 @@ class _ChapterPageState extends State<ChapterPage> {
                             searchItem.name,
                             style: TextStyle(fontSize: 24.0),
                           ),
-                          SizedBox(height: 8.0,),
+                          SizedBox(
+                            height: 8.0,
+                          ),
                           Text(
                             searchItem.author,
                             style: TextStyle(fontSize: 16.0),
                           ),
-                          SizedBox(height: 8.0,),
+                          SizedBox(
+                            height: 8.0,
+                          ),
                           changeRule(context),
                         ],
                       ),
@@ -285,7 +346,7 @@ class _ChapterPageState extends State<ChapterPage> {
                                           }
                                         },
                                         child: Text(
-                                          "更至 ${(searchItem.chapters == null || searchItem.chapters.isEmpty) ? "无" : searchItem.chapters.last.name.length > 8 ? searchItem.chapters.last.name.substring(0,8) : searchItem.chapters.last.name}",
+                                          "更至 ${(searchItem.chapters == null || searchItem.chapters.isEmpty) ? "无" : searchItem.chapters.last.name.length > 8 ? searchItem.chapters.last.name.substring(0, 8) : searchItem.chapters.last.name}",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .textTheme
@@ -300,12 +361,15 @@ class _ChapterPageState extends State<ChapterPage> {
                             const SizedBox(
                               height: 16.0,
                             ),
-                            Image.network(
-                              fetchCorrectImageCover(searchItem),
-                              width: double.infinity,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
+                            //banner这里加载
+                            Visibility(
+                                visible: _isReady, child: (_bannerAdWidget == null) ? Container() : _bannerAdWidget),
+                            // Image.network(
+                            //   fetchCorrectImageCover(searchItem),
+                            //   width: double.infinity,
+                            //   height: 200,
+                            //   fit: BoxFit.cover,
+                            // ),
                             const SizedBox(
                               height: 16.0,
                             ),
@@ -315,26 +379,26 @@ class _ChapterPageState extends State<ChapterPage> {
                     ),
                   ),
                   Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: bottomRow(context),
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: bottomRow(context),
                   ),
                   Positioned(
                     top: 0,
-                      right: 19,
-                      child: Container(
-                        width: 126,
-                        height: 170,
-                        clipBehavior: Clip.hardEdge,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Image.network(
-                          fetchCorrectImageCover(searchItem),
-                          fit: BoxFit.cover,
-                        ),
+                    right: 19,
+                    child: Container(
+                      width: 126,
+                      height: 170,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
+                      child: Image.network(
+                        fetchCorrectImageCover(searchItem),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   // buildPage(context),
                 ],
@@ -343,8 +407,6 @@ class _ChapterPageState extends State<ChapterPage> {
       ),
     );
   }
-
-
 
   Widget buildPage(BuildContext context) {
     final page = Provider.of<ChapterPageProvider>(context, listen: true).page;
@@ -404,7 +466,6 @@ class _ChapterPageState extends State<ChapterPage> {
 
   static double lastTopHeight = 0.0;
 
-
   List<ChapterRoad> parseChapers(List<ChapterItem> chapters) {
     currentRoad = 0;
     final roads = <ChapterRoad>[];
@@ -428,8 +489,8 @@ class _ChapterPageState extends State<ChapterPage> {
     roads.add(ChapterRoad(roadName, startIndex, chapters.length - startIndex));
     return roads;
   }
-  var currentRoad = 0;
 
+  var currentRoad = 0;
 }
 
 class ArcBannerImage extends StatelessWidget {
