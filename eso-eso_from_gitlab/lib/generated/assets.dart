@@ -218,6 +218,7 @@ class Assets {
   static const String utilsRouterHelper = 'lib/utils/router_helper.dart';
   static const String utilsRuleComparess = 'lib/utils/rule_comparess.dart';
   static const String utilsTextInputFormatter = 'lib/utils/text_input_formatter.dart';
+  static const String videoVideoProvider = 'lib/video/video_provider.dart';
   static const String viewModelHomeViewModel = 'lib/page/home/view_model/home_view_model.dart';
   static const String widgetEmptyItemWidget = 'lib/page/recommand/widget/empty_item_widget.dart';
   static const String widgetHotRecommendItem = 'lib/page/recommand/widget/hot_recommend_item.dart';
