@@ -5,5 +5,6 @@ enum HomeContentType {
   Picture,
   Audio,
   Video,
+  shortVideo,
 }
 

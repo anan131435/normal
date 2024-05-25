@@ -456,10 +456,12 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         future: ensureInitAudioHandler(searchItem),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
+            print("音频数据回来");
             try {
               audioHandler.load(
                   searchItem, Provider.of<ContentProvider>(context, listen: false));
             } catch (e) {
+              print("音频数据加载报错${e.toString()}");
               audioHandler.load(searchItem);
             }
             return _buildPage();
@@ -529,6 +531,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
                       if (!snapshot.hasData || snapshot.data == null) {
                         return _buildAppBar(chapter.name, chapter.time);
                       }
+                      print("音频流数据回来");
                       return _buildAppBar(
                           snapshot.data.title, snapshot.data.displaySubtitle);
                     },

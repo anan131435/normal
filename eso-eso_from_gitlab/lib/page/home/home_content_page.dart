@@ -150,7 +150,10 @@ class _HomeContentPageState extends State<HomeContentPage>
                   RecommendPage(
                     contentType: HomeContentType.Video,
                   ),
-                  ShortVideoPage(),
+                  // ShortVideoPage(),
+                  RecommendPage(
+                    contentType: HomeContentType.shortVideo,
+                  ),
                 ]),
               )
             ],

@@ -47,6 +47,8 @@ class _RecommendPageState extends State<RecommendPage>
         return 3;
       case HomeContentType.Video:
         return 2;
+      case HomeContentType.shortVideo:
+        return 2;
     }
   }
 
@@ -56,30 +58,10 @@ class _RecommendPageState extends State<RecommendPage>
 
   @override
   void initState() {
-    createProvider();
-    print("recommand initState");
+    // createProvider();
     super.initState();
   }
 
-  void createProvider() async {
-    _provider = EditSourceProvider(type: 2);
-    _provider.ruleContentType = fetchRuletype(widget.contentType);
-    await _provider.refreshData();
-  }
-
-  ListDataItem findDataSourceItem(
-      {DiscoverPageController controller, int index}) {
-    if (index >= controller.items.length) {
-      print("进入了边界条件");
-      return controller.items[0];
-    }
-    ListDataItem item = controller.items[index];
-    if (item.items.isEmpty) {
-      findDataSourceItem(controller: controller, index: index + 1);
-    } else {
-      return item;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,18 +69,25 @@ class _RecommendPageState extends State<RecommendPage>
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<EditSourceProvider>(
-          create: (context) => _provider,
+          create: (context) {
+            _provider = EditSourceProvider(type: 2);
+            _provider.ruleContentType = fetchRuletype(widget.contentType);
+            return _provider;
+          },
         ),
       ],
       child: Consumer<EditSourceProvider>(builder: (context, value, child) {
-        print("Consumer<EditSourceProvider>");
         if (value.rules.isEmpty) {
-          print("数据源是空");
           return Container();
         } else {
           print("数据源不是空");
           //数据源
-          rule = value.rules.first;
+          if (widget.contentType == HomeContentType.shortVideo) {
+            rule = value.rules[3];
+          } else {
+            rule = value.rules[5];
+          }
+
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
@@ -182,12 +171,11 @@ class _RecommendPageState extends State<RecommendPage>
       BuildContext context, DiscoverPageController pageController, ListDataItem item,
       [DiscoverMap map, int index]) {
 
-    print("item 是否是空 ${item}");
-    if (item == null || item.items.isEmpty) {
-      print("item 是空或者items是空");
-    } else {
-      print("查询到的不是空");
-    }
+    // if (item == null || item.items.isEmpty) {
+    //   print("item 是空或者items是空");
+    // } else {
+    //   print("查询到的不是空");
+    // }
 
     // if (item.isLoading) {
     //   return Column(
