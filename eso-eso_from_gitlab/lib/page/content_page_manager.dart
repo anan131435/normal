@@ -8,6 +8,7 @@ import 'package:eso/database/search_item_manager.dart';
 import 'package:eso/global.dart';
 import 'package:eso/page/audio_page.dart';
 import 'package:eso/page/manga_page.dart';
+import 'package:eso/page/short_video/short_video_page.dart';
 import 'package:eso/page/video_page_desktop.dart';
 // import 'package:eso/page/rss_page.dart';
 import 'package:eso/page/video_page_refactor.dart';
@@ -52,6 +53,8 @@ class ContentPageRoute {
               case API.VIDEO:
                 if (Global.isDesktop) return VideoPageDesktop(searchItem: searchItem);
                 return VideoPage(searchItem: searchItem);
+              case API.shortVideo:
+                return ShortVideoPage(searchItem: searchItem);
               case API.AUDIO:
                 return AudioPage(searchItem: searchItem);
               default:

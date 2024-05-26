@@ -13,6 +13,7 @@ abstract class API {
   static const AUDIO = 3;
   static const RSS = 4;
   static const NOVELMORE = 5;
+  static const shortVideo = 6;
 
   static String getRuleContentTypeName(int ruleContentType) {
     switch (ruleContentType) {
@@ -28,6 +29,8 @@ abstract class API {
         return "RSS";
       case NOVELMORE:
         return "图文";
+      case shortVideo:
+        return "短视频";
       default:
         return "图片";
     }
@@ -47,6 +50,8 @@ abstract class API {
         return RSS;
       case "图文":
         return NOVELMORE;
+      case "短视频":
+        return shortVideo;
       default:
         return -1;
     }

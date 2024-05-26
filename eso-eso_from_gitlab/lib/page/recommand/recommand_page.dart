@@ -82,20 +82,23 @@ class _RecommendPageState extends State<RecommendPage>
         } else {
           print("数据源不是空");
           //数据源
-          if (widget.contentType == HomeContentType.shortVideo) {
-            rule = value.rules[3];
-          } else {
-            rule = value.rules[5];
-          }
+          // if (widget.contentType == HomeContentType.shortVideo) {
+          //   rule = value.rules[3];
+          // } else {
+          //   rule = value.rules[5];
+          // }
+          rule = value.rules.first;
 
           return FutureBuilder<List<DiscoverMap>>(
             initialData: null,
             future: APIFromRUle(rule).discoverMap(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
+                print("APIFromRUle报错了");
                 return Text("error: ${snapshot.error}");
               }
               if (!snapshot.hasData) {
+                print("没找到数据");
                 return Center(
                   child: CircularProgressIndicator(
                     color: Color(primaryColor),
@@ -105,6 +108,7 @@ class _RecommendPageState extends State<RecommendPage>
               return ChangeNotifierProvider<DiscoverPageController>(
                   create: (context) {
                 discoverMap = snapshot.data;
+                print("找到了数据");
                 return DiscoverPageController(
                     originTag: rule.id,
                     discoverMap: snapshot.data,
@@ -206,6 +210,7 @@ class _RecommendPageState extends State<RecommendPage>
   }
 
   Widget findListView({BuildContext context}) {
+    print("刷新UI");
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
