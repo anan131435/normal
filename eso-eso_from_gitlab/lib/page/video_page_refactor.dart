@@ -227,9 +227,9 @@ class _VideoPageState extends State<VideoPage> with WidgetsBindingObserver{
                 _buildPlayer(!isLoading && !Global.isDesktop, context),
                 if (isLoading)
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 120),
+                      padding: const EdgeInsets.only(top: 20),
                       child: _buildLoading(context),
                     ),
                   ),

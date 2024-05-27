@@ -113,7 +113,7 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     } catch (e) {}
     if (_disposed) return;
     try {
-      print("视频章节index ${chapterIndex}");
+      print("视频章节index ${chapterIndex} 默认的呢 ${searchItem.durChapterIndex}");
       _content =
       await contentProvider.loadChapter(chapterIndex ?? searchItem.durChapterIndex);
       if (_content.isEmpty || _content.first.isEmpty) {

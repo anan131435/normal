@@ -9,6 +9,7 @@ import 'package:eso/global.dart';
 import 'package:eso/page/audio_page.dart';
 import 'package:eso/page/manga_page.dart';
 import 'package:eso/page/short_video/short_video_page.dart';
+import 'package:eso/page/short_video/short_video_page_list.dart';
 import 'package:eso/page/video_page_desktop.dart';
 // import 'package:eso/page/rss_page.dart';
 import 'package:eso/page/video_page_refactor.dart';
@@ -52,7 +53,9 @@ class ContentPageRoute {
               //   return RSSPage(searchItem: searchItem);
               case API.VIDEO:
                 if (Global.isDesktop) return VideoPageDesktop(searchItem: searchItem);
-                return VideoPage(searchItem: searchItem);
+                return ShortVideoPageList(searchItem: searchItem,); //VideoPage(searchItem: searchItem);
+
+
               case API.shortVideo:
                 return ShortVideoPage(searchItem: searchItem);
               case API.AUDIO:

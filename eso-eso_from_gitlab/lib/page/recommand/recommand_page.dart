@@ -48,7 +48,7 @@ class _RecommendPageState extends State<RecommendPage>
       case HomeContentType.Video:
         return 2;
       case HomeContentType.shortVideo:
-        return 2;
+        return 6;
     }
   }
 
