@@ -45,15 +45,16 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
           create: (context) =>
               VideoPageProvider(searchItem: widget.searchItem, contentProvider: contentProvider),
           builder: (BuildContext context, child) {
-            print("shortVideo page builder");
             final provider = Provider.of<VideoPageProvider>(context, listen: false);
             final isLoading =
             context.select((VideoPageProvider provider) => provider.isLoading);
+            print("shortVideo page builder isloading ${isLoading}");
             final showController =
             context.select((VideoPageProvider provider) => provider.showController);
             final hint = context.select((VideoPageProvider provider) => provider.hint);
             final showChapter =
             context.select((VideoPageProvider provider) => provider.showChapter);
+            print("shortVideo page builder showController ${showController}");
             return Stack(
               children: [
                 PageView.builder(itemBuilder: (context, index) {
@@ -78,6 +79,13 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
                       padding: const EdgeInsets.only(top: 20),
                       child: _buildLoading(context),
                     ),
+                  ),
+                if (showController)
+                  Container(
+                    padding: EdgeInsets.fromLTRB(
+                        10, 10 + MediaQuery.of(context).padding.top, 10, 10),
+                    color: Color(0x20000000),
+                    child: _buildTopBar(context),
                   ),
               ],
             );
@@ -357,7 +365,6 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
       context.select((VideoPageProvider provider) => provider.controller);
       final aspectRatio =
       context.select((VideoPageProvider provider) => provider.aspectRatio);
-      print("controller is ${controller}");
       return GestureDetector(
         child: Container(
           // 增加color才能使全屏手势生效

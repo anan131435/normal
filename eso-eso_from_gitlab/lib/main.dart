@@ -4,6 +4,7 @@ import 'package:eso/hive/theme_box.dart';
 import 'package:eso/page/add_local_item_page.dart';
 import 'package:eso/utils.dart';
 import 'package:eso/utils/auto_insert_data.dart';
+import 'package:eso/utils/http_proxy.dart';
 import 'package:eso/utils/local_cupertion_delegate.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -98,6 +99,7 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 
 void main() async {
+
   if (Platform.isAndroid) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));

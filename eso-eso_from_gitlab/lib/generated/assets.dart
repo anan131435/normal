@@ -179,6 +179,7 @@ class Assets {
   static const String settingThemePage = 'lib/page/setting/theme_page.dart';
   static const String settingUiSetting = 'lib/page/setting/ui_setting.dart';
   static const String shortVideoShortVideoPage = 'lib/page/short_video/short_video_page.dart';
+  static const String shortVideoShortVideoPageList = 'lib/page/short_video/short_video_page_list.dart';
   static const String sourceDebugRulePage = 'lib/page/source/debug_rule_page.dart';
   static const String sourceEditRulePage = 'lib/page/source/edit_rule_page.dart';
   static const String sourceEditSourcePage = 'lib/page/source/edit_source_page.dart';
@@ -211,6 +212,7 @@ class Assets {
   static const String utilsDecodeBody = 'lib/utils/decode_body.dart';
   static const String utilsDlnaUtil = 'lib/utils/dlna_util.dart';
   static const String utilsFlutterSlider = 'lib/utils/flutter_slider.dart';
+  static const String utilsHttpProxy = 'lib/utils/http_proxy.dart';
   static const String utilsLocalCupertionDelegate = 'lib/utils/local_cupertion_delegate.dart';
   static const String utilsLocalStorageUtils = 'lib/utils/local_storage_utils.dart';
   static const String utilsMemoryCache = 'lib/utils/memory_cache.dart';
