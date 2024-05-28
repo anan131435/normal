@@ -24,12 +24,13 @@ class ShortVideoPageList extends StatefulWidget {
 }
 
 class _ShortVideoPageListState extends State<ShortVideoPageList> {
-  final PageController _pageController = PageController(initialPage: 0,keepPage: true);
+  PageController _pageController;
   SearchItem _searchItem;
   ShortVideoPage videoPage;
   @override
   void initState() {
     _searchItem = widget.searchItem;
+    _pageController = PageController(initialPage: _searchItem.durChapterIndex,keepPage: true);
     AutoOrientation.portraitUpMode();
     super.initState();
   }
@@ -56,12 +57,17 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
             return Stack(
               children: [
                 PageView.builder(itemBuilder: (context, index) {
-                  return _buildPlayer(!isLoading, context);
+                  return Builder(
+                    builder: (context) {
+                      return _buildPlayer(!isLoading, context);
+                    },
+                  );
                 },
                   itemCount: _searchItem.chapters.length,
                   scrollDirection: Axis.vertical,
                   controller: _pageController,
                   onPageChanged: (value) {
+                    print("当前的index is ${value}");
                     provider.loadChapter(value);
                   },
                 ),
@@ -69,24 +75,8 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 120),
+                      padding: const EdgeInsets.only(top: 20),
                       child: _buildLoading(context),
-                    ),
-                  ),
-                if (showController)
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                        10, 10 + MediaQuery.of(context).padding.top, 10, 10),
-                    color: Color(0x20000000),
-                    child: _buildTopBar(context),
-                  ),
-                if (showController)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-                      color: Color(0x20000000),
-                      child: _buildBottomBar(context),
                     ),
                   ),
               ],
