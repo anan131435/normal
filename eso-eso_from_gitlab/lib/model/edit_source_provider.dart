@@ -52,6 +52,7 @@ class EditSourceProvider with ChangeNotifier {
     _rulesFilter = [];
     if (_rules == null) return;
     _rules.forEach((element) {
+      print("传进来的数据类型${value} 自己的类型${element.contentType}");
       if (element.contentType == value) _rulesFilter.add(element);
     });
   }

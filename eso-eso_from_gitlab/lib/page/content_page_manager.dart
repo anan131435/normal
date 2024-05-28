@@ -53,11 +53,11 @@ class ContentPageRoute {
               //   return RSSPage(searchItem: searchItem);
               case API.VIDEO:
                 if (Global.isDesktop) return VideoPageDesktop(searchItem: searchItem);
-                return ShortVideoPageList(searchItem: searchItem,); //VideoPage(searchItem: searchItem);
+                return VideoPage(searchItem: searchItem,); //VideoPage(searchItem: searchItem);
 
 
               case API.shortVideo:
-                return ShortVideoPage(searchItem: searchItem);
+                return ShortVideoPageList(searchItem: searchItem);
               case API.AUDIO:
                 return AudioPage(searchItem: searchItem);
               default:
