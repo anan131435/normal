@@ -119,7 +119,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
   Widget _buildListView(BuildContext context,
       DiscoverPageController pageController, ListDataItem item,
       [DiscoverMap map, int index]) {
-    print("查询到的数据是${item.items.length}");
     return Column(
       children: [
         Expanded(
@@ -146,7 +145,6 @@ class _RecommendCartoonWidgetState extends State<RecommendCartoonWidget>
   Widget findListView({BuildContext context}) {
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
-    print("控制器的数据源${controller.items}");
     if (controller.items == null || controller.items.isEmpty) {
       return Container();
     } else {

@@ -89,7 +89,6 @@ class _ChapterPageState extends State<ChapterPage> {
 
   HjBannerAd rewardAd;
   BannerAdWidget _bannerAdWidget;
-  EsoBannerListener _bannerListener;
   bool _isReady = false;
   @override
   void initState() {
@@ -111,7 +110,7 @@ class _ChapterPageState extends State<ChapterPage> {
   void _requestRewardAd() async {
     if (rewardAd == null) {
       HjAdRequest request = HjAdRequest(placementId: "4328928841972927");
-      rewardAd = HjBannerAd(request: request, listener: EsoBannerListener());
+      rewardAd = HjBannerAd(request: request,width: 300, height: 60, listener: EsoBannerListener());
       rewardAd.loadAd();
     } else {
       _showRewardAd();
@@ -124,7 +123,7 @@ class _ChapterPageState extends State<ChapterPage> {
     if (_isReady) {
       _bannerAdWidget = BannerAdWidget(
         hjBannerAd: rewardAd,
-        height: 200,
+        height: 60,
         width: 300,
       );
       setState(() {
@@ -138,7 +137,7 @@ class _ChapterPageState extends State<ChapterPage> {
   void _requestAndroidRewardAd() async {
     if (rewardAd == null) {
       HjAdRequest request = HjAdRequest(placementId: "2828426563637874");
-      rewardAd = HjBannerAd(request: request, listener: EsoBannerListener());
+      rewardAd = HjBannerAd(request: request,width: 300,height: 60, listener: EsoBannerListener());
       rewardAd.loadAd();
     } else {
       _showRewardAd();
@@ -160,94 +159,11 @@ class _ChapterPageState extends State<ChapterPage> {
         .whenComplete(provider.adjustScroll);
   }
 
-  Widget bottomRow(BuildContext context) {
-    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 36.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(searchItem.chapters == null
-                  ? "加载中"
-                  : "共${searchItem.chapters.length}章"),
-              Text((searchItem.chapters == null || searchItem.chapters.isEmpty)
-                  ? "加载中"
-                  : searchItem.chapters.last.name.length > 12
-                      ? searchItem.chapters.last.name.substring(0, 11)
-                      : searchItem.chapters.last.name),
-            ],
-          ),
-          Container(
-            height: 50,
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: Theme.of(context).appBarTheme.backgroundColor),
-            child: TextButton(
-                onPressed: () {
-                  jumpToSpecChapter(context, searchItem.durChapterIndex);
-                },
-                child: Text(
-                  getChapterText(),
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyText1.color),
-                )),
-          ),
-        ],
-      ),
-    );
-  }
 
-  String getChapterText() {
-    if (searchItem.chapters == null || searchItem.chapters.isEmpty) {
-      return "阅至";
-    }
-    if (searchItem.durChapter == searchItem.chapters.first.name &&
-        (searchItem.chapters.first.url == null ||
-            searchItem.chapters.first.url.isEmpty)) {
-      String name = searchItem.chapters[1].name;
-      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
-    } else {
-      String name = searchItem.durChapter;
-      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
-    }
-  }
-
-  Widget changeRule(BuildContext context) {
-    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
-    return GestureDetector(
-      onTap: () {
-        provider.onSelect(MenuChapter.change, context);
-      },
-      child: Row(
-        children: [
-          Text(
-            searchItem.origin,
-            style: TextStyle(fontSize: 16.0),
-          ),
-          Icon(Icons.refresh_outlined),
-        ],
-      ),
-    );
-  }
-
-  String fetchCorrectImageCover(SearchItem item) {
-    if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
-      int index = item.cover.indexOf(".jpg");
-      String cover = item.cover.substring(0, index);
-      return cover + ".jpg";
-    } else {
-      return item.cover;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    print("CapturePage build");
     return ChangeNotifierProvider<ChapterPageProvider>(
       create: (context) =>
           ChapterPageProvider(searchItem: searchItem, size: size),
@@ -406,6 +322,97 @@ class _ChapterPageState extends State<ChapterPage> {
         ),
       ),
     );
+  }
+
+  Widget bottomRow(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+        color: Theme.of(context).appBarTheme.backgroundColor.withOpacity(0.2),
+      ),
+      padding: const EdgeInsets.only(left: 16.0,right: 16.0),
+      width: double.infinity,
+      height: 100,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(searchItem.chapters == null
+                  ? "加载中"
+                  : "共${searchItem.chapters.length}章"),
+              Text((searchItem.chapters == null || searchItem.chapters.isEmpty)
+                  ? "加载中"
+                  : searchItem.chapters.last.name.length > 12
+                  ? searchItem.chapters.last.name.substring(0, 11)
+                  : searchItem.chapters.last.name),
+            ],
+          ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: Theme.of(context).appBarTheme.backgroundColor),
+            child: TextButton(
+                onPressed: () {
+                  jumpToSpecChapter(context, searchItem.durChapterIndex);
+                },
+                child: Text(
+                  getChapterText(),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color),
+                )),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String getChapterText() {
+    if (searchItem.chapters == null || searchItem.chapters.isEmpty) {
+      return "阅至";
+    }
+    if (searchItem.durChapter == searchItem.chapters.first.name &&
+        (searchItem.chapters.first.url == null ||
+            searchItem.chapters.first.url.isEmpty)) {
+      String name = searchItem.chapters[1].name;
+      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
+    } else {
+      String name = searchItem.durChapter;
+      return (name.length > 7) ? "阅至 ${name.substring(0, 6)}" : "阅至 $name";
+    }
+  }
+
+  Widget changeRule(BuildContext context) {
+    ChapterPageProvider provider = context.watch<ChapterPageProvider>();
+    return GestureDetector(
+      onTap: () {
+        provider.onSelect(MenuChapter.change, context);
+      },
+      child: Row(
+        children: [
+          Text(
+            searchItem.origin,
+            style: TextStyle(fontSize: 16.0),
+          ),
+          Icon(Icons.refresh_outlined),
+        ],
+      ),
+    );
+  }
+
+  String fetchCorrectImageCover(SearchItem item) {
+    if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
+      int index = item.cover.indexOf(".jpg");
+      String cover = item.cover.substring(0, index);
+      return cover + ".jpg";
+    } else {
+      return item.cover;
+    }
   }
 
   Widget buildPage(BuildContext context) {

@@ -48,14 +48,11 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
             final provider = Provider.of<VideoPageProvider>(context, listen: false);
             final isLoading =
             context.select((VideoPageProvider provider) => provider.isLoading);
-            // print("shortVideo page builder isloading ${isLoading} ");
-            print("播放地址 isloading ${isLoading}  \n 时间 ${DateTime.now()}");
             final showController =
             context.select((VideoPageProvider provider) => provider.showController);
             final hint = context.select((VideoPageProvider provider) => provider.hint);
             final showChapter =
             context.select((VideoPageProvider provider) => provider.showChapter);
-            print("shortVideo page builder showController ${showController}");
             return Stack(
               children: [
                 PageView.builder(itemBuilder: (context, index) {
