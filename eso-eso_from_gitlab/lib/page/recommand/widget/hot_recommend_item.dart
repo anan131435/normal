@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class HotRecommendItem extends StatelessWidget {
-  final SearchItem searchItem;
-  const HotRecommendItem({Key key,this.searchItem}) : super(key: key);
+  final SearchItem item;
+  const HotRecommendItem({Key key,this.item}) : super(key: key);
   String fetchCorrectImageCover() {
-    if (searchItem.cover.contains(".jpg") && !searchItem.cover.endsWith(".jpg")) {
-      int index = searchItem.cover.indexOf(".jpg");
-      String cover = searchItem.cover.substring(0,index);
+    if (item.cover.contains(".jpg") && !item.cover.endsWith(".jpg")) {
+      int index = item.cover.indexOf(".jpg");
+      String cover = item.cover.substring(0,index);
       return cover + ".jpg";
+    } else if (item.cover.contains(".png") && !item.cover.endsWith(".png")){
+      int index = item.cover.indexOf(".png");
+      String cover = item.cover.substring(0,index);
+      return cover + ".png";
     } else {
-      return searchItem.cover;
+      return item.cover;
     }
   }
   @override
@@ -46,7 +50,7 @@ class HotRecommendItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  searchItem.name,
+                  item.name,
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -58,7 +62,7 @@ class HotRecommendItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      searchItem.origin,
+                      item.origin,
                       style: TextStyle(
                           fontSize: 12, color: ColorsUtil.contractColor("#86909C"),
                       ),
@@ -68,7 +72,7 @@ class HotRecommendItem extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            searchItem.author,
+                            item.author,
                             style: TextStyle(
                                 fontSize: 12, color: ColorsUtil.contractColor("#86909C")),
                             maxLines: 1,

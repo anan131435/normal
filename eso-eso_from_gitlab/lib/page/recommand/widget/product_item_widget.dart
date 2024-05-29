@@ -12,6 +12,10 @@ class ProductItemWidget extends StatelessWidget {
       int index = item.cover.indexOf(".jpg");
       String cover = item.cover.substring(0,index);
       return cover + ".jpg";
+    } else if (item.cover.contains(".png") && !item.cover.endsWith(".png")){
+      int index = item.cover.indexOf(".png");
+      String cover = item.cover.substring(0,index);
+      return cover + ".png";
     } else {
       return item.cover;
     }

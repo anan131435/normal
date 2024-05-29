@@ -32,11 +32,12 @@ class RecommendPage extends StatefulWidget {
 
 class _RecommendPageState extends State<RecommendPage>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  List<ProductItem> itemList;
   EditSourceProvider _provider;
   Rule rule;
   List<DiscoverMap> discoverMap;
   TabController _tabController;
+  ListDataItem _currentDataItem;
+
   int fetchRuletype(HomeContentType type) {
     switch (type) {
       case HomeContentType.Novel:
@@ -58,10 +59,8 @@ class _RecommendPageState extends State<RecommendPage>
 
   @override
   void initState() {
-    // createProvider();
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +107,6 @@ class _RecommendPageState extends State<RecommendPage>
               return ChangeNotifierProvider<DiscoverPageController>(
                   create: (context) {
                 discoverMap = snapshot.data;
-                print("找到了数据");
                 return DiscoverPageController(
                     originTag: rule.id,
                     discoverMap: snapshot.data,
@@ -135,6 +133,11 @@ class _RecommendPageState extends State<RecommendPage>
       _tabController = TabController(length: discoverMap.length, vsync: this);
       _tabController.addListener(() {
         _select(pageController, _tabController.index);
+        _currentDataItem = pageController.items[_tabController.index];
+
+        setState(() {
+
+        });
       });
     }
     return SizedBar(
@@ -151,6 +154,11 @@ class _RecommendPageState extends State<RecommendPage>
         unselectedLabelColor: Theme.of(context).textTheme.bodyText1.color,
         onTap: (index) {
           _select(pageController, index);
+          _currentDataItem = pageController.items[index];
+          print("切换了tab ${_currentDataItem.items.first.name} index is ${index}");
+          setState(() {
+
+          });
         },
       ),
     );
@@ -210,11 +218,12 @@ class _RecommendPageState extends State<RecommendPage>
   }
 
   Widget findListView({BuildContext context}) {
-    print("刷新UI");
     double screenH = MediaQuery.of(context).size.height;
     final controller = Provider.of<DiscoverPageController>(context);
     if (controller.items != null && controller.items.isNotEmpty) {
-      ListDataItem item = controller.items[0];
+      if (_tabController == null) {
+        _currentDataItem = controller.items[0];
+      }
       List<Widget> children = [];
       if (controller.discoverMap.isNotEmpty) {
         for (var i = 0; i < discoverMap.length; i++) {
@@ -263,6 +272,7 @@ class _RecommendPageState extends State<RecommendPage>
               ),
             );
           } else {
+            print("构建第二个${_currentDataItem.items.length}");
             return Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
               child: GridView.builder(
@@ -272,7 +282,7 @@ class _RecommendPageState extends State<RecommendPage>
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10),
                 itemBuilder: (context, index) {
-                  SearchItem searchItem = item.items[index];
+                  SearchItem searchItem = _currentDataItem.items[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -282,14 +292,13 @@ class _RecommendPageState extends State<RecommendPage>
                       );
                     },
                     child: HotRecommendItem(
-                      searchItem: searchItem,
+                      item: searchItem,
                     ),
                   );
                 },
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                reverse: true,
-                itemCount: (item == null) ? 0 : item.items.length,
+                itemCount: (_currentDataItem == null) ? 0 : _currentDataItem.items.length,
               ),
             );
           }
