@@ -124,53 +124,6 @@ class _FirstPageState extends State<FirstPage> {
     });
   }
 
-  void addUrlDecode({EditSourceProvider provider}) async {
-    final requestUri = Uri.tryParse("https://eso.hanpeki.online/index.json");
-    if (requestUri == null) {
-      print("接口返回错误");
-    } else {
-      final response = await http.get(requestUri);
-      print("接口返回 ${response.body}");
-      Map<String, dynamic> json = jsonDecode(response.body);
-      DataBaseEntity entity = DataBaseEntity.fromJson(json);
-      entity.contentVersion = "1.0.1";
-      var box = Hive.box(Global.contentVersionKey);
-      if (entity.contentVersion == box.get(Global.contentVersionKey)) {
-        //版本号一致不更新数据库内容
-        print("不更新数据库内容");
-      } else {
-        if (box.get(Global.contentVersionKey) == null) {
-          box.put(Global.contentVersionKey, entity.contentVersion);
-          final uri = Uri.tryParse(entity.url);
-          print("开始请求");
-          final res = await http.get(uri, headers: {
-            'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
-          });
-          print("请求结束");
-          insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
-        } else {
-          //删除老的
-          final rules = provider.rules
-              .where((element) => provider.checkSelectMap[element.id] == true)
-              .toList();
-          print("查询到老的数据源是${rules.length}");
-          await provider.handleSelect(rules, MenuEditSource.delete);
-          //插入新的
-          box.put(Global.contentVersionKey, entity.contentVersion);
-          final uri = Uri.tryParse(entity.url);
-          print("开始请求");
-          final res = await http.get(uri, headers: {
-            'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.113 Safari/537.36'
-          });
-          print("请求结束");
-          insertOrUpdateRuleInMain(autoReadBytes(res.bodyBytes));
-        }
-      }
-    }
-  }
-
   void insertOrUpdateRuleInMain(String s, [List l]) async {
     try {
       dynamic json;
@@ -213,79 +166,14 @@ class _FirstPageState extends State<FirstPage> {
             height: 150,
             width: double.infinity,
           ),
-          Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Container(
-                height: 80.0,
-                width: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF18D191),
-                ),
-                child: new Icon(
-                  Icons.library_books,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(right: 90.0, top: 80.0),
-                height: 80.0,
-                width: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF45E0EC),
-                ),
-                child: Icon(
-                  Icons.photo_library,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 10.0, top: 90.0),
-                height: 80.0,
-                width: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFFCE56),
-                ),
-                child: Icon(
-                  Icons.library_music,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 100.0, top: 70.0),
-                height: 80.0,
-                width: 80.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFFFC6A7F),
-                ),
-                child: Icon(
-                  Icons.video_library,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              )
-            ],
+          Image.asset("assets/bg/heart-123.gif"
           ),
           SizedBox(
             height: 20,
           ),
-          // Container(
-          //   height: 100,
-          //   width: 100,
-          //   child: Image.asset(
-          //     Global.logoPath,
-          //     fit: BoxFit.fill,
-          //   ),
-          // ),
+
           Text(
-            'ESO',
+            '亦搜',
             style: TextStyle(
               fontSize: 80,
               fontWeight: FontWeight.bold,
@@ -297,12 +185,6 @@ class _FirstPageState extends State<FirstPage> {
           ),
           SizedBox(
             height: 10,
-          ),
-          Text(
-            'my custom reader & player in one app',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
           ),
           Spacer(),
         ],

@@ -63,6 +63,7 @@ class Assets {
   static const String bg006 = 'assets/bg/006.jpg';
   static const String bg007 = 'assets/bg/007.jpg';
   static const String bg008 = 'assets/bg/008.png';
+  static const String bgHeart123 = 'assets/bg/heart-123.gif';
   static const String databaseChapterItem = 'lib/database/chapter_item.dart';
   static const String databaseDatabase = 'lib/database/database.dart';
   static const String databaseDatabase.g = 'lib/database/database.g.dart';
