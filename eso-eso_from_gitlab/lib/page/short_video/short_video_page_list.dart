@@ -48,7 +48,8 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
             final provider = Provider.of<VideoPageProvider>(context, listen: false);
             final isLoading =
             context.select((VideoPageProvider provider) => provider.isLoading);
-            print("shortVideo page builder isloading ${isLoading}");
+            // print("shortVideo page builder isloading ${isLoading} ");
+            print("播放地址 isloading ${isLoading}  \n 时间 ${DateTime.now()}");
             final showController =
             context.select((VideoPageProvider provider) => provider.showController);
             final hint = context.select((VideoPageProvider provider) => provider.hint);
@@ -86,6 +87,15 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
                         10, 10 + MediaQuery.of(context).padding.top, 10, 10),
                     color: Color(0x20000000),
                     child: _buildTopBar(context),
+                  ),
+                if (showController)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                      color: Color(0x20000000),
+                      child: _buildBottomBar(context),
+                    ),
                   ),
               ],
             );
@@ -380,6 +390,7 @@ class _ShortVideoPageListState extends State<ShortVideoPageList> {
           ),
         ),
         onDoubleTap: provider.playOrPause,
+        onTap: provider.toggleControllerBar,
         // onVerticalDragStart: provider.onVerticalDragStart,
         // onVerticalDragUpdate: provider.onVerticalDragUpdate,
       );

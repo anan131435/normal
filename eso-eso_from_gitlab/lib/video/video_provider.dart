@@ -113,7 +113,6 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
     } catch (e) {}
     if (_disposed) return;
     try {
-      print("视频章节index ${chapterIndex} 默认的呢 ${searchItem.durChapterIndex}");
       _content =
       await contentProvider.loadChapter(chapterIndex ?? searchItem.durChapterIndex);
       if (_content.isEmpty || _content.first.isEmpty) {
@@ -127,7 +126,7 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
       if (_disposed) return;
       // loadingText.add("播放地址 ${_content[0].split("").join("\u200B")}");
       // loadingText.add("获取视频信息...");
-      print("播放地址 ${_content[0].split("").join("\u200B")}");
+      // print("播放地址 ${_content[0].split("").join("\u200B")}  \n 时间 ${DateTime.now()}");
       notifyListeners();
           (VideoPlayerController controller) {
         Future.delayed(Duration(microseconds: 120)).then((value) => controller.dispose());
@@ -149,6 +148,8 @@ class VideoPageProvider with ChangeNotifier, WidgetsBindingObserver {
       await _controller.initialize();
       _controller.seekTo(Duration(milliseconds: searchItem.durContentIndex));
       _controller.play();
+      displayController();
+      notifyListeners();
       DeviceDisplayBrightness.keepOn(enabled: true);
       _controller.addListener(_listener);
       _controllerTime = DateTime.now();

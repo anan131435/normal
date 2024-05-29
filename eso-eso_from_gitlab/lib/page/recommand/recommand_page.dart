@@ -248,12 +248,6 @@ class _RecommendPageState extends State<RecommendPage>
                           "猜你喜欢",
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
-                        Text(
-                          "换一换",
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: ColorsUtil.contractColor("#86909C")),
-                        ),
                       ],
                     ),
                   ),
